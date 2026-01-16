@@ -51,18 +51,18 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center gap-8 text-sm tracking-widest uppercase">
-                        <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>
-                        <Link href={about.url()} className="hover:text-red-600 transition-colors">About</Link>
-                        <Link href="#features" className="hover:text-red-600 transition-colors">Features</Link>
-                        <Link href={pricing.url()} className="hover:text-red-600 transition-colors">Pricing</Link>
+                        <Link href="/" className="hover:text-yellow-600 transition-colors">Home</Link>
+                        <Link href={about.url()} className="hover:text-yellow-600 transition-colors">About</Link>
+                        <Link href="#features" className="hover:text-yellow-600 transition-colors">Features</Link>
+                        <Link href={pricing.url()} className="hover:text-yellow-600 transition-colors">Pricing</Link>
                         {auth.user ? (
-                            <Link href="/dashboard" className="bg-red-600 text-white px-5 py-2.5 hover:bg-red-700 transition-colors">
+                            <Link href="/dashboard" className="bg-yellow-500 text-white px-5 py-2.5 hover:bg-yellow-600 transition-colors">
                                 My Studio
                             </Link>
                         ) : (
                             <>
-                                <Link href="/login" className="hover:text-red-600 transition-colors">Log in</Link>
-                                <Link href="/register" className="bg-red-600 text-white px-5 py-2.5 hover:bg-red-700 transition-colors">
+                                <Link href="/login" className="hover:text-yellow-600 transition-colors">Log in</Link>
+                                <Link href="/register" className="bg-yellow-500 text-white px-5 py-2.5 hover:bg-yellow-600 transition-colors">
                                     Get Started
                                 </Link>
                             </>
@@ -79,18 +79,18 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 {mobileMenuOpen && (
                     <div className="md:hidden bg-[#F5F2EA] border-t border-black/5 px-6 py-4">
                         <nav className="flex flex-col gap-4 text-sm tracking-widest uppercase">
-                            <Link href="/" className="hover:text-red-600 transition-colors py-2">Home</Link>
-                            <Link href={about.url()} className="hover:text-red-600 transition-colors py-2">About</Link>
-                            <Link href="#features" className="hover:text-red-600 transition-colors py-2">Features</Link>
-                            <Link href={pricing.url()} className="hover:text-red-600 transition-colors py-2">Pricing</Link>
+                            <Link href="/" className="hover:text-yellow-600 transition-colors py-2">Home</Link>
+                            <Link href={about.url()} className="hover:text-yellow-600 transition-colors py-2">About</Link>
+                            <Link href="#features" className="hover:text-yellow-600 transition-colors py-2">Features</Link>
+                            <Link href="/pricing" className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
                             {auth.user ? (
-                                <Link href="/dashboard" className="bg-red-600 text-white px-5 py-2.5 text-center hover:bg-red-700 transition-colors">
+                                <Link href="/dashboard" className="bg-yellow-500 text-white px-5 py-2.5 text-center hover:bg-yellow-600 transition-colors">
                                     My Studio
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href="/login" className="hover:text-red-600 transition-colors py-2">Log in</Link>
-                                    <Link href="/register" className="bg-red-600 text-white px-5 py-2.5 text-center hover:bg-red-700 transition-colors">
+                                    <Link href="/login" className="hover:text-yellow-600 transition-colors py-2">Log in</Link>
+                                    <Link href="/register" className="bg-yellow-500 text-white px-5 py-2.5 text-center hover:bg-yellow-600 transition-colors">
                                         Get Started
                                     </Link>
                                 </>
@@ -103,14 +103,14 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
             {/* Hero Section */}
             <section className="min-h-screen flex items-center pt-20 relative overflow-hidden">
                 {/* Background Accent */}
-                <div className="absolute top-1/4 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-red-600/5 rounded-full blur-2xl" />
+                <div className="absolute top-1/4 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-2xl" />
 
                 <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
                     <div className="relative z-10">
-                        <p className="text-red-600 uppercase tracking-[0.3em] text-sm mb-4 font-medium">By Glenride</p>
+                        <p className="text-yellow-600 uppercase tracking-[0.3em] text-sm mb-4 font-medium">By Glenride</p>
                         <h1 className="text-6xl md:text-8xl font-bold leading-[0.9] mb-6" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            INSPIRE<span className="text-red-600">WRITE</span>.
+                            INSPIRE<span className="text-yellow-500">WRITE</span>.
                         </h1>
                         <p className="text-xl text-gray-600 mb-8 max-w-md leading-relaxed">
                             A spiritual writing companion for your journey. Read scripture, journal your thoughts, and create meaningful lessons.
@@ -136,12 +136,12 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
 
                     {/* Decorative Typography */}
                     <div className="hidden md:block relative">
-                        <div className="text-[12rem] font-bold text-red-600/10 leading-none absolute -top-20 -right-10 select-none" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                        <div className="text-[12rem] font-bold text-yellow-500/10 leading-none absolute -top-20 -right-10 select-none" style={{ fontFamily: 'DM Serif Display, serif' }}>
                             IW
                         </div>
                         <div className="bg-white p-8 shadow-2xl relative z-10">
                             <div className="border border-gray-100 p-6">
-                                <Quote className="text-red-600 mb-4" size={32} />
+                                <Quote className="text-yellow-500 mb-4" size={32} />
                                 <p className="text-lg italic text-gray-700 mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                     "Thy word is a lamp unto my feet, and a light unto my path."
                                 </p>
@@ -157,15 +157,15 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            FEAT<span className="text-red-600">URES</span>.
+                            FEAT<span className="text-yellow-500">URES</span>.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {features.map((feature) => (
-                            <div key={feature.num} className="group p-6 border border-gray-100 hover:border-red-600 hover:shadow-lg transition-all duration-300">
-                                <span className="text-5xl font-bold text-red-600/20 group-hover:text-red-600/40 transition-colors" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                            <div key={feature.num} className="group p-6 border border-gray-100 hover:border-yellow-500 hover:shadow-lg transition-all duration-300">
+                                <span className="text-5xl font-bold text-yellow-500/20 group-hover:text-yellow-500/40 transition-colors" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                     {feature.num}
                                 </span>
                                 <h3 className="text-lg font-bold uppercase tracking-wider mt-4 mb-2">{feature.title}</h3>
@@ -182,7 +182,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     <div>
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                                AB<span className="text-red-600">OUT</span> US.
+                                AB<span className="text-yellow-500">OUT</span> US.
                             </h2>
                             <div className="h-px bg-white/20 flex-1" />
                         </div>
@@ -192,14 +192,14 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         <p className="text-gray-300 leading-relaxed mb-8">
                             We combine the timeless wisdom of the Bible with modern AI technology to help you create lessons, build sermons, and capture your spiritual insights in meaningful ways.
                         </p>
-                        <Link href={about.url()} className="inline-flex items-center gap-2 text-red-500 uppercase tracking-widest text-sm hover:text-red-400 transition-colors group">
+                        <Link href={about.url()} className="inline-flex items-center gap-2 text-yellow-500 uppercase tracking-widest text-sm hover:text-yellow-400 transition-colors group">
                             Learn More <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         {stats.map((stat, i) => (
-                            <div key={i} className="p-8 border border-white/10 text-center hover:border-red-600/50 transition-colors">
-                                <div className="text-5xl font-bold text-red-600 mb-2" style={{ fontFamily: 'DM Serif Display, serif' }}>{stat.value}</div>
+                            <div key={i} className="p-8 border border-white/10 text-center hover:border-yellow-500/50 transition-colors">
+                                <div className="text-5xl font-bold text-yellow-500 mb-2" style={{ fontFamily: 'DM Serif Display, serif' }}>{stat.value}</div>
                                 <div className="text-xs uppercase tracking-widest text-gray-400">{stat.label}</div>
                             </div>
                         ))}
@@ -212,7 +212,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            SCRIP<span className="text-red-600">TURE</span>.
+                            SCRIP<span className="text-yellow-500">TURE</span>.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -220,15 +220,15 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     {/* Old Testament */}
                     {oldTestament.length > 0 && (
                         <div className="mb-16">
-                            <h3 className="text-sm uppercase tracking-[0.3em] text-red-600 mb-6 font-medium">Old Testament</h3>
+                            <h3 className="text-sm uppercase tracking-[0.3em] text-yellow-600 mb-6 font-medium">Old Testament</h3>
                             <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3">
                                 {oldTestament.map((book) => (
                                     <Link
                                         key={book.id}
                                         href={`/bible/${book.abbreviation}/1`}
-                                        className="p-3 bg-white border border-gray-100 text-center text-sm hover:border-red-600 hover:shadow-md transition-all group"
+                                        className="p-3 bg-white border border-gray-100 text-center text-sm hover:border-yellow-500 hover:shadow-md transition-all group"
                                     >
-                                        <span className="group-hover:text-red-600 transition-colors">{book.name}</span>
+                                        <span className="group-hover:text-yellow-600 transition-colors">{book.name}</span>
                                     </Link>
                                 ))}
                             </div>
@@ -238,15 +238,15 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     {/* New Testament */}
                     {newTestament.length > 0 && (
                         <div>
-                            <h3 className="text-sm uppercase tracking-[0.3em] text-red-600 mb-6 font-medium">New Testament</h3>
+                            <h3 className="text-sm uppercase tracking-[0.3em] text-yellow-600 mb-6 font-medium">New Testament</h3>
                             <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3">
                                 {newTestament.map((book) => (
                                     <Link
                                         key={book.id}
                                         href={`/bible/${book.abbreviation}/1`}
-                                        className="p-3 bg-white border border-gray-100 text-center text-sm hover:border-red-600 hover:shadow-md transition-all group"
+                                        className="p-3 bg-white border border-gray-100 text-center text-sm hover:border-yellow-500 hover:shadow-md transition-all group"
                                     >
-                                        <span className="group-hover:text-red-600 transition-colors">{book.name}</span>
+                                        <span className="group-hover:text-yellow-600 transition-colors">{book.name}</span>
                                     </Link>
                                 ))}
                             </div>
@@ -260,7 +260,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            REVI<span className="text-red-600">EWS</span>.
+                            REVI<span className="text-yellow-500">EWS</span>.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -268,7 +268,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     <div className="grid md:grid-cols-3 gap-8">
                         {testimonials.map((testimonial, i) => (
                             <div key={i} className="p-8 bg-[#F5F2EA] border border-gray-100 hover:shadow-lg transition-shadow">
-                                <Quote className="text-red-600/30 mb-4" size={40} />
+                                <Quote className="text-yellow-500/30 mb-4" size={40} />
                                 <p className="text-gray-700 mb-6 italic leading-relaxed" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                     "{testimonial.quote}"
                                 </p>
@@ -283,7 +283,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
             </section>
 
             {/* CTA Section */}
-            <section className="py-24 bg-red-600 text-white">
+            <section className="py-24 bg-yellow-500 text-white">
                 <div className="max-w-4xl mx-auto px-6 text-center">
                     <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'DM Serif Display, serif' }}>
                         GET IN TOUCH.
@@ -294,7 +294,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             href="/register"
-                            className="inline-flex items-center justify-center gap-2 bg-white text-red-600 px-10 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
+                            className="inline-flex items-center justify-center gap-2 bg-white text-yellow-600 px-10 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
                         >
                             Start Free Trial
                         </Link>
@@ -322,20 +322,20 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         <div>
                             <h4 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4">Quick Links</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="/" className="hover:text-red-500 transition-colors">Home</Link></li>
-                                <li><Link href={about.url()} className="hover:text-red-500 transition-colors">About</Link></li>
-                                <li><Link href={pricing.url()} className="hover:text-red-500 transition-colors">Pricing</Link></li>
-                                <li><Link href="/bible/gn/1" className="hover:text-red-500 transition-colors">Start Reading</Link></li>
+                                <li><Link href="/" className="hover:text-yellow-500 transition-colors">Home</Link></li>
+                                <li><Link href={about.url()} className="hover:text-yellow-500 transition-colors">About</Link></li>
+                                <li><Link href={pricing.url()} className="hover:text-yellow-500 transition-colors">Pricing</Link></li>
+                                <li><Link href="/bible/gn/1" className="hover:text-yellow-500 transition-colors">Start Reading</Link></li>
                             </ul>
                         </div>
 
                         <div>
                             <h4 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4">Connect</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><a href="#" className="hover:text-red-500 transition-colors">Twitter</a></li>
-                                <li><a href="#" className="hover:text-red-500 transition-colors">Facebook</a></li>
-                                <li><a href="#" className="hover:text-red-500 transition-colors">Instagram</a></li>
-                                <li><a href="mailto:hello@inspirewrite.online" className="hover:text-red-500 transition-colors">Contact</a></li>
+                                <li><a href="#" className="hover:text-yellow-500 transition-colors">Twitter</a></li>
+                                <li><a href="#" className="hover:text-yellow-500 transition-colors">Facebook</a></li>
+                                <li><a href="#" className="hover:text-yellow-500 transition-colors">Instagram</a></li>
+                                <li><a href="mailto:hello@inspirewrite.online" className="hover:text-yellow-500 transition-colors">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -345,7 +345,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             © {new Date().getFullYear()} InspireWrite by Glenride. All Rights Reserved.
                         </p>
                         <p className="text-xs text-gray-500">
-                            <a href="https://inspirewrite.online" className="hover:text-red-500 transition-colors">inspirewrite.online</a>
+                            <a href="https://inspirewrite.online" className="hover:text-yellow-500 transition-colors">inspirewrite.online</a>
                         </p>
                     </div>
                 </div>
