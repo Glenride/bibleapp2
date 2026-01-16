@@ -63,7 +63,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                             <Link href="/" className="hover:text-yellow-600 transition-colors py-2">Home</Link>
                             <Link href={about.url()} className="hover:text-yellow-600 transition-colors py-2">About</Link>
                             <Link href={pricing.url()} className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
-                            <Link href="/bible/gen/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
+                            <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
                             {auth.user ? (
                                 <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
                                     My Studio

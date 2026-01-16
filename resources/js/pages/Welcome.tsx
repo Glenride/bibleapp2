@@ -117,7 +117,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link
-                                href="/bible/gen/1"
+                                href="/bible/gn/1"
                                 className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 text-sm uppercase tracking-widest hover:bg-gray-800 transition-colors group"
                             >
                                 Start Reading
@@ -325,7 +325,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                                 <li><Link href="/" className="hover:text-red-500 transition-colors">Home</Link></li>
                                 <li><Link href={about.url()} className="hover:text-red-500 transition-colors">About</Link></li>
                                 <li><Link href={pricing.url()} className="hover:text-red-500 transition-colors">Pricing</Link></li>
-                                <li><Link href="/bible/gen/1" className="hover:text-red-500 transition-colors">Start Reading</Link></li>
+                                <li><Link href="/bible/gn/1" className="hover:text-red-500 transition-colors">Start Reading</Link></li>
                             </ul>
                         </div>
 
