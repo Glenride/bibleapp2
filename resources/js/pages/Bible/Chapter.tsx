@@ -38,7 +38,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     const { auth } = usePage<SharedData>().props;
     const [fontSize, setFontSize] = useState(20);
     const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
-    
+
     // Initialize Zen Mode from localStorage
     const [zenMode, setZenMode] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -51,7 +51,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     useEffect(() => {
         localStorage.setItem('bible-zen-mode', String(zenMode));
     }, [zenMode]);
-    
+
     const [noteDialog, setNoteDialog] = useState<NoteDialogState>({
         isOpen: false,
         type: 'highlight',
@@ -75,6 +75,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
 
     const handleBookmarkClick = () => {
         if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
 
         if (isBookmarked) {
             // Open dialog to edit note or remove
@@ -97,7 +98,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
 
     const handleSaveNote = () => {
         const { type, id, color } = noteDialog;
-        
+
         let url = '';
         let data: any = { note: noteContent };
 
@@ -130,7 +131,9 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     };
 
     const handleHighlight = (color: string) => {
-        if (!auth.user || !selectedVerseId) return router.visit('/login');
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
+        if (!selectedVerseId) return;
 
         router.post('/bible/highlight', {
             verse_id: selectedVerseId,
@@ -142,7 +145,9 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     };
 
     const handleFavorite = () => {
-        if (!auth.user || !selectedVerseId) return router.visit('/login');
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
+        if (!selectedVerseId) return;
 
         router.post('/bible/favorite', {
             verse_id: selectedVerseId,
@@ -161,7 +166,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
         // Prioritize editing Highlight note, then Favorite note.
         // If neither, we'll create a new Favorite with note (or Highlight? Let's go with Favorite as it's cleaner)
         // Actually, let's go with Highlight (yellow) as default "Note" carrier if nothing exists, as it's more "study" like.
-        
+
         if (highlight) {
             setNoteDialog({
                 isOpen: true,
@@ -179,7 +184,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
             });
         } else {
             // Create new Highlight (Yellow) with Note
-             setNoteDialog({
+            setNoteDialog({
                 isOpen: true,
                 type: 'highlight',
                 id: verseId,
@@ -207,7 +212,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                 <meta property="og:title" content={`${book.name} ${chapter.number} - Holy Bible`} />
                 <meta property="og:description" content={`Read ${book.name} Chapter ${chapter.number}. ${verses[0]?.text.substring(0, 100)}...`} />
             </Head>
-            
+
             <div className={cn(
                 "mx-auto py-8 px-4 md:px-8 relative transition-all duration-500 ease-in-out",
                 zenMode ? "max-w-3xl pt-12" : "max-w-4xl"
@@ -218,14 +223,14 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                     zenMode && "opacity-20 hover:opacity-100"
                 )}>
                     <div className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4 md:mb-0">
-                         <Link href="/" className="hover:text-primary/70 font-medium">Books</Link>
-                         <span className="text-muted-foreground">/</span>
-                         <span className="font-bold text-primary">{book.name}</span>
+                        <Link href="/" className="hover:text-primary/70 font-medium">Books</Link>
+                        <span className="text-muted-foreground">/</span>
+                        <span className="font-bold text-primary">{book.name}</span>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
-                        <Button 
-                            variant="ghost" 
+                        <Button
+                            variant="ghost"
                             size="icon"
                             onClick={handleBookmarkClick}
                             className={cn("hover:text-primary transition-colors", isBookmarked && "text-primary fill-primary")}
@@ -233,7 +238,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                         >
                             <Bookmark className={cn("h-5 w-5", isBookmarked && "fill-current")} />
                         </Button>
-                        
+
                         <div className="flex items-center gap-2 border-l border-border pl-4">
                             <button onClick={() => setFontSize(Math.max(14, fontSize - 2))} className="text-lg font-serif hover:text-primary w-8 h-8 flex items-center justify-center transition-colors">A-</button>
                             <button onClick={() => setFontSize(Math.min(32, fontSize + 2))} className="text-lg font-serif hover:text-primary w-8 h-8 flex items-center justify-center transition-colors">A+</button>
@@ -256,10 +261,10 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                 {/* Chapter Navigation */}
                 <div className={cn(
                     "flex justify-between items-center mb-12 transition-opacity duration-300",
-                     zenMode && "opacity-0 hover:opacity-100"
+                    zenMode && "opacity-0 hover:opacity-100"
                 )}>
                     {prev_link ? (
-                        <Link 
+                        <Link
                             href={prev_link}
                             className="text-xs uppercase tracking-widest hover:text-primary flex items-center gap-2 text-muted-foreground transition-colors"
                         >
@@ -268,14 +273,14 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                     ) : (
                         <div className="w-20"></div>
                     )}
-                    
+
                     <h1 className="font-serif text-5xl md:text-6xl text-center text-foreground/90 font-medium tracking-tight">
                         <span className="text-2xl md:text-3xl block mb-2 text-muted-foreground italic font-normal">Chapter</span>
                         {chapter.number}
                     </h1>
-                    
+
                     {next_link ? (
-                        <Link 
+                        <Link
                             href={next_link}
                             className="text-xs uppercase tracking-widest hover:text-primary flex items-center gap-2 text-muted-foreground transition-colors"
                         >
@@ -287,11 +292,11 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                 </div>
 
                 {/* Verses */}
-                <div 
+                <div
                     className={cn(
                         "prose prose-lg dark:prose-invert max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
                         zenMode && "prose-xl leading-relaxed"
-                    )} 
+                    )}
                     style={{ fontSize: `${fontSize}px` }}
                 >
                     {verses.map((verse, index) => {
@@ -302,8 +307,8 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                         const hasNote = highlight?.note || userInteractions.favorites[verse.id]?.note;
 
                         return (
-                            <span 
-                                key={verse.id} 
+                            <span
+                                key={verse.id}
                                 onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
                                 className={cn(
                                     "relative inline transition-colors duration-200 cursor-pointer select-text decoration-clone p-0.5 rounded box-decoration-clone",
@@ -319,20 +324,20 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                     {isFavorited && <Heart className="inline-block h-2 w-2 ml-0.5 text-red-500 fill-red-500" />}
                                     {hasNote && <MessageSquare className="inline-block h-2 w-2 ml-0.5 text-blue-500 fill-blue-500" />}
                                 </sup>
-                                
+
                                 <span className={cn(
                                     isFirstVerse && "float-left text-7xl leading-[0.8] pr-3 pt-1 font-bold text-primary font-serif",
                                 )}>
                                     {isFirstVerse ? verse.text.charAt(0) : ''}
                                 </span>
-                                
+
                                 <span>
                                     {isFirstVerse ? verse.text.substring(1) : verse.text}{' '}
                                 </span>
 
                                 {/* Floating Toolbar for Selected Verse */}
                                 {isSelected && (
-                                    <div 
+                                    <div
                                         className="absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-3 bg-popover text-popover-foreground shadow-xl border border-border rounded-full p-1.5 flex items-center gap-1 animate-in fade-in slide-in-from-bottom-2 zoom-in-95 duration-200 whitespace-nowrap"
                                         onClick={(e) => e.stopPropagation()}
                                     >
@@ -353,21 +358,21 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                                 />
                                             ))}
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={handleFavorite}
                                             className={cn("p-2 rounded-full hover:bg-muted transition-colors", isFavorited ? "text-red-500" : "text-muted-foreground")}
                                             title={isFavorited ? "Remove from Favorites" : "Add to Favorites"}
                                         >
                                             <Heart className={cn("h-4 w-4", isFavorited && "fill-current")} />
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => openVerseNoteDialog(verse.id)}
                                             className={cn("p-2 rounded-full hover:bg-muted transition-colors", hasNote ? "text-blue-500" : "text-muted-foreground")}
                                             title="Add/Edit Note"
                                         >
                                             <MessageSquare className={cn("h-4 w-4", hasNote && "fill-current")} />
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => setSelectedVerseId(null)}
                                             className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
                                             title="Close"
@@ -380,26 +385,26 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                         );
                     })}
                 </div>
-                
+
                 {/* Bottom Navigation */}
-                 <div className={cn(
-                     "flex justify-between items-center mt-16 pt-12 border-t border-border/50 transition-opacity duration-300",
-                     zenMode && "opacity-20 hover:opacity-100"
-                 )}>
+                <div className={cn(
+                    "flex justify-between items-center mt-16 pt-12 border-t border-border/50 transition-opacity duration-300",
+                    zenMode && "opacity-20 hover:opacity-100"
+                )}>
                     {prev_link ? (
-                        <Link 
+                        <Link
                             href={prev_link}
                             className="group flex flex-col items-start"
                         >
-                             <span className="text-xs uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-primary transition-colors">&larr; Previous</span>
-                             <span className="font-serif text-lg group-hover:text-primary transition-colors">Chapter {chapter.number - 1 > 0 ? chapter.number - 1 : 'Book'}</span>
+                            <span className="text-xs uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-primary transition-colors">&larr; Previous</span>
+                            <span className="font-serif text-lg group-hover:text-primary transition-colors">Chapter {chapter.number - 1 > 0 ? chapter.number - 1 : 'Book'}</span>
                         </Link>
                     ) : (
                         <div></div>
                     )}
-                    
+
                     {next_link ? (
-                        <Link 
+                        <Link
                             href={next_link}
                             className="group flex flex-col items-end"
                         >
@@ -424,13 +429,13 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                             Add a personal note or reflection.
                         </DialogDescription>
                     </DialogHeader>
-                    
+
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                             <Label htmlFor="note">Note</Label>
-                            <Textarea 
-                                id="note" 
-                                value={noteContent} 
+                            <Textarea
+                                id="note"
+                                value={noteContent}
                                 onChange={(e) => setNoteContent(e.target.value)}
                                 placeholder="Enter your thoughts here..."
                                 className="min-h-[120px]"
@@ -440,9 +445,9 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
 
                     <DialogFooter className="sm:justify-between">
                         {noteDialog.type === 'bookmark' ? (
-                             <Button 
-                                type="button" 
-                                variant="destructive" 
+                            <Button
+                                type="button"
+                                variant="destructive"
                                 onClick={() => {
                                     setNoteDialog({ ...noteDialog, isOpen: false });
                                     router.post('/bible/bookmark', {
@@ -454,7 +459,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 Remove Bookmark
                             </Button>
                         ) : (
-                            <div></div> 
+                            <div></div>
                         )}
                         <div className="flex gap-2">
                             <Button variant="secondary" onClick={() => setNoteDialog({ ...noteDialog, isOpen: false })}>

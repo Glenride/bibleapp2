@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bible_versions', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('abbreviation')->unique();
-            $table->string('language');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('bible_versions')) {
+            Schema::create('bible_versions', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('abbreviation'); // KJV, NIV, etc.
+                $table->string('language');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

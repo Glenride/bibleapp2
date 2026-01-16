@@ -35,21 +35,21 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-6 text-xs tracking-widest uppercase">
-                    <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>
-                    <Link href={about.url()} className="hover:text-red-600 transition-colors">About</Link>
-                    <Link href={pricing.url()} className="hover:text-red-600 transition-colors">Pricing</Link>
-                    <Link href="/bible/gen/1" className="hover:text-red-600 transition-colors">Scripture</Link>
+                    <Link href="/" className="hover:text-yellow-600 transition-colors">Home</Link>
+                    <Link href={about.url()} className="hover:text-yellow-600 transition-colors">About</Link>
+                    <Link href={pricing.url()} className="hover:text-yellow-600 transition-colors">Pricing</Link>
+                    <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors">Scripture</Link>
 
                     {auth.user ? (
-                        <Link href="/dashboard" className="bg-red-600 text-white px-4 py-2 hover:bg-red-700 transition-colors">
+                        <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
                             My Studio
                         </Link>
                     ) : (
                         <>
-                            <Link href="/login" className="hover:text-red-600 transition-colors">
+                            <Link href="/login" className="hover:text-yellow-600 transition-colors">
                                 Log in
                             </Link>
-                            <Link href="/register" className="bg-red-600 text-white px-4 py-2 hover:bg-red-700 transition-colors">
+                            <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
                                 Get Started
                             </Link>
                         </>
@@ -60,18 +60,18 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                 {mobileMenuOpen && (
                     <div className="md:hidden w-full pt-4 border-t border-black/5 mt-4">
                         <nav className="flex flex-col gap-3 text-xs tracking-widest uppercase">
-                            <Link href="/" className="hover:text-red-600 transition-colors py-2">Home</Link>
-                            <Link href={about.url()} className="hover:text-red-600 transition-colors py-2">About</Link>
-                            <Link href={pricing.url()} className="hover:text-red-600 transition-colors py-2">Pricing</Link>
-                            <Link href="/bible/gen/1" className="hover:text-red-600 transition-colors py-2">Scripture</Link>
+                            <Link href="/" className="hover:text-yellow-600 transition-colors py-2">Home</Link>
+                            <Link href={about.url()} className="hover:text-yellow-600 transition-colors py-2">About</Link>
+                            <Link href={pricing.url()} className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
+                            <Link href="/bible/gen/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
                             {auth.user ? (
-                                <Link href="/dashboard" className="bg-red-600 text-white px-4 py-2 text-center hover:bg-red-700 transition-colors">
+                                <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
                                     My Studio
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href="/login" className="hover:text-red-600 transition-colors py-2">Log in</Link>
-                                    <Link href="/register" className="bg-red-600 text-white px-4 py-2 text-center hover:bg-red-700 transition-colors">
+                                    <Link href="/login" className="hover:text-yellow-600 transition-colors py-2">Log in</Link>
+                                    <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
                                         Get Started
                                     </Link>
                                 </>
@@ -103,19 +103,19 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                     <div className="col-span-1">
                         <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Quick Links</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="/" className="text-gray-300 hover:text-red-500 transition-colors">Home</Link></li>
-                            <li><Link href={about.url()} className="text-gray-300 hover:text-red-500 transition-colors">About</Link></li>
-                            <li><Link href={pricing.url()} className="text-gray-300 hover:text-red-500 transition-colors">Pricing</Link></li>
-                            <li><Link href="/bible/gen/1" className="text-gray-300 hover:text-red-500 transition-colors">Scripture</Link></li>
+                            <li><Link href="/" className="text-gray-300 hover:text-yellow-500 transition-colors">Home</Link></li>
+                            <li><Link href={about.url()} className="text-gray-300 hover:text-yellow-500 transition-colors">About</Link></li>
+                            <li><Link href={pricing.url()} className="text-gray-300 hover:text-yellow-500 transition-colors">Pricing</Link></li>
+                            <li><Link href="/bible/gn/1" className="text-gray-300 hover:text-yellow-500 transition-colors">Scripture</Link></li>
                         </ul>
                     </div>
 
                     <div className="col-span-1">
                         <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Connect</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Twitter</a></li>
-                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Facebook</a></li>
-                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Instagram</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Twitter</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Facebook</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Instagram</a></li>
                         </ul>
                     </div>
                 </div>

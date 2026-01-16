@@ -23,9 +23,9 @@ export default function Pricing() {
                             <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Basic Search</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Personal Notes</li>
                         </ul>
-                        <button className="w-full py-2 px-4 border border-primary text-primary hover:bg-primary/5 rounded-md transition-colors">
+                        <a href="/checkout/price_basic" className="w-full block text-center py-2 px-4 border border-primary text-primary hover:bg-primary/5 rounded-md transition-colors">
                             Get Started
-                        </button>
+                        </a>
                     </div>
 
                     {/* Pro Plan */}
@@ -40,9 +40,9 @@ export default function Pricing() {
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Unlimited Journals</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Reading Plans</li>
                         </ul>
-                        <button className="w-full py-2 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-sm">
+                        <a href="/checkout/price_pro" className="w-full block text-center py-2 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-sm">
                             Subscribe Now
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

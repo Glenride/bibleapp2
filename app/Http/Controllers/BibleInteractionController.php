@@ -20,6 +20,11 @@ class BibleInteractionController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if (!$user->subscribed('default')) {
+             return back()->with('error', 'Subscription required for this feature.');
+        }
+
         $highlight = $user->highlights()->where('verse_id', $request->verse_id)->first();
 
         if ($highlight) {
@@ -65,6 +70,11 @@ class BibleInteractionController extends Controller
         ]);
 
         $user = Auth::user();
+        
+        if (!$user->subscribed('default')) {
+             return back()->with('error', 'Subscription required for this feature.');
+        }
+
         $favorite = $user->favorites()->where('verse_id', $request->verse_id)->first();
 
         if ($favorite) {
@@ -99,6 +109,10 @@ class BibleInteractionController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if (!$user->subscribed('default')) {
+             return back()->with('error', 'Subscription required for this feature.');
+        }
         
         // Check if bookmark exists for this chapter (and verse if provided)
         $query = $user->bookmarks()

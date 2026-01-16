@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BibleController;
 use App\Http\Controllers\BibleInteractionController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\SermonController;
@@ -17,6 +18,8 @@ Route::get('/bible/{book}/{chapter?}', [BibleController::class, 'show'])->name('
 Route::get('/shared/{token}', [SermonController::class, 'shared'])->name('sermons.shared');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/checkout/{plan}', [CheckoutController::class, 'subscribe'])->name('checkout');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/bible/highlight', [BibleInteractionController::class, 'toggleHighlight'])->name('bible.highlight');

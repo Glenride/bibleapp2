@@ -3,7 +3,7 @@ import { PenTool } from 'lucide-react';
 export default function AppLogo() {
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-red-600 text-white">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-yellow-500 text-white">
                 <PenTool className="size-5" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
