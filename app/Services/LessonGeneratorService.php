@@ -130,40 +130,52 @@ class LessonGeneratorService
     protected function buildPrompt(string $versesContext, ?string $theme): string
     {
         $themeInstruction = $theme
-            ? "Focus the lesson around this theme: {$theme}"
-            : "Identify a central theme that connects these verses";
+            ? "Your sermon design must be centered around this specific proposition/theme: {$theme}"
+            : "Derive a single, clear proposition from these verses that will serve as the main theme";
 
         return <<<PROMPT
-You are a thoughtful Bible study teacher creating a personalized lesson based on verses that a reader has highlighted and favorited. These verses represent what resonates with them spiritually.
+You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis. You are designing a lesson based on specific verses a user has highlighted.
 
+OBJECTIVE:
+Create a structured expository lesson that strictly follows the homiletical design principles of "Sermon Design and Structure".
+
+INPUT CONTEXT:
 {$themeInstruction}
 
 VERSES THE READER HAS MARKED:
 {$versesContext}
 
-Create a Bible study lesson with:
-1. A compelling title (5-10 words)
-2. An introduction connecting the verses to daily life
-3. 2-3 key insights drawn from these specific verses
-4. Reflection questions for personal growth
-5. A practical application section
-6. A closing prayer or meditation
+REQUIRED LESSON STRUCTURE:
+1.  **Proposition**: A single, clear sentence that states the timeless truth of the lesson (the "big idea").
+2.  **Introduction**:
+    *   Arrest attention.
+    *   Introduce the subject and the text.
+    *   Make a smooth transition to the main points.
+3.  **Main Points** (Provide 2-3 distinct points derived directly from the text):
+    *   For *each* main point, you MUST include:
+        *   **Explanation**: Clarify the meaning of the text (What does it say?).
+        *   **Application**: Implications for the hearer (What does it say to us/me?).
+        *   **Illustration**: A tangible image or story to clarify the truth (What is it like?).
+4.  **Conclusion**:
+    *   Summarize the main argument.
+    *   Final exhortation or call to action.
+    *   Closing prayer.
 
-Format your response as JSON with this structure:
+Format your response as JSON with this exact structure:
 {
-  "title": "Lesson title here",
-  "detected_theme": "The main theme you identified",
-  "content": "The full lesson content in markdown format"
+  "title": "A compelling, brief title (5-10 words)",
+  "detected_theme": "The proposition/theme used",
+  "content": "The full lesson content in rigorous markdown format, using headers (##, ###) for the sections described above. Ensure the distinctions between Explanation, Application, and Illustration are clear within each point."
 }
 
-Make the lesson personal, warm, and spiritually nourishing. Reference the specific verses throughout.
+Make the tone spirutuallly nourishing but intellectually rigorous and structured.
 PROMPT;
     }
 
     protected function callOpenAI(string $prompt): array
     {
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-4o',
+            'model' => 'gpt-5-mini',
             'messages' => [
                 ['role' => 'system', 'content' => 'You are a thoughtful Bible study teacher. Always respond with valid JSON.'],
                 ['role' => 'user', 'content' => $prompt],
@@ -208,7 +220,7 @@ Example: ["God's Faithfulness", "Finding Peace", "Living with Purpose"]
 PROMPT;
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-4o',
+            'model' => 'gpt-5-mini',
             'messages' => [
                 ['role' => 'system', 'content' => 'You analyze Bible verses and identify themes. Respond only with a JSON array.'],
                 ['role' => 'user', 'content' => $prompt],
