@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BibleController;
 use App\Http\Controllers\BibleInteractionController;
 use App\Http\Controllers\CheckoutController;
@@ -46,6 +47,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/sermons/{sermon}/add-lesson', [SermonController::class, 'addLesson'])->name('sermons.add-lesson');
     Route::post('/sermons/{sermon}/remove-lesson', [SermonController::class, 'removeLesson'])->name('sermons.remove-lesson');
     Route::get('/shared-with-me', [SermonController::class, 'sharedWithMe'])->name('sermons.shared-with-me');
+
+    // Admin routes
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/users', [AdminController::class, 'index'])->name('admin.users');
+        Route::post('/users/{user}/make-admin', [AdminController::class, 'makeAdmin'])->name('admin.make-admin');
+        Route::post('/users/{user}/remove-admin', [AdminController::class, 'removeAdmin'])->name('admin.remove-admin');
+        Route::post('/users/{user}/assign-trial', [AdminController::class, 'assignTrial'])->name('admin.assign-trial');
+        Route::post('/users/{user}/cancel-subscription', [AdminController::class, 'cancelSubscription'])->name('admin.cancel-subscription');
+    });
 });
 
 require __DIR__.'/settings.php';

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -49,7 +50,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Check if user is super admin (hardcoded email).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->email === 'dvaughnhouse@gmail.com';
+    }
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->is_admin || $this->isSuperAdmin();
     }
 
     public function highlights()
