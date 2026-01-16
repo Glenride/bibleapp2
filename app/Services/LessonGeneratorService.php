@@ -180,7 +180,6 @@ PROMPT;
                 ['role' => 'system', 'content' => 'You are a thoughtful Bible study teacher. Always respond with valid JSON.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'temperature' => 0.7,
             'max_completion_tokens' => 2000,
         ]);
 
@@ -225,7 +224,6 @@ PROMPT;
                 ['role' => 'system', 'content' => 'You analyze Bible verses and identify themes. Respond only with a JSON array.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'temperature' => 0.7,
             'max_completion_tokens' => 200,
         ]);
 

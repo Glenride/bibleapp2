@@ -293,10 +293,9 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
-                            href="/register"
                             className="inline-flex items-center justify-center gap-2 bg-white text-yellow-600 px-10 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
                         >
-                            Start Free Trial
+                            Create Account
                         </Link>
                         <Link
                             href={pricing.url()}
