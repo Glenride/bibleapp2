@@ -85,7 +85,7 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                         "Thy word is a lamp unto my feet, and a light unto my path." — Psalm 119:105
                     </p>
                     <Link
-                        href="/"
+                        href="/bible/gn/1"
                         className="inline-flex items-center gap-2 bg-yellow-500 text-white px-6 py-3 text-sm uppercase tracking-widest hover:bg-yellow-600 transition-colors group"
                     >
                         <BookOpen size={18} />

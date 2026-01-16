@@ -20,7 +20,12 @@ Route::get('/shared/{token}', [SermonController::class, 'shared'])->name('sermon
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout/{plan}', [CheckoutController::class, 'subscribe'])->name('checkout');
 
+    Route::get('/billing-portal', function () {
+        return auth()->user()->redirectToBillingPortal(route('subscription.edit'));
+    })->name('billing-portal');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     Route::post('/bible/highlight', [BibleInteractionController::class, 'toggleHighlight'])->name('bible.highlight');
     Route::post('/bible/favorite', [BibleInteractionController::class, 'toggleFavorite'])->name('bible.favorite');
