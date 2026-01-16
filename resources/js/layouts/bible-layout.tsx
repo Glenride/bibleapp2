@@ -4,6 +4,8 @@ import { SharedData } from '@/types';
 import { cn } from '@/lib/utils';
 import { FlashToaster } from '@/components/flash-toaster';
 import { about, pricing } from '@/routes';
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface BibleLayoutProps extends PropsWithChildren {
     zenMode?: boolean;
@@ -11,95 +13,114 @@ interface BibleLayoutProps extends PropsWithChildren {
 
 export default function BibleLayout({ children, zenMode = false }: BibleLayoutProps) {
     const { auth } = usePage<SharedData>().props;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans flex flex-col transition-colors duration-500">
+        <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a] flex flex-col transition-colors duration-500" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
+
+            {/* Header */}
             <header className={cn(
-                "py-6 px-4 md:px-12 flex flex-col md:flex-row justify-between items-center border-b border-border/50 transition-all duration-500 overflow-hidden",
+                "py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center border-b border-black/10 bg-[#F5F2EA]/95 backdrop-blur-sm transition-all duration-500 overflow-hidden sticky top-0 z-50",
                 zenMode ? "h-0 py-0 opacity-0 border-none" : "h-auto opacity-100"
             )}>
-                <div className="mb-4 md:mb-0">
-                    <Link href="/" className="font-serif text-2xl tracking-widest uppercase font-bold">
-                        Glenride holy Bible
+                <div className="flex items-center justify-between w-full md:w-auto mb-0">
+                    <Link href="/" className="text-xl tracking-[0.2em] uppercase font-bold" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                        INSPIREWRITE.
                     </Link>
+                    <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
 
-                <nav className="flex items-center space-x-6 text-sm tracking-widest uppercase">
-                    <Link href="/" className="hover:text-primary/70 transition-colors">Home</Link>
-                    <Link href={about.url()} className="hover:text-primary/70 transition-colors">About</Link>
-                    <Link href={pricing.url()} className="hover:text-primary/70 transition-colors">Pricing</Link>
-                    <Link href="#" className="hover:text-primary/70 transition-colors">Old Testament</Link>
-                    <Link href="#" className="hover:text-primary/70 transition-colors">New Testament</Link>
+                {/* Desktop Nav */}
+                <nav className="hidden md:flex items-center gap-6 text-xs tracking-widest uppercase">
+                    <Link href="/" className="hover:text-red-600 transition-colors">Home</Link>
+                    <Link href={about.url()} className="hover:text-red-600 transition-colors">About</Link>
+                    <Link href={pricing.url()} className="hover:text-red-600 transition-colors">Pricing</Link>
+                    <Link href="/bible/gen/1" className="hover:text-red-600 transition-colors">Scripture</Link>
 
                     {auth.user ? (
-                        <Link href="/dashboard" className="hover:text-primary/70 transition-colors font-bold text-primary">
-                            My Journal
+                        <Link href="/dashboard" className="bg-red-600 text-white px-4 py-2 hover:bg-red-700 transition-colors">
+                            My Studio
                         </Link>
                     ) : (
                         <>
-                            <Link href="/login" className="hover:text-primary/70 transition-colors">
+                            <Link href="/login" className="hover:text-red-600 transition-colors">
                                 Log in
                             </Link>
-                            <Link href="/register" className="bg-primary text-primary-foreground px-4 py-2 text-xs hover:opacity-90 transition-opacity">
-                                Register
+                            <Link href="/register" className="bg-red-600 text-white px-4 py-2 hover:bg-red-700 transition-colors">
+                                Get Started
                             </Link>
                         </>
                     )}
                 </nav>
+
+                {/* Mobile Nav */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden w-full pt-4 border-t border-black/5 mt-4">
+                        <nav className="flex flex-col gap-3 text-xs tracking-widest uppercase">
+                            <Link href="/" className="hover:text-red-600 transition-colors py-2">Home</Link>
+                            <Link href={about.url()} className="hover:text-red-600 transition-colors py-2">About</Link>
+                            <Link href={pricing.url()} className="hover:text-red-600 transition-colors py-2">Pricing</Link>
+                            <Link href="/bible/gen/1" className="hover:text-red-600 transition-colors py-2">Scripture</Link>
+                            {auth.user ? (
+                                <Link href="/dashboard" className="bg-red-600 text-white px-4 py-2 text-center hover:bg-red-700 transition-colors">
+                                    My Studio
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link href="/login" className="hover:text-red-600 transition-colors py-2">Log in</Link>
+                                    <Link href="/register" className="bg-red-600 text-white px-4 py-2 text-center hover:bg-red-700 transition-colors">
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
+                        </nav>
+                    </div>
+                )}
             </header>
 
             <main className="flex-grow">
                 {children}
             </main>
 
+            {/* Footer */}
             <footer className={cn(
-                "bg-[#F5F2EA] dark:bg-card border-t border-border/50 px-4 md:px-12 transition-all duration-500 overflow-hidden",
+                "bg-[#1a1a1a] text-white px-6 md:px-12 transition-all duration-500 overflow-hidden",
                 zenMode ? "max-h-0 py-0 opacity-0 border-none" : "max-h-[1000px] py-12 opacity-100 mt-auto"
             )}>
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="col-span-1 md:col-span-1">
-                        <h3 className="font-serif text-lg uppercase tracking-widest mb-4">Glenride Holy Bible</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            The Word of God, accessible to everyone. Read, study, and share the Bible in multiple languages and versions.
+                    <div className="col-span-1 md:col-span-2">
+                        <h3 className="text-xl tracking-[0.2em] uppercase mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                            INSPIREWRITE.
+                        </h3>
+                        <p className="text-sm text-gray-400 leading-relaxed max-w-md">
+                            A spiritual writing companion by Glenride. Read scripture, journal your thoughts, and create meaningful lessons.
                         </p>
                     </div>
 
                     <div className="col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Quick Links</h4>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><Link href="/" className="hover:text-primary">Home</Link></li>
-                            <li><Link href={about.url()} className="hover:text-primary">About</Link></li>
-                            <li><Link href={pricing.url()} className="hover:text-primary">Pricing</Link></li>
-                            <li><Link href="#" className="hover:text-primary">Contact</Link></li>
+                        <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Quick Links</h4>
+                        <ul className="space-y-2 text-sm">
+                            <li><Link href="/" className="text-gray-300 hover:text-red-500 transition-colors">Home</Link></li>
+                            <li><Link href={about.url()} className="text-gray-300 hover:text-red-500 transition-colors">About</Link></li>
+                            <li><Link href={pricing.url()} className="text-gray-300 hover:text-red-500 transition-colors">Pricing</Link></li>
+                            <li><Link href="/bible/gen/1" className="text-gray-300 hover:text-red-500 transition-colors">Scripture</Link></li>
                         </ul>
                     </div>
 
                     <div className="col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Connect</h4>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><a href="#" className="hover:text-primary">Twitter</a></li>
-                            <li><a href="#" className="hover:text-primary">Facebook</a></li>
-                            <li><a href="#" className="hover:text-primary">Instagram</a></li>
+                        <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Connect</h4>
+                        <ul className="space-y-2 text-sm">
+                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Twitter</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Facebook</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-red-500 transition-colors">Instagram</a></li>
                         </ul>
                     </div>
-
-                    <div className="col-span-1 md:col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Subscribe</h4>
-                        <div className="flex gap-2">
-                            <input
-                                type="email"
-                                placeholder="Your email"
-                                className="bg-white dark:bg-zinc-900 border border-border px-3 py-2 text-sm w-full focus:outline-none focus:border-primary"
-                            />
-                            <button className="bg-primary text-primary-foreground px-4 py-2 text-xs uppercase tracking-widest hover:opacity-90">
-                                Join
-                            </button>
-                        </div>
-                    </div>
                 </div>
-                <div className="border-t border-border/30 mt-12 pt-6 text-center text-xs text-muted-foreground uppercase tracking-widest">
-                    &copy; {new Date().getFullYear()} Glenride Holy Bible and Journal. All Rights Reserved. v1.1
+                <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-gray-500 uppercase tracking-widest">
+                    © {new Date().getFullYear()} InspireWrite by Glenride. All Rights Reserved.
                 </div>
             </footer>
         </div>
