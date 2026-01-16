@@ -44,7 +44,8 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user() ? array_merge($request->user()->toArray(), [
-                    'is_subscribed' => $request->user()->subscribed('default'),
+                    'is_subscribed' => $request->user()->isAdmin() || $request->user()->subscribed('default'),
+                    'is_admin' => $request->user()->isAdmin(),
                 ]) : null,
             ],
             'flash' => [

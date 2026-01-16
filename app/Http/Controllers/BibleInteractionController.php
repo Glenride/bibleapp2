@@ -21,7 +21,7 @@ class BibleInteractionController extends Controller
 
         $user = Auth::user();
 
-        if (!$user->subscribed('default')) {
+        if (!$user->isAdmin() && !$user->subscribed('default')) {
              return back()->with('error', 'Subscription required for this feature.');
         }
 
@@ -71,7 +71,7 @@ class BibleInteractionController extends Controller
 
         $user = Auth::user();
         
-        if (!$user->subscribed('default')) {
+        if (!$user->isAdmin() && !$user->subscribed('default')) {
              return back()->with('error', 'Subscription required for this feature.');
         }
 
@@ -110,7 +110,7 @@ class BibleInteractionController extends Controller
 
         $user = Auth::user();
 
-        if (!$user->subscribed('default')) {
+        if (!$user->isAdmin() && !$user->subscribed('default')) {
              return back()->with('error', 'Subscription required for this feature.');
         }
         
