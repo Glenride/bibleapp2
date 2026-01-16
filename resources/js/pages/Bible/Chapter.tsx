@@ -1,9 +1,9 @@
 import BibleLayout from '@/layouts/bible-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Book, Chapter as ChapterType, Verse, UserInteractions } from '@/types/bible';
+import { Book, Chapter as ChapterType, Verse, UserInteractions, BookNav } from '@/types/bible';
 import { SharedData } from '@/types';
 import { useState, useEffect } from 'react';
-import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare } from 'lucide-react';
+import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,8 +14,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
     book: Book;
@@ -24,6 +32,8 @@ interface Props {
     prev_link: string | null;
     next_link: string | null;
     userInteractions: UserInteractions;
+    allBooks: BookNav[];
+    bookChapters: { id: number; number: number }[];
 }
 
 interface NoteDialogState {
@@ -34,10 +44,12 @@ interface NoteDialogState {
     color?: string; // For highlights
 }
 
-export default function Chapter({ book, chapter, verses, prev_link, next_link, userInteractions }: Props) {
+export default function Chapter({ book, chapter, verses, prev_link, next_link, userInteractions, allBooks, bookChapters }: Props) {
     const { auth } = usePage<SharedData>().props;
     const [fontSize, setFontSize] = useState(20);
     const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
+    const [navOpen, setNavOpen] = useState(false);
+    const [expandedBook, setExpandedBook] = useState<string | null>(book.abbreviation);
 
     // Initialize Zen Mode from localStorage
     const [zenMode, setZenMode] = useState(() => {
@@ -222,11 +234,113 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                     "flex flex-col md:flex-row justify-between items-center mb-12 border-b border-border/50 pb-6 transition-opacity duration-300",
                     zenMode && "opacity-20 hover:opacity-100"
                 )}>
-                    <div className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4 md:mb-0">
-                        <Link href="/" className="hover:text-primary/70 font-medium">Books</Link>
-                        <span className="text-muted-foreground">/</span>
-                        <span className="font-bold text-primary">{book.name}</span>
-                    </div>
+                    <Sheet open={navOpen} onOpenChange={setNavOpen}>
+                        <SheetTrigger asChild>
+                            <button className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4 md:mb-0 hover:text-primary transition-colors group">
+                                <BookOpen className="h-4 w-4 text-primary" />
+                                <span className="font-medium">Books</span>
+                                <span className="text-muted-foreground">/</span>
+                                <span className="font-bold text-primary">{book.name}</span>
+                                <span className="text-muted-foreground">/</span>
+                                <span className="font-medium">Ch. {chapter.number}</span>
+                                <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-[320px] sm:w-[400px] p-0">
+                            <SheetHeader className="p-6 border-b">
+                                <SheetTitle className="text-left font-serif">Scripture Navigation</SheetTitle>
+                            </SheetHeader>
+                            <ScrollArea className="h-[calc(100vh-80px)]">
+                                <div className="p-4">
+                                    {/* Old Testament */}
+                                    <div className="mb-6">
+                                        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-2">Old Testament</h3>
+                                        {allBooks.filter(b => b.position <= 39).map((navBook) => (
+                                            <div key={navBook.id} className="mb-1">
+                                                <button
+                                                    onClick={() => setExpandedBook(expandedBook === navBook.abbreviation ? null : navBook.abbreviation)}
+                                                    className={cn(
+                                                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                                                        navBook.abbreviation === book.abbreviation
+                                                            ? "bg-primary/10 text-primary font-medium"
+                                                            : "hover:bg-muted"
+                                                    )}
+                                                >
+                                                    <span>{navBook.name}</span>
+                                                    <ChevronRight className={cn(
+                                                        "h-4 w-4 transition-transform",
+                                                        expandedBook === navBook.abbreviation && "rotate-90"
+                                                    )} />
+                                                </button>
+                                                {expandedBook === navBook.abbreviation && (
+                                                    <div className="grid grid-cols-6 gap-1 p-2 ml-2 border-l border-border">
+                                                        {Array.from({ length: navBook.chapters_count }, (_, i) => i + 1).map((chNum) => (
+                                                            <Link
+                                                                key={chNum}
+                                                                href={`/bible/${navBook.abbreviation}/${chNum}`}
+                                                                onClick={() => setNavOpen(false)}
+                                                                className={cn(
+                                                                    "w-8 h-8 flex items-center justify-center rounded text-xs font-medium transition-colors",
+                                                                    navBook.abbreviation === book.abbreviation && chNum === chapter.number
+                                                                        ? "bg-primary text-primary-foreground"
+                                                                        : "hover:bg-muted"
+                                                                )}
+                                                            >
+                                                                {chNum}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* New Testament */}
+                                    <div>
+                                        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-2">New Testament</h3>
+                                        {allBooks.filter(b => b.position > 39).map((navBook) => (
+                                            <div key={navBook.id} className="mb-1">
+                                                <button
+                                                    onClick={() => setExpandedBook(expandedBook === navBook.abbreviation ? null : navBook.abbreviation)}
+                                                    className={cn(
+                                                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                                                        navBook.abbreviation === book.abbreviation
+                                                            ? "bg-primary/10 text-primary font-medium"
+                                                            : "hover:bg-muted"
+                                                    )}
+                                                >
+                                                    <span>{navBook.name}</span>
+                                                    <ChevronRight className={cn(
+                                                        "h-4 w-4 transition-transform",
+                                                        expandedBook === navBook.abbreviation && "rotate-90"
+                                                    )} />
+                                                </button>
+                                                {expandedBook === navBook.abbreviation && (
+                                                    <div className="grid grid-cols-6 gap-1 p-2 ml-2 border-l border-border">
+                                                        {Array.from({ length: navBook.chapters_count }, (_, i) => i + 1).map((chNum) => (
+                                                            <Link
+                                                                key={chNum}
+                                                                href={`/bible/${navBook.abbreviation}/${chNum}`}
+                                                                onClick={() => setNavOpen(false)}
+                                                                className={cn(
+                                                                    "w-8 h-8 flex items-center justify-center rounded text-xs font-medium transition-colors",
+                                                                    navBook.abbreviation === book.abbreviation && chNum === chapter.number
+                                                                        ? "bg-primary text-primary-foreground"
+                                                                        : "hover:bg-muted"
+                                                                )}
+                                                            >
+                                                                {chNum}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </ScrollArea>
+                        </SheetContent>
+                    </Sheet>
 
                     <div className="flex items-center gap-4">
                         <Button

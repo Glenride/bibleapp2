@@ -14,6 +14,14 @@ export interface Book {
     image: string | null;
 }
 
+export interface BookNav {
+    id: number;
+    name: string;
+    abbreviation: string;
+    position: number;
+    chapters_count: number;
+}
+
 export interface Chapter {
     id: number;
     book_id: number;

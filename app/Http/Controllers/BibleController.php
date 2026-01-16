@@ -102,6 +102,26 @@ class BibleController extends Controller
                 ->first();
         }
 
+        // Get all books with chapter counts for navigation
+        $allBooks = $version->books()
+            ->orderBy('position')
+            ->withCount('chapters')
+            ->get()
+            ->map(function ($b) {
+                return [
+                    'id' => $b->id,
+                    'name' => $b->name,
+                    'abbreviation' => $b->abbreviation,
+                    'position' => $b->position,
+                    'chapters_count' => $b->chapters_count,
+                ];
+            });
+
+        // Get all chapters for current book
+        $bookChapters = $book->chapters()
+            ->orderBy('number')
+            ->get(['id', 'number']);
+
         return Inertia::render('Bible/Chapter', [
             'book' => $book,
             'chapter' => $chapter,
@@ -109,6 +129,8 @@ class BibleController extends Controller
             'prev_link' => $prevLink,
             'next_link' => $nextLink,
             'userInteractions' => $userInteractions,
+            'allBooks' => $allBooks,
+            'bookChapters' => $bookChapters,
         ]);
     }
 }
