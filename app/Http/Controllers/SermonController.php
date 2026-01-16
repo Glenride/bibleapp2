@@ -234,6 +234,17 @@ class SermonController extends Controller
             'position' => $position,
         ]);
 
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->lessonGenerator->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            // Log::error("Failed to update sermon analysis: " . $e->getMessage());
+        }
+
         return back()->with('success', 'Lesson added to sermon!');
     }
 
@@ -258,6 +269,17 @@ class SermonController extends Controller
 
         $sermon->lessons()->where('position', '>', $lesson->position)
             ->decrement('position');
+
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->lessonGenerator->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            // Log::error("Failed to update sermon analysis: " . $e->getMessage());
+        }
 
         return back()->with('success', 'Lesson removed from sermon.');
     }

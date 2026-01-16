@@ -247,23 +247,32 @@ PROMPT;
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
-You are a wise theologian and pastor. I need you to analyze a series of Bible study lessons that form a complete sermon series.
-Your goal is to identify the overarching prophetic or spiritual theme that connects all these lessons and write a culminating analysis.
+You are a scholarly expository preacher and theologian. You have a series of Bible study lessons that form a coherent sermon series.
+Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document that follows the homiletical structure of "Sermon Design and Structure".
 
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
 
-LESSONS IN THIS SERIES:
+LESSONS (to be used as main points):
 {$lessonsContext}
 
-Please provide:
-1. An overarching "Detected Theme" (3-5 words) that unifies all these lessons.
-2. A "Spiritual Analysis" (approx. 200-300 words). This should read like a powerful conclusion to the sermon series, summarizing the journey the student has taken through these lessons and offering a final, life-changing takeaway. It should feel like the "alter call" or the moment of realization.
+REQUIRED MASTER SERMON STRUCTURE:
+1.  **Proposition**: A unifying theme or "big idea" that ties all the lessons together into one message.
+2.  **Introduction**:
+    *   Introduce the series theme.
+    *   Provide context for the journey through these lessons.
+3.  **Main Points (The Lessons)**:
+    *   Treat each Lesson as a major movement or Main Point in this master sermon.
+    *   For each point (Lesson), provide a **Synthesized Explanation** and **Application** that connects it back to the main Proposition.
+    *   Do not just copy the lesson content; summarize its spiritual essence and how it fits the whole.
+4.  **Conclusion**:
+    *   A powerful culpritinating analysis.
+    *   Final "Altar Call" or life-changing takeaway.
 
 Format your response as JSON:
 {
-  "detected_theme": "The unifying theme",
-  "analysis": "The spiritual analysis text..."
+  "detected_theme": "The unifying proposition",
+  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections (Introduction, Main Points, Conclusion) and H3 for the individual Lesson points."
 }
 PROMPT;
 
