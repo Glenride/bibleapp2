@@ -27,11 +27,27 @@ class EnsureSecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        // Basic CSP - Adjust as needed for external scripts (like analytics or fonts)
-        // Allowing 'unsafe-inline' for styles because many UI libraries use it, and fonts from data:
-        // Allowing scripts from 'self' and inline (Inertia often needs inline scripts for initial page state)
-        // This is a starting point and should be tightened based on specific needs.
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:5173 http://localhost:5174 http://0.0.0.0:5173 http://127.0.0.1:5173; style-src 'self' 'unsafe-inline' https://fonts.bunny.net http://localhost:5173 http://localhost:5174 http://0.0.0.0:5173 http://127.0.0.1:5173; font-src 'self' https://fonts.bunny.net data: http://localhost:5173 http://localhost:5174 http://0.0.0.0:5173 http://127.0.0.1:5173; img-src 'self' data: https: http://localhost:5173 http://localhost:5174 http://0.0.0.0:5173 http://127.0.0.1:5173; connect-src 'self' http://localhost:5173 ws://localhost:5173 http://localhost:5174 ws://localhost:5174 http://0.0.0.0:5173 ws://0.0.0.0:5173 http://127.0.0.1:5173 ws://127.0.0.1:5173;");
+        // Build CSP based on environment
+        $isLocal = app()->environment('local');
+        
+        // Dev server URLs only needed in local development
+        $devServers = $isLocal 
+            ? 'http://localhost:5173 http://localhost:5174 http://0.0.0.0:5173 http://127.0.0.1:5173'
+            : '';
+        $devWs = $isLocal
+            ? 'ws://localhost:5173 ws://localhost:5174 ws://0.0.0.0:5173 ws://127.0.0.1:5173'
+            : '';
+        
+        $csp = implode('; ', array_filter([
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'" . ($devServers ? " $devServers" : ''),
+            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net" . ($devServers ? " $devServers" : ''),
+            "font-src 'self' https://fonts.bunny.net data:" . ($devServers ? " $devServers" : ''),
+            "img-src 'self' data: https:" . ($devServers ? " $devServers" : ''),
+            "connect-src 'self'" . ($devServers ? " $devServers $devWs" : ''),
+        ]));
+        
+        $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
     }
