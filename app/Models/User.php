@@ -15,6 +15,10 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable, Billable;
 
+    public const TRIAL_PLAN_PRICE_ID = 'price_1SqIvELenlwJrzcOf7LO0U6T';
+    public const PRO_PLAN_PRICE_ID = 'price_1SqIgxLenlwJrzcOw7OEiD4n';
+    public const BASIC_PLAN_PRICE_ID = 'price_1SqIgMLenlwJrzcOoUWAw2qf';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -68,6 +72,40 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin || $this->isSuperAdmin();
+    }
+
+    public function currentPlan(): string
+    {
+        $subscription = $this->subscription('default');
+
+        if (!$subscription || !$subscription->valid()) {
+            return 'none';
+        }
+
+        if ($subscription->hasPrice(self::TRIAL_PLAN_PRICE_ID)) {
+            return 'trial';
+        }
+
+        if ($subscription->hasPrice(self::PRO_PLAN_PRICE_ID)) {
+            return 'pro';
+        }
+
+        if ($subscription->hasPrice(self::BASIC_PLAN_PRICE_ID)) {
+            return 'basic';
+        }
+
+        return 'none';
+    }
+
+    public function hasProAccess(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+
+        return $plan === 'pro' || $plan === 'trial';
     }
 
     public function highlights()

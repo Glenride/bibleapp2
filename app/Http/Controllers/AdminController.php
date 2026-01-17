@@ -19,15 +19,10 @@ class AdminController extends Controller
                 $currentPlan = 'none';
                 $subscriptionEndsAt = null;
 
+                $currentPlan = $user->currentPlan();
+
                 if ($user->subscribed('default')) {
                     $subscription = $user->subscription('default');
-                    if ($subscription->hasPrice('price_1SqIvELenlwJrzcOf7LO0U6T')) {
-                        $currentPlan = 'trial';
-                    } elseif ($subscription->hasPrice('price_1SqIgxLenlwJrzcOw7OEiD4n')) {
-                        $currentPlan = 'pro';
-                    } elseif ($subscription->hasPrice('price_1SqIgMLenlwJrzcOoUWAw2qf')) {
-                        $currentPlan = 'basic';
-                    }
                     if ($subscription->asStripeSubscription()->current_period_end ?? null) {
                         $subscriptionEndsAt = \Carbon\Carbon::createFromTimestamp(
                             $subscription->asStripeSubscription()->current_period_end
@@ -88,7 +83,7 @@ class AdminController extends Controller
         }
 
         // Create new subscription with the free trial price
-        $user->newSubscription('default', 'price_1SqIvELenlwJrzcOf7LO0U6T')
+        $user->newSubscription('default', User::TRIAL_PLAN_PRICE_ID)
             ->create();
 
         return back()->with('success', "Free trial assigned to {$user->name}.");

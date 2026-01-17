@@ -14,7 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface SubscriptionProps {
-    currentPlan: 'none' | 'basic' | 'pro';
+    currentPlan: 'none' | 'basic' | 'pro' | 'trial';
     subscriptionEndsAt?: string;
 }
 
@@ -43,6 +43,7 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                     {currentPlan === 'none' && 'No active subscription'}
                                     {currentPlan === 'basic' && 'Basic - $7/month'}
                                     {currentPlan === 'pro' && 'Journal Pro - $27/month'}
+                                    {currentPlan === 'trial' && 'Trial - Free'}
                                 </p>
                                 {subscriptionEndsAt && (
                                     <p className="text-muted-foreground text-xs mt-2">
@@ -61,6 +62,11 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                         <Check className="size-4" /> Active
                                     </span>
                                 )}
+                                {currentPlan === 'trial' && (
+                                    <span className="flex items-center gap-1 text-amber-600 text-sm font-medium">
+                                        <Sparkles className="size-4" /> Trial
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -69,12 +75,14 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                     {currentPlan !== 'pro' && (
                         <div className="space-y-4">
                             <h3 className="text-sm font-medium text-muted-foreground">
-                                {currentPlan === 'none' ? 'Choose a Plan' : 'Upgrade Your Plan'}
+                                {currentPlan === 'none' || currentPlan === 'trial'
+                                    ? 'Choose a Plan'
+                                    : 'Upgrade Your Plan'}
                             </h3>
 
                             <div className="grid gap-4">
                                 {/* Basic Plan */}
-                                {currentPlan === 'none' && (
+                                {(currentPlan === 'none' || currentPlan === 'trial') && (
                                     <div className="rounded-lg border border-border/50 bg-card p-6">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">

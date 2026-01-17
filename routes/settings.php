@@ -28,17 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/subscription', function () {
         $user = auth()->user();
-        $currentPlan = 'none';
+        $currentPlan = $user->currentPlan();
         $subscriptionEndsAt = null;
 
         if ($user->subscribed('default')) {
             $subscription = $user->subscription('default');
-            // Determine plan based on price ID
-            if ($subscription->hasPrice('price_1SqIgxLenlwJrzcOw7OEiD4n')) {
-                $currentPlan = 'pro';
-            } elseif ($subscription->hasPrice('price_1SqIgMLenlwJrzcOoUWAw2qf')) {
-                $currentPlan = 'basic';
-            }
             if ($subscription->ends_at) {
                 $subscriptionEndsAt = $subscription->ends_at->format('M d, Y');
             } elseif ($subscription->asStripeSubscription()->current_period_end) {

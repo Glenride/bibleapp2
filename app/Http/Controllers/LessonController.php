@@ -97,6 +97,10 @@ class LessonController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->hasProAccess()) {
+            return back()->with('error', 'Pro plan required to generate AI lessons.');
+        }
+
         if ($request->sermon_id) {
             $sermon = $user->sermons()->findOrFail($request->sermon_id);
             Gate::authorize('update', $sermon);

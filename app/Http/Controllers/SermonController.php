@@ -49,6 +49,10 @@ class SermonController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->hasProAccess()) {
+            return back()->with('error', 'Pro plan required to generate AI sermons.');
+        }
+
         try {
             $sermon = $this->lessonGenerator->generateSermon($user, $request->title, [
                 'description' => $request->description,
