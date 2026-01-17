@@ -233,15 +233,15 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                     Generate Lesson
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
-                                <form onSubmit={generateLesson} className="flex flex-col flex-1 overflow-hidden">
+                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col min-h-0">
+                                <form onSubmit={generateLesson} className="flex flex-col flex-1 overflow-hidden min-h-0">
                                     <DialogHeader>
                                         <DialogTitle>Generate a Lesson</DialogTitle>
                                         <DialogDescription>
                                             Select verses from your highlights and favorites to include in your lesson.
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <div className="flex flex-col gap-4 py-4 flex-1 overflow-hidden">
+                                    <div className="flex flex-col gap-4 py-4 flex-1 overflow-hidden min-h-0">
                                         <div className="grid gap-2">
                                             <Label htmlFor="theme">Theme (Optional)</Label>
                                             <Input
@@ -252,7 +252,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                             />
                                         </div>
 
-                                        <Tabs defaultValue="highlights" className="flex-1 flex flex-col overflow-hidden">
+                                        <Tabs defaultValue="highlights" className="flex-1 flex flex-col overflow-hidden min-h-0">
                                             <TabsList className="w-full">
                                                 <TabsTrigger value="highlights" className="flex-1 gap-2">
                                                     <Highlighter size={14} />
@@ -263,7 +263,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                     Favorites ({selectedFavorites.length}/{favorites.length})
                                                 </TabsTrigger>
                                             </TabsList>
-                                            <TabsContent value="highlights" className="flex-1 overflow-hidden">
+                                            <TabsContent value="highlights" className="flex-1 overflow-hidden min-h-0">
                                                 <div className="border rounded-lg overflow-hidden h-full flex flex-col">
                                                     <div className="p-2 bg-muted/50 border-b flex justify-between items-center">
                                                         <span className="text-sm text-muted-foreground">
@@ -275,7 +275,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="flex-1">
+                                                    <ScrollArea className="flex-1 min-h-0">
                                                         <div className="p-2 space-y-1">
                                                             {highlights.map((item) => (
                                                                 <SelectableSourceItem
@@ -289,7 +289,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                     </ScrollArea>
                                                 </div>
                                             </TabsContent>
-                                            <TabsContent value="favorites" className="flex-1 overflow-hidden">
+                                            <TabsContent value="favorites" className="flex-1 overflow-hidden min-h-0">
                                                 <div className="border rounded-lg overflow-hidden h-full flex flex-col">
                                                     <div className="p-2 bg-muted/50 border-b flex justify-between items-center">
                                                         <span className="text-sm text-muted-foreground">
@@ -301,7 +301,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="flex-1">
+                                                    <ScrollArea className="flex-1 min-h-0">
                                                         <div className="p-2 space-y-1">
                                                             {favorites.map((item) => (
                                                                 <SelectableSourceItem

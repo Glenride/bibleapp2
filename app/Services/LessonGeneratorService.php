@@ -79,7 +79,18 @@ class LessonGeneratorService
                 'sermon_id' => $sermon->id,
             ]);
         }
-
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+            ]);
+        } catch (
+            \Exception $e
+        ) {
+            // Silently fail analysis generation so we don't block sermon creation
+        }
         return $sermon->load('lessons');
     }
 
@@ -118,7 +129,6 @@ class LessonGeneratorService
             return $context;
         })->implode("\n\n");
     }
-
     protected function formatReference($verse): string
     {
         $book = $verse->chapter->book->name ?? 'Unknown';
@@ -135,16 +145,11 @@ class LessonGeneratorService
 
         return <<<PROMPT
 You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis. You are designing a lesson based on specific verses a user has highlighted.
-
-OBJECTIVE:
-Create a structured expository lesson that strictly follows the homiletical design principles of "Sermon Design and Structure".
-
+OBJECTIVE: Create a structured expository lesson that strictly follows the homiletical design principles of "Sermon Design and Structure". Aim for about 700 words (650-750).
 INPUT CONTEXT:
 {$themeInstruction}
-
 VERSES THE READER HAS MARKED:
 {$versesContext}
-
 REQUIRED LESSON STRUCTURE:
 1.  **Proposition**: A single, clear sentence that states the timeless truth of the lesson (the "big idea").
 2.  **Introduction**:
@@ -167,20 +172,19 @@ Format your response as JSON with this exact structure:
   "detected_theme": "The proposition/theme used",
   "content": "The full lesson content in rigorous markdown format, using headers (##, ###) for the sections described above. Ensure the distinctions between Explanation, Application, and Illustration are clear within each point."
 }
-
 Make the tone spirutuallly nourishing but intellectually rigorous and structured.
 PROMPT;
     }
 
-    protected function callOpenAI(string $prompt): array
+    protected function callOpenAI(string $prompt, int $maxCompletionTokens = 2000): array
     {
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-5-mini',
+            'model' => 'gpt-5.2',
             'messages' => [
                 ['role' => 'system', 'content' => 'You are a thoughtful Bible study teacher. Always respond with valid JSON.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'max_completion_tokens' => 2000,
+            'max_completion_tokens' => $maxCompletionTokens,
         ]);
 
         $content = $response->choices[0]->message->content;
@@ -219,7 +223,7 @@ Example: ["God's Faithfulness", "Finding Peace", "Living with Purpose"]
 PROMPT;
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-5-mini',
+            'model' => 'gpt-5.2',
             'messages' => [
                 ['role' => 'system', 'content' => 'You analyze Bible verses and identify themes. Respond only with a JSON array.'],
                 ['role' => 'user', 'content' => $prompt],
@@ -245,15 +249,11 @@ PROMPT;
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
-You are a scholarly expository preacher and theologian. You have a series of Bible study lessons that form a coherent sermon series.
-Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document that follows the homiletical structure of "Sermon Design and Structure".
-
+You are a scholarly expository preacher and theologian. You have a series of Bible study lessons that form a coherent sermon series. Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document that follows the homiletical structure of "Sermon Design and Structure". Write at least 1000 words and include a final "Reflection & Writing Prompts" section (3-5 prompts) to inspire the reader's own writing.
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
-
 LESSONS (to be used as main points):
 {$lessonsContext}
-
 REQUIRED MASTER SERMON STRUCTURE:
 1.  **Proposition**: A unifying theme or "big idea" that ties all the lessons together into one message.
 2.  **Introduction**:
@@ -266,15 +266,16 @@ REQUIRED MASTER SERMON STRUCTURE:
 4.  **Conclusion**:
     *   A powerful culpritinating analysis.
     *   Final "Altar Call" or life-changing takeaway.
+5.  **Reflection & Writing Prompts**:
+    *   3-5 prompts that invite personal writing and spiritual reflection.
 
 Format your response as JSON:
 {
   "detected_theme": "The unifying proposition",
-  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections (Introduction, Main Points, Conclusion) and H3 for the individual Lesson points."
+  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections (Introduction, Main Points, Conclusion, Reflection & Writing Prompts) and H3 for the individual Lesson points."
 }
 PROMPT;
-
-        $response = $this->callOpenAI($prompt);
+        $response = $this->callOpenAI($prompt, 3000);
 
         if (isset($response['detected_theme']) && isset($response['analysis'])) {
             return $response;
