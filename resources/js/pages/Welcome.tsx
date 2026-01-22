@@ -40,7 +40,49 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     return (
         <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
-            <Head title="Home" />
+            <Head title="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling">
+                <meta name="description" content="InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features Zen mode reading, verse highlighting, and AI sermon generation." />
+                <meta name="keywords" content="Bible app, Bible reading, spiritual journaling, AI sermon generator, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
+                <meta property="og:title" content="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling" />
+                <meta property="og:description" content="The AI-powered Bible reading and spiritual journaling companion for modern believers." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://inspirewrite.online" />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "SoftwareApplication",
+                        "name": "InspireWrite",
+                        "alternateName": "InspireWrite by Glenride",
+                        "applicationCategory": "ReligiousApplication",
+                        "operatingSystem": "Web",
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "0",
+                            "priceCurrency": "USD"
+                        },
+                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Zen mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
+                        "featureList": [
+                            "Complete Bible Access with 66 books",
+                            "Distraction-free Zen reading mode",
+                            "Color-coded verse highlighting",
+                            "Verse favorites and bookmarks",
+                            "Personal notes on any verse",
+                            "AI-powered sermon generation",
+                            "AI-powered lesson creation",
+                            "Spiritual journaling dashboard"
+                        ],
+                        "creator": {
+                            "@type": "Organization",
+                            "name": "Glenride",
+                            "founder": {
+                                "@type": "Person",
+                                "name": "D'Vaughn House"
+                            }
+                        },
+                        "url": "https://inspirewrite.online"
+                    })
+                }} />
+            </Head>
 
             {/* Navigation */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-[#F5F2EA]/95 backdrop-blur-sm border-b border-black/5">
@@ -112,8 +154,11 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         <h1 className="text-6xl md:text-8xl font-bold leading-[0.9] mb-6" style={{ fontFamily: 'DM Serif Display, serif' }}>
                             INSPIRE<span className="text-yellow-500">WRITE</span>.
                         </h1>
-                        <p className="text-xl text-gray-600 mb-8 max-w-md leading-relaxed">
-                            A spiritual writing companion for your journey. Read scripture, journal your thoughts, and create meaningful lessons.
+                        <p className="text-xl text-gray-600 mb-4 max-w-md leading-relaxed">
+                            The AI-powered Bible reading and spiritual journaling companion for modern believers.
+                        </p>
+                        <p className="text-lg text-gray-500 mb-8 max-w-md leading-relaxed">
+                            Read all 66 books in distraction-free Zen mode. Highlight verses, capture reflections, and generate sermons with AI assistance.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link

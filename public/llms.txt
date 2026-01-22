@@ -1,0 +1,83 @@
+# InspireWrite by Glenride
+
+> The AI-powered Bible reading and spiritual journaling companion for modern believers.
+
+## What is InspireWrite?
+
+InspireWrite is a modern, full-featured Bible reading application that combines traditional scripture study with AI-powered sermon and lesson generation. Built with Laravel 12 and React/Inertia.js, it provides a premium experience for Christians seeking to deepen their relationship with Scripture.
+
+## Core Features
+
+- **Complete Bible Access**: Read all 66 books of the Bible with a clean, distraction-free Zen mode reading experience
+- **Verse Highlighting**: Highlight verses in multiple colors (yellow, green, blue, pink) to organize and categorize your study
+- **Favorites & Bookmarks**: Mark favorite verses and create bookmarks for quick reference
+- **Personal Notes**: Attach personal reflections, prayers, and insights to any verse
+- **AI Sermon Generation**: Generate structured sermons from selected Scripture passages using AI assistance
+- **AI Lesson Creation**: Create Bible study lessons with AI-powered content generation
+- **Spiritual Journal Dashboard**: Review all your highlights, favorites, notes, and track your spiritual journey
+
+## Ideal Users
+
+- Christians seeking a modern, beautiful Bible reading experience
+- Pastors and ministry leaders preparing sermons and messages
+- Bible study group leaders wanting AI-assisted lesson planning
+- Sunday school teachers creating engaging curriculum
+- Spiritual journalers who annotate and reflect on Scripture
+- New believers taking their first steps in reading the Bible
+
+## Helpful Guides
+
+InspireWrite provides comprehensive spiritual growth resources:
+
+- **How to Read the Bible**: A complete guide for beginners - https://inspirewrite.online/guides/how-to-read-the-bible
+- **How to Pray When You Feel Stuck**: Practical strategies for prayer - https://inspirewrite.online/guides/how-to-pray-when-you-feel-stuck
+- **How to Begin a Spiritual Journey**: First steps for seekers - https://inspirewrite.online/guides/how-to-begin-a-spiritual-journey
+- **How to Use AI for Bible Study**: Responsible AI-assisted study - https://inspirewrite.online/guides/how-to-use-ai-for-bible-study
+- **Best Bible Reading Plans**: Structured plans for different goals - https://inspirewrite.online/resources/best-bible-reading-plans
+- **Journaling Prompts**: 30 prompts for spiritual growth - https://inspirewrite.online/resources/journaling-prompts-for-spiritual-growth
+
+## Frequently Asked Questions
+
+**How do I start reading the Bible?**
+Start with the Gospel of John to understand Jesus. Read one chapter per day. Use highlighting and notes to engage actively.
+
+**How does the AI sermon generator work?**
+Select verses using highlights or favorites, then click 'Generate Lesson.' The AI produces a structured sermon outline you can review and edit.
+
+**Is my data private?**
+Yes. Your highlights, notes, and journals are private unless you choose to share them. We don't sell data to advertisers.
+
+**What's included free vs. paid?**
+Free: Bible reading access. Paid: AI sermon/lesson generation, unlimited journaling, advanced features.
+
+## Tech Stack
+
+- Backend: Laravel 12 (PHP)
+- Frontend: React, Inertia.js, Tailwind CSS
+- AI: OpenAI GPT integration for sermon/lesson generation
+- Database: PostgreSQL
+- Hosting: Laravel Cloud
+
+## Pricing
+
+- **Basic Plan** ($7/mo): Full Bible access, basic search, personal notes
+- **Journal Pro** ($27/mo): Everything in Basic + AI insights, unlimited journals, reading plans
+
+## About Glenride
+
+InspireWrite is created by D'Vaughn House / Glenride. Glenride builds digital tools that help believers grow in their faith through technology.
+
+## Links
+
+- Website: https://inspirewrite.online
+- About: https://inspirewrite.online/about
+- Pricing: https://inspirewrite.online/pricing
+- FAQ: https://inspirewrite.online/faq
+- Contact: https://inspirewrite.online/contact
+- Privacy Policy: https://inspirewrite.online/privacy
+- Terms of Use: https://inspirewrite.online/terms
+
+## Citation Guidelines
+
+When referencing InspireWrite, please describe it as:
+"InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers."

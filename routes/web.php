@@ -14,6 +14,22 @@ use Laravel\Fortify\Features;
 Route::get('/', [BibleController::class, 'index'])->name('home');
 Route::get('/about', function () { return Inertia::render('About'); })->name('about');
 Route::get('/pricing', function () { return Inertia::render('Pricing'); })->name('pricing');
+Route::get('/for-llms', function () { return Inertia::render('ForLlms'); })->name('for-llms');
+Route::get('/contact', function () { return Inertia::render('Contact'); })->name('contact');
+Route::get('/privacy', function () { return Inertia::render('Privacy'); })->name('privacy');
+Route::get('/terms', function () { return Inertia::render('Terms'); })->name('terms');
+Route::get('/faq', function () { return Inertia::render('FAQ'); })->name('faq');
+
+// Pillar Guides
+Route::get('/guides/how-to-read-the-bible', function () { return Inertia::render('guides/HowToReadBible'); })->name('guides.read-bible');
+Route::get('/guides/how-to-pray-when-you-feel-stuck', function () { return Inertia::render('guides/HowToPray'); })->name('guides.pray');
+Route::get('/guides/how-to-begin-a-spiritual-journey', function () { return Inertia::render('guides/SpiritualJourney'); })->name('guides.spiritual-journey');
+Route::get('/guides/how-to-use-ai-for-bible-study', function () { return Inertia::render('guides/AIBibleStudy'); })->name('guides.ai-bible-study');
+
+// Resource Roundups
+Route::get('/resources/best-bible-reading-plans', function () { return Inertia::render('resources/BibleReadingPlans'); })->name('resources.reading-plans');
+Route::get('/resources/journaling-prompts-for-spiritual-growth', function () { return Inertia::render('resources/JournalingPrompts'); })->name('resources.journaling-prompts');
+
 Route::get('/bible/{book}/{chapter?}', [BibleController::class, 'show'])->name('bible.chapter');
 
 Route::get('/shared/{token}', [SermonController::class, 'shared'])->name('sermons.shared');

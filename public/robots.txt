@@ -1,4 +1,23 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://your-domain.com/sitemap.xml
+# Allow AI/LLM scrapers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://inspirewrite.online/sitemap.xml
