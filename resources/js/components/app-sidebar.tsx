@@ -39,7 +39,13 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const footerNavItems: NavItem[] = [];
+const footerNavItems: NavItem[] = [
+    {
+        title: 'FAQ',
+        href: '/faq',
+        icon: BookOpen,
+    },
+];
 
 export function AppSidebar() {
     return (
