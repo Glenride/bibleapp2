@@ -59,10 +59,46 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
         return false;
     });
 
+    // Track verse to highlight from URL hash (e.g., #verse-5)
+    const [highlightedVerseNum, setHighlightedVerseNum] = useState<number | null>(() => {
+        if (typeof window !== 'undefined') {
+            const hash = window.location.hash;
+            const match = hash.match(/^#verse-(\d+)$/);
+            return match ? parseInt(match[1], 10) : null;
+        }
+        return null;
+    });
+
     // Persist Zen Mode changes
     useEffect(() => {
         localStorage.setItem('bible-zen-mode', String(zenMode));
     }, [zenMode]);
+
+    // Scroll to highlighted verse on mount or when hash changes
+    useEffect(() => {
+        if (highlightedVerseNum !== null) {
+            const verseElement = document.getElementById(`verse-${highlightedVerseNum}`);
+            if (verseElement) {
+                // Small delay to ensure DOM is ready
+                setTimeout(() => {
+                    verseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+                // Clear highlight after a few seconds
+                setTimeout(() => {
+                    setHighlightedVerseNum(null);
+                }, 4000);
+            }
+        }
+    }, [highlightedVerseNum]);
+
+    // Close selection when changing chapters
+    useEffect(() => {
+        setSelectedVerseId(null);
+        // Update highlighted verse from new URL hash
+        const hash = window.location.hash;
+        const match = hash.match(/^#verse-(\d+)$/);
+        setHighlightedVerseNum(match ? parseInt(match[1], 10) : null);
+    }, [chapter.id]);
 
     const [noteDialog, setNoteDialog] = useState<NoteDialogState>({
         isOpen: false,
@@ -71,11 +107,6 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
         initialNote: '',
     });
     const [noteContent, setNoteContent] = useState('');
-
-    // Close selection when changing chapters
-    useEffect(() => {
-        setSelectedVerseId(null);
-    }, [chapter.id]);
 
     useEffect(() => {
         if (noteDialog.isOpen) {
@@ -423,11 +454,13 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                         return (
                             <span
                                 key={verse.id}
+                                id={`verse-${verse.number}`}
                                 onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
                                 className={cn(
                                     "relative inline transition-colors duration-200 cursor-pointer select-text decoration-clone p-0.5 rounded box-decoration-clone",
                                     highlight ? getHighlightColor(highlight.color) : "hover:bg-black/5 dark:hover:bg-white/5",
-                                    isSelected && "bg-black/10 dark:bg-white/10"
+                                    isSelected && "bg-black/10 dark:bg-white/10",
+                                    highlightedVerseNum === verse.number && "ring-2 ring-primary ring-offset-2 bg-primary/10 animate-pulse"
                                 )}
                             >
                                 <sup className={cn(

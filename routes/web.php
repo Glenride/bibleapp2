@@ -6,6 +6,7 @@ use App\Http\Controllers\BibleInteractionController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SermonController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('billing-portal');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
 
     Route::post('/bible/highlight', [BibleInteractionController::class, 'toggleHighlight'])->name('bible.highlight');
     Route::post('/bible/favorite', [BibleInteractionController::class, 'toggleFavorite'])->name('bible.favorite');
