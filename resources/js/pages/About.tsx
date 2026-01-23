@@ -137,7 +137,7 @@ export default function About() {
                         </div>
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">
                             <Sparkles className="text-yellow-500 mb-4" size={32} />
-                            <h3 className="text-lg font-bold uppercase tracking-wider mb-2">AI-Powered Lessons</h3>
+                            <h3 className="text-lg font-bold uppercase tracking-wider mb-2">The Assistant</h3>
                             <p className="text-gray-600 leading-relaxed">Transform your Bible study into structured lessons and sermons with intelligent AI assistance. Save hours of preparation time.</p>
                         </div>
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">

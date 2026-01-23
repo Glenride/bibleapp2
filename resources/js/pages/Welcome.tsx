@@ -21,7 +21,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     const features = [
         { num: '01', title: 'Scripture Reading', desc: 'Immerse yourself in the Word with a distraction-free reading experience' },
         { num: '02', title: 'Personal Journaling', desc: 'Capture your spiritual insights, prayers, and reflections' },
-        { num: '03', title: 'Lesson Creation', desc: 'Transform your study into structured lessons powered by AI' },
+        { num: '03', title: 'The Assistant', desc: 'Transform your study into structured lessons powered by AI' },
         { num: '04', title: 'Sermon Builder', desc: 'Craft meaningful sermons with intelligent assistance' },
     ];
 
@@ -35,7 +35,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     const testimonials = [
         { quote: 'InspireWrite has transformed how I study and reflect on Scripture. The journaling features are incredible.', author: 'Sarah M.', role: 'Bible Study Leader' },
         { quote: 'Finally, a platform that combines reading, studying, and writing in one beautiful experience.', author: 'Pastor David', role: 'Church Pastor' },
-        { quote: 'The AI-powered lesson generator saves me hours of preparation time each week.', author: 'Michelle K.', role: 'Sunday School Teacher' },
+        { quote: 'The Assistant saves me hours of preparation time each week.', author: 'Michelle K.', role: 'Sunday School Teacher' },
     ];
 
     return (

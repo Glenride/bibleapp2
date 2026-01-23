@@ -214,7 +214,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
 
                 {/* Header */}
                 <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border p-8 bg-card shadow-sm">
-                    <h2 className="text-2xl font-serif font-bold mb-4">AI Bible Study</h2>
+                    <h2 className="text-2xl font-serif font-bold mb-4">The Assistant</h2>
                     <p className="max-w-2xl text-muted-foreground leading-relaxed">
                         Transform your highlights, favorites, and notes into personalized Bible study lessons using AI.
                         Combine lessons into sermons to create complete Bible studies you can share with friends.

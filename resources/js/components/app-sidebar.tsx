@@ -33,7 +33,7 @@ const mainNavItems: NavItem[] = [
         icon: BookOpen,
     },
     {
-        title: 'AI Lessons',
+        title: 'The Assistant',
         href: '/lessons',
         icon: Sparkles,
     },
