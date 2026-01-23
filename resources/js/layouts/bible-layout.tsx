@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import { SharedData } from '@/types';
 import { cn } from '@/lib/utils';
 import { FlashToaster } from '@/components/flash-toaster';
+import { SiteFooter } from '@/components/site-footer';
 import { about, pricing } from '@/routes';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
@@ -85,44 +86,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                 {children}
             </main>
 
-            {/* Footer */}
-            <footer className={cn(
-                "bg-[#1a1a1a] text-white px-6 md:px-12 transition-all duration-500 overflow-hidden",
-                zenMode ? "max-h-0 py-0 opacity-0 border-none" : "max-h-[1000px] py-12 opacity-100 mt-auto"
-            )}>
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="col-span-1 md:col-span-2">
-                        <h3 className="text-xl tracking-[0.2em] uppercase mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            INSPIREWRITE.
-                        </h3>
-                        <p className="text-sm text-gray-400 leading-relaxed max-w-md">
-                            A spiritual writing companion by Glenride. Read scripture, journal your thoughts, and create meaningful lessons.
-                        </p>
-                    </div>
-
-                    <div className="col-span-1">
-                        <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Quick Links</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/" className="text-gray-300 hover:text-yellow-500 transition-colors">Home</Link></li>
-                            <li><Link href={about.url()} className="text-gray-300 hover:text-yellow-500 transition-colors">About</Link></li>
-                            <li><Link href={pricing.url()} className="text-gray-300 hover:text-yellow-500 transition-colors">Pricing</Link></li>
-                            <li><Link href="/bible/gn/1" className="text-gray-300 hover:text-yellow-500 transition-colors">Scripture</Link></li>
-                        </ul>
-                    </div>
-
-                    <div className="col-span-1">
-                        <h4 className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Connect</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Twitter</a></li>
-                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Facebook</a></li>
-                            <li><a href="#" className="text-gray-300 hover:text-yellow-500 transition-colors">Instagram</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-gray-500 uppercase tracking-widest">
-                    © {new Date().getFullYear()} InspireWrite by Glenride. All Rights Reserved.
-                </div>
-            </footer>
+            <SiteFooter zenMode={zenMode} />
         </div>
     );
 }
