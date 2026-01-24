@@ -72,6 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/users/{user}/remove-admin', [AdminController::class, 'removeAdmin'])->name('admin.remove-admin');
         Route::post('/users/{user}/assign-trial', [AdminController::class, 'assignTrial'])->name('admin.assign-trial');
         Route::post('/users/{user}/cancel-subscription', [AdminController::class, 'cancelSubscription'])->name('admin.cancel-subscription');
+        Route::post('/users/{user}/toggle-beta', [AdminController::class, 'toggleBetaTester'])->name('admin.toggle-beta');
+        Route::post('/users/{user}/remove-beta', [AdminController::class, 'removeBetaTester'])->name('admin.remove-beta');
     });
 });
 

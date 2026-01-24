@@ -29,6 +29,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_beta_tester',
+        'beta_expires_at',
     ];
 
     /**
@@ -55,6 +57,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_admin' => 'boolean',
+            'is_beta_tester' => 'boolean',
+            'beta_expires_at' => 'datetime',
         ];
     }
 
@@ -72,6 +76,24 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin || $this->isSuperAdmin();
+    }
+
+    /**
+     * Check if user is an active beta tester.
+     */
+    public function isBetaTester(): bool
+    {
+        if (!$this->is_beta_tester) {
+            return false;
+        }
+
+        // If no expiration set, beta access is permanent
+        if (!$this->beta_expires_at) {
+            return true;
+        }
+
+        // Check if beta access has expired
+        return $this->beta_expires_at->isFuture();
     }
 
     public function currentPlan(): string
@@ -100,6 +122,11 @@ class User extends Authenticatable
     public function hasProAccess(): bool
     {
         if ($this->isAdmin()) {
+            return true;
+        }
+
+        // Beta testers get full pro access
+        if ($this->isBetaTester()) {
             return true;
         }
 

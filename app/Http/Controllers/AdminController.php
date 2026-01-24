@@ -36,6 +36,9 @@ class AdminController extends Controller
                     'email' => $user->email,
                     'is_admin' => $user->is_admin,
                     'is_super_admin' => $user->isSuperAdmin(),
+                    'is_beta_tester' => $user->is_beta_tester,
+                    'beta_expires_at' => $user->beta_expires_at?->format('M d, Y'),
+                    'is_active_beta' => $user->isBetaTester(),
                     'current_plan' => $currentPlan,
                     'subscription_ends_at' => $subscriptionEndsAt,
                     'created_at' => $user->created_at->format('M d, Y'),
@@ -100,5 +103,41 @@ class AdminController extends Controller
         }
 
         return back()->with('error', 'User has no active subscription.');
+    }
+
+    /**
+     * Toggle beta tester status for a user.
+     */
+    public function toggleBetaTester(Request $request, User $user)
+    {
+        $request->validate([
+            'expires_in_days' => 'nullable|integer|min:1|max:365',
+        ]);
+
+        $expiresAt = null;
+        if ($request->expires_in_days) {
+            $expiresAt = now()->addDays($request->expires_in_days);
+        }
+
+        $user->update([
+            'is_beta_tester' => true,
+            'beta_expires_at' => $expiresAt,
+        ]);
+
+        $expiryMessage = $expiresAt ? " (expires {$expiresAt->format('M d, Y')})" : " (no expiration)";
+        return back()->with('success', "{$user->name} is now a beta tester{$expiryMessage}.");
+    }
+
+    /**
+     * Remove beta tester status from a user.
+     */
+    public function removeBetaTester(Request $request, User $user)
+    {
+        $user->update([
+            'is_beta_tester' => false,
+            'beta_expires_at' => null,
+        ]);
+
+        return back()->with('success', "{$user->name} is no longer a beta tester.");
     }
 }
