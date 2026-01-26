@@ -41,6 +41,7 @@ export interface User {
     avatar?: string;
     email_verified_at: string | null;
     is_subscribed?: boolean;
+    is_admin?: boolean;
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
