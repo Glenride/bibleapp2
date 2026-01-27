@@ -74,6 +74,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/users/{user}/cancel-subscription', [AdminController::class, 'cancelSubscription'])->name('admin.cancel-subscription');
         Route::post('/users/{user}/toggle-beta', [AdminController::class, 'toggleBetaTester'])->name('admin.toggle-beta');
         Route::post('/users/{user}/remove-beta', [AdminController::class, 'removeBetaTester'])->name('admin.remove-beta');
+
+        // Trials management
+        Route::get('/trials', [AdminController::class, 'trials'])->name('admin.trials');
+        Route::post('/users/{user}/extend-trial', [AdminController::class, 'extendTrial'])->name('admin.extend-trial');
+        Route::post('/users/{user}/revoke-trial', [AdminController::class, 'revokeTrial'])->name('admin.revoke-trial');
+        Route::post('/trials/bulk-extend', [AdminController::class, 'bulkExtendTrials'])->name('admin.bulk-extend-trials');
+        Route::post('/trials/bulk-revoke', [AdminController::class, 'bulkRevokeTrials'])->name('admin.bulk-revoke-trials');
     });
 });
 

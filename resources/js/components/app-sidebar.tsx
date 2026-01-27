@@ -15,7 +15,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Search, Sparkles, Users, Shield } from 'lucide-react';
+import { BookOpen, Clock, Folder, LayoutGrid, Search, Sparkles, Users, Shield } from 'lucide-react';
 import AppLogo from './app-logo';
 import { useActiveUrl } from '@/hooks/use-active-url';
 
@@ -60,6 +60,11 @@ const adminNavItems: NavItem[] = [
         title: 'User Management',
         href: '/admin/users',
         icon: Users,
+    },
+    {
+        title: 'Trials Management',
+        href: '/admin/trials',
+        icon: Clock,
     },
 ];
 
