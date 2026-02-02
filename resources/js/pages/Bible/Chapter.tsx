@@ -51,7 +51,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     const [navOpen, setNavOpen] = useState(false);
     const [expandedBook, setExpandedBook] = useState<string | null>(book.abbreviation);
 
-    // Initialize Zen Mode from localStorage
+    // Initialize Easy Read mode from localStorage
     const [zenMode, setZenMode] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('bible-zen-mode') === 'true';
@@ -69,7 +69,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
         return null;
     });
 
-    // Persist Zen Mode changes
+    // Persist Easy Read mode changes
     useEffect(() => {
         localStorage.setItem('bible-zen-mode', String(zenMode));
     }, [zenMode]);
@@ -394,7 +394,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setZenMode(!zenMode)}
-                                title={zenMode ? "Exit Zen Mode" : "Enter Zen Mode"}
+                                title={zenMode ? "Exit Easy Read Mode" : "Enter Easy Read Mode"}
                                 className="hover:text-primary transition-colors"
                             >
                                 {zenMode ? <Minimize className="h-5 w-5" /> : <Expand className="h-5 w-5" />}

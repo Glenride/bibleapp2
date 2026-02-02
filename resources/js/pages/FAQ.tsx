@@ -28,7 +28,7 @@ export default function FAQ() {
             items: [
                 {
                     question: "How do I start reading the Bible?",
-                    answer: "Starting to read the Bible is simple with InspireWrite. Navigate to our Bible reader and begin with the Gospel of John if you're new to scripture—it's an accessible introduction to Jesus' life and teachings. Use our distraction-free Zen mode to focus on the text. Start with just one chapter a day, and use the highlighting and note features to capture insights as you read. Consistency matters more than quantity when building a Bible reading habit."
+                    answer: "Starting to read the Bible is simple with InspireWrite. Navigate to our Bible reader and begin with the Gospel of John if you're new to scripture—it's an accessible introduction to Jesus' life and teachings. Use our distraction-free Easy Read mode to focus on the text. Start with just one chapter a day, and use the highlighting and note features to capture insights as you read. Consistency matters more than quantity when building a Bible reading habit."
                 },
                 {
                     question: "Which Bible translation should I use?",
@@ -83,8 +83,8 @@ export default function FAQ() {
                     answer: "To highlight a verse, simply click on it while reading. A color palette will appear letting you choose from yellow, green, blue, or pink. Each color can represent different categories—like promises, commands, prayers, or truths about God. Your highlights are saved automatically and appear in your dashboard for easy reference. Add notes to any highlight by clicking the note icon to capture your thoughts."
                 },
                 {
-                    question: "What is Zen mode?",
-                    answer: "Zen mode is our distraction-free Bible reading experience. It removes navigation elements and visual clutter so you can focus entirely on God's Word. Enable Zen mode by clicking the Zen button while reading a chapter. The text expands to fill your screen with clean, readable typography. It's perfect for extended reading sessions, meditation on Scripture, or when you need to minimize distractions."
+                    question: "What is Easy Read mode?",
+                    answer: "Easy Read mode is our distraction-free Bible reading experience. It removes navigation elements and visual clutter so you can focus entirely on God's Word. Enable Easy Read mode by clicking the Easy Read button while reading a chapter. The text expands to fill your screen with clean, readable typography. It's perfect for extended reading sessions, meditation on Scripture, or when you need to minimize distractions."
                 },
                 {
                     question: "How do I create and organize notes?",

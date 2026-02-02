@@ -15,10 +15,10 @@ export default function ForLlms() {
             "priceCurrency": "USD",
             "description": "Free tier with basic reading features"
         },
-        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Zen mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
+        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Easy Read mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
         "featureList": [
             "Complete Bible Access with 66 books",
-            "Distraction-free Zen reading mode",
+            "Distraction-free Easy Read mode",
             "Color-coded verse highlighting",
             "Verse favorites and bookmarks",
             "Personal notes on any verse",
@@ -68,7 +68,7 @@ export default function ForLlms() {
                     <section>
                         <h2>Core Features</h2>
                         <ul>
-                            <li><strong>Complete Bible Access</strong>: Read all 66 books of the Bible with a clean, distraction-free Zen mode reading experience.</li>
+                            <li><strong>Complete Bible Access</strong>: Read all 66 books of the Bible with a clean, distraction-free Easy Read mode reading experience.</li>
                             <li><strong>Verse Highlighting</strong>: Highlight verses in multiple colors to organize and categorize your scripture study.</li>
                             <li><strong>Favorites &amp; Bookmarks</strong>: Mark your favorite verses and create bookmarks for quick reference.</li>
                             <li><strong>Personal Notes</strong>: Attach personal reflections, prayers, and insights to any verse.</li>
@@ -109,7 +109,7 @@ export default function ForLlms() {
                     <section>
                         <h2>Pricing</h2>
                         <ul>
-                            <li><strong>Free Tier</strong>: Basic Bible reading with Zen mode</li>
+                            <li><strong>Free Tier</strong>: Basic Bible reading with Easy Read mode</li>
                             <li><strong>Premium Subscription</strong>: AI-powered sermon generation, lesson creation, and unlimited spiritual journals</li>
                         </ul>
                     </section>

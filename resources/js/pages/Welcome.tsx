@@ -42,7 +42,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
         <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
             <Head title="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling">
-                <meta name="description" content="InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features Zen mode reading, verse highlighting, and AI sermon generation." />
+                <meta name="description" content="InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features Easy Read mode, verse highlighting, and AI sermon generation." />
                 <meta name="keywords" content="Bible app, Bible reading, spiritual journaling, AI sermon generator, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
                 <meta property="og:title" content="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling" />
                 <meta property="og:description" content="The AI-powered Bible reading and spiritual journaling companion for modern believers." />
@@ -61,10 +61,10 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             "price": "0",
                             "priceCurrency": "USD"
                         },
-                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Zen mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
+                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Easy Read mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
                         "featureList": [
                             "Complete Bible Access with 66 books",
-                            "Distraction-free Zen reading mode",
+                            "Distraction-free Easy Read mode",
                             "Color-coded verse highlighting",
                             "Verse favorites and bookmarks",
                             "Personal notes on any verse",
@@ -159,7 +159,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             The AI-powered Bible reading and spiritual journaling companion for modern believers.
                         </p>
                         <p className="text-lg text-gray-500 mb-8 max-w-md leading-relaxed">
-                            Read all 66 books in distraction-free Zen mode. Highlight verses, capture reflections, and generate sermons with AI assistance.
+                            Read all 66 books in distraction-free Easy Read mode. Highlight verses, capture reflections, and generate sermons with AI assistance.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link

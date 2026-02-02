@@ -5,7 +5,7 @@ A modern, production-ready Bible reading and journaling application built with L
 ## Features
 
 - **Read Bible**: Browse books, chapters, and verses.
-- **Zen Mode**: Distraction-free reading experience with persistent preference.
+- **Easy Read Mode**: Distraction-free reading experience with persistent preference.
 - **User Interactions**:
     - **Highlights**: Color-coded highlights (Yellow, Green, Blue, Pink) with notes.
     - **Favorites**: Mark verses as favorites with notes.

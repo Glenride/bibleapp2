@@ -82,10 +82,10 @@ export default function About() {
                             <h3 className="text-xl font-bold mb-2">D'Vaughn House</h3>
                             <p className="text-yellow-500 text-sm uppercase tracking-widest mb-4">Founder & Developer, Glenride</p>
                             <p className="text-gray-300 leading-relaxed mb-4">
-                                D'Vaughn House is a software developer and believer passionate about using technology to serve the Christian community. With years of experience building web and mobile applications, D'Vaughn founded Glenride to create digital tools that help people grow in their faith.
+                                D'Vaughn House is a software developer and the founder of Glenride, the group that creates InspireWrite and other digital products for Christian communities. With years of experience building web and mobile applications, he started Glenride to craft thoughtful tools that help people engage with Scripture.
                             </p>
                             <p className="text-gray-300 leading-relaxed">
-                                InspireWrite was born from a personal desire to have a better Bible reading and journaling experience—one that combines the reverence of Scripture with the convenience of modern technology. D'Vaughn believes that AI, when used wisely, can be a powerful tool for spiritual formation.
+                                InspireWrite was born from a desire to have a better Bible reading and journaling experience—one that combines the reverence of Scripture with the convenience of modern technology. Glenride builds each product with responsible AI assistance to support study and reflection.
                             </p>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ export default function About() {
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">
                             <BookOpen className="text-yellow-500 mb-4" size={32} />
                             <h3 className="text-lg font-bold uppercase tracking-wider mb-2">Scripture Reading</h3>
-                            <p className="text-gray-600 leading-relaxed">Read all 66 books of the Bible in a clean, distraction-free Zen mode. No ads, no distractions—just you and God's Word.</p>
+                            <p className="text-gray-600 leading-relaxed">Read all 66 books of the Bible in a clean, distraction-free Easy Read mode. No ads, no distractions—just you and God's Word.</p>
                         </div>
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">
                             <PenTool className="text-yellow-500 mb-4" size={32} />
