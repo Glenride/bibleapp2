@@ -144,35 +144,61 @@ class LessonGeneratorService
             : "Derive a single, clear proposition from these verses that will serve as the main theme";
 
         return <<<PROMPT
-You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis. You are designing a lesson based on specific verses a user has highlighted.
-OBJECTIVE: Create a structured expository lesson that strictly follows the homiletical design principles of "Sermon Design and Structure". Aim for about 700 words (650-750).
+You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis in "Sermon Design and Sermon Structure in the Effective Development of Expository Preaching."
+
+OBJECTIVE: Create a structured expository lesson following homiletical design principles. The sermon structure serves as a "skeleton" upon which the "flesh" of content is built. Aim for 700-800 words.
+
 INPUT CONTEXT:
 {$themeInstruction}
+
 VERSES THE READER HAS MARKED:
 {$versesContext}
+
 REQUIRED LESSON STRUCTURE:
-1.  **Proposition**: A single, clear sentence that states the timeless truth of the lesson (the "big idea").
-2.  **Introduction**:
-    *   Arrest attention.
-    *   Introduce the subject and the text.
-    *   Make a smooth transition to the main points.
-3.  **Main Points** (Provide 2-3 distinct points derived directly from the text):
-    *   For *each* main point, you MUST include:
-        *   **Explanation**: Clarify the meaning of the text (What does it say?).
-        *   **Application**: Implications for the hearer (What does it say to us/me?).
-        *   **Illustration**: A tangible image or story to clarify the truth (What is it like?).
-4.  **Conclusion**:
-    *   Summarize the main argument.
-    *   Final exhortation or call to action.
-    *   Closing prayer.
+
+1. **Proposition** (The Big Idea):
+   - A single, clear sentence stating the timeless truth of the lesson (15 words or less)
+   - This is "a statement about God and human life" - not a statement about the sermon
+   - The proposition provides the "hook" from which all supporting points are based
+
+2. **Introduction**:
+   - Arrest the attention of the hearer
+   - Awaken interest in the subject
+   - Introduce the subject and the text
+   - Make a smooth transition into the body of the sermon
+
+3. **Main Points** (2-3 distinct points derived directly from the text):
+   - Each point should be faithful to the text, capturing "a specific distinct emphasis, thought, or movement"
+   - Points should be ordered logically with clear movement toward a climax
+   - For EACH main point, include these functional elements:
+     * **Explanation**: Clarify the meaning of the text. "What does it say?"
+     * **Application**: Implications for the hearer. "What does this say to us/me?"
+     * **Illustration**: A tangible image or story to clarify the truth. "What is it like?"
+
+4. **Transitions**:
+   - Connect main points with smooth transitions that are "inconspicuous, simple, and brief"
+   - Help listeners sense order and progression
+
+5. **Conclusion**:
+   - The conclusion is "not just a wrap-up, but a call to action"
+   - Summarize the main argument
+   - Provide a final exhortation or call to response
+   - Include a closing prayer
+
+QUALITY PRINCIPLES:
+- Unity: Focus on one subject and one aspect of that subject
+- Order: Discernible, meaningful movement between parts
+- Balance: Equal attention given to each component
+- Harmony: Points that "echo one another" in parallel structure
 
 Format your response as JSON with this exact structure:
 {
   "title": "A compelling, brief title (5-10 words)",
   "detected_theme": "The proposition/theme used",
-  "content": "The full lesson content in rigorous markdown format, using headers (##, ###) for the sections described above. Ensure the distinctions between Explanation, Application, and Illustration are clear within each point."
+  "content": "The full lesson content in rigorous markdown format, using headers (##, ###) for the sections described above."
 }
-Make the tone spirutuallly nourishing but intellectually rigorous and structured.
+
+Make the tone spiritually nourishing but intellectually rigorous. The ultimate goal is the glory of God and the transformation of lives.
 PROMPT;
     }
 
@@ -261,31 +287,57 @@ PROMPT;
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
-You are a scholarly expository preacher and theologian. You have a series of Bible study lessons that form a coherent sermon series. Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document that follows the homiletical structure of "Sermon Design and Structure". Write at least 1000 words and include a final "Reflection & Writing Prompts" section (3-5 prompts) to inspire the reader's own writing.
+You are a scholarly expository preacher and theologian, deeply knowledgeable in homiletics as described by Kenneth R. Lewis in "Sermon Design and Sermon Structure in the Effective Development of Expository Preaching."
+
+You have a series of Bible study lessons that form a coherent sermon series. Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document. Write at least 1000 words.
+
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
+
 LESSONS (to be used as main points):
 {$lessonsContext}
+
 REQUIRED MASTER SERMON STRUCTURE:
-1.  **Proposition**: A unifying theme or "big idea" that ties all the lessons together into one message.
-2.  **Introduction**:
-    *   Introduce the series theme.
-    *   Provide context for the journey through these lessons.
-3.  **Main Points (The Lessons)**:
-    *   Treat each Lesson as a major movement or Main Point in this master sermon.
-    *   For each point (Lesson), provide a **Synthesized Explanation** and **Application** that connects it back to the main Proposition.
-    *   Do not just copy the lesson content; summarize its spiritual essence and how it fits the whole.
-4.  **Conclusion**:
-    *   A powerful culpritinating analysis.
-    *   Final "Altar Call" or life-changing takeaway.
-5.  **Reflection & Writing Prompts**:
-    *   3-5 prompts that invite personal writing and spiritual reflection.
+
+1. **Proposition** (The Big Idea):
+   - A unifying theme that ties all the lessons together into one message
+   - A single, clear sentence (15 words or less) stating a timeless truth
+   - This is "a statement about God and human life"
+
+2. **Introduction**:
+   - Arrest the attention of the hearer
+   - Introduce the series theme and provide context for the journey
+   - Make a smooth transition into the body
+
+3. **Main Points (The Lessons)**:
+   - Treat each Lesson as a major movement or Main Point
+   - Use smooth transitions between points that are "inconspicuous, simple, and brief"
+   - For each point, provide:
+     * **Synthesized Explanation**: What does this lesson teach?
+     * **Application**: How does it connect to the main Proposition and the hearer's life?
+   - Do not just copy the lesson content; summarize its spiritual essence
+
+4. **Conclusion**:
+   - The conclusion is "not just a wrap-up, but a call to action"
+   - A powerful culminating synthesis of the main argument
+   - Final exhortation or life-changing takeaway
+
+5. **Reflection & Writing Prompts**:
+   - 3-5 prompts that invite personal writing and spiritual reflection
+
+QUALITY PRINCIPLES:
+- Unity: Focus on one unifying theme across all lessons
+- Order: Discernible, meaningful movement toward a climax
+- Balance: Equal attention given to each lesson/component
+- Harmony: Points that "echo one another" in parallel structure
 
 Format your response as JSON:
 {
   "detected_theme": "The unifying proposition",
-  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections (Introduction, Main Points, Conclusion, Reflection & Writing Prompts) and H3 for the individual Lesson points."
+  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections and H3 for individual Lesson points."
 }
+
+The ultimate goal is the glory of God and the transformation of lives.
 PROMPT;
         $response = $this->callOpenAI($prompt, 3000);
 
