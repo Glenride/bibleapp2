@@ -275,7 +275,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="flex-1 min-h-0">
+                                                    <ScrollArea className="h-[300px]">
                                                         <div className="p-2 space-y-1">
                                                             {highlights.map((item) => (
                                                                 <SelectableSourceItem
@@ -301,7 +301,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="flex-1 min-h-0">
+                                                    <ScrollArea className="h-[300px]">
                                                         <div className="p-2 space-y-1">
                                                             {favorites.map((item) => (
                                                                 <SelectableSourceItem

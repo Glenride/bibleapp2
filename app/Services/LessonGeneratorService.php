@@ -35,7 +35,7 @@ class LessonGeneratorService
         }
 
         $prompt = $this->buildPrompt($versesContext, $theme);
-        $response = $this->callOpenAI($prompt);
+        $response = $this->callOpenAI($prompt, 2000, true);
 
         $lesson = $user->lessons()->create([
             'sermon_id' => $sermonId,
@@ -176,7 +176,7 @@ Make the tone spirutuallly nourishing but intellectually rigorous and structured
 PROMPT;
     }
 
-    protected function callOpenAI(string $prompt, int $maxCompletionTokens = 2000): array
+    protected function callOpenAI(string $prompt, int $maxCompletionTokens = 2000, bool $validateContent = false): array
     {
         $response = OpenAI::chat()->create([
             'model' => 'gpt-5.2',
@@ -203,6 +203,18 @@ PROMPT;
                 'detected_theme' => 'General',
                 'content' => $content,
             ];
+        }
+
+        // Validate lesson content only when explicitly requested
+        if ($validateContent) {
+            if (empty($decoded['content']) || trim($decoded['content']) === '') {
+                throw new \Exception('AI generated an empty lesson. Please try again.');
+            }
+
+            // Ensure title has a meaningful value
+            if (empty($decoded['title']) || trim($decoded['title']) === '') {
+                $decoded['title'] = 'Bible Study Lesson';
+            }
         }
 
         return $decoded;
