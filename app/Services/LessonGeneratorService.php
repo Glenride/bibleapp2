@@ -92,6 +92,10 @@ class LessonGeneratorService
             $sermon->update([
                 'detected_theme' => $analysis['detected_theme'] ?? null,
                 'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
             ]);
         } catch (
             \Exception $e
@@ -288,13 +292,14 @@ PROMPT;
     {
         $sermon->load('lessons');
         $lessonsContext = $sermon->lessons->map(function ($lesson) {
-            return "LESSON: {$lesson->title}\nTHEME: {$lesson->theme}\nCONTENT SUMMARY: " . Str::limit($lesson->content, 500);
+            $content = $lesson->big_takeaway ?? Str::limit($lesson->content, 500);
+            return "LESSON: {$lesson->title}\nTHEME: {$lesson->theme}\nBIG TAKEAWAY: {$content}";
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
 You have a series of Bible study lessons that form a coherent sermon series. Synthesize them into a single comprehensive Master Sermon that feels unified, pastoral, and easy to follow.
 
-LENGTH: At least 1000 words.
+LENGTH: 1000–1200 words total across all fields.
 
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
@@ -302,43 +307,44 @@ SERMON DESCRIPTION: {$sermon->description}
 LESSONS (use these as the core teaching movements, in order):
 {$lessonsContext}
 
-UNIFYING TASK:
-- Identify one clear unifying theme that ties all lessons together and state it near the beginning as a single sentence (not labeled "proposition").
-
-STRUCTURE & STYLE (optimize for listening + learning):
-- Do NOT use obvious outline headers such as: Introduction, Main Point, Point 1, Transition, Conclusion.
-- Use subtle, natural section phrases (short lines that sound like a preacher guiding listeners).
-- Each movement should include:
-  - What we're seeing in the text/idea
-  - Why it matters
-  - A concrete example or illustration
-  - A practical next step
-- Include smooth "bridge" sentences that show how one movement leads to the next.
-- End with:
-  - A direct call-to-action
-  - 3 reflection questions
-  - A closing prayer (6–10 lines)
+WRITING RULES (for better listening + learning):
+- Do NOT use obvious outline labels like: Introduction, Main Point, Point 1, Transition, Conclusion.
+- Write as a guided teaching flow with natural phrases.
+- Each movement should naturally include teaching, illustration, and application without labeling them.
 
 OUTPUT FORMAT:
 Return valid JSON with exactly this structure:
 {
-  "detected_theme": "...",
-  "analysis": "..."
+  "detected_theme": "The unifying theme in 2-4 words",
+  "big_takeaway": "One clear sentence summarizing the sermon's core truth",
+  "movements": [
+    {
+      "focus": "Short phrase describing this movement's focus",
+      "teaching": "3-5 paragraphs synthesizing the lesson: what it teaches, why it matters, with an illustration woven in",
+      "practice": "One concrete action step for this movement"
+    }
+  ],
+  "reflection_questions": ["Question 1?", "Question 2?", "Question 3?"],
+  "prayer": "A closing prayer (6-10 lines)"
 }
 
-FORMATTING inside the JSON "analysis" field:
-- Write in clean markdown, but avoid markdown headings (# / ## / ###).
-- You may use short breaks, italics, and bullet lists sparingly for readability.
+IMPORTANT:
+- Create one movement for EACH lesson provided, in the same order.
+- Include smooth bridging ideas within the teaching text between movements.
+- Use plain text with light formatting only (short paragraphs).
 PROMPT;
-        $response = $this->callOpenAI($prompt, 3000);
+        $response = $this->callOpenAI($prompt, 3500);
 
-        if (isset($response['detected_theme']) && isset($response['analysis'])) {
-            return $response;
-        }
+        // Build backward-compatible analysis from structured fields
+        $analysis = $this->buildAnalysisFromStructured($response);
 
         return [
-            'detected_theme' => $sermon->title,
-            'analysis' => 'Unable to generate analysis at this time.',
+            'detected_theme' => $response['detected_theme'] ?? $sermon->title,
+            'analysis' => $analysis,
+            'big_takeaway' => $response['big_takeaway'] ?? null,
+            'movements' => $response['movements'] ?? null,
+            'reflection_questions' => $response['reflection_questions'] ?? null,
+            'prayer' => $response['prayer'] ?? null,
         ];
     }
 
@@ -397,6 +403,57 @@ PROMPT;
         // Fallback to content field if structured fields are empty
         if (empty($parts) && !empty($response['content'])) {
             return $response['content'];
+        }
+
+        return implode("\n\n", array_filter($parts));
+    }
+
+    /**
+     * Build backward-compatible analysis string from structured sermon response.
+     */
+    protected function buildAnalysisFromStructured(array $response): string
+    {
+        $parts = [];
+
+        // Big takeaway
+        if (!empty($response['big_takeaway'])) {
+            $parts[] = "**" . $response['big_takeaway'] . "**";
+        }
+
+        // Movements
+        if (!empty($response['movements']) && is_array($response['movements'])) {
+            foreach ($response['movements'] as $movement) {
+                $parts[] = "";
+                if (!empty($movement['focus'])) {
+                    $parts[] = "**" . $movement['focus'] . "**";
+                }
+                if (!empty($movement['teaching'])) {
+                    $parts[] = $movement['teaching'];
+                }
+                if (!empty($movement['practice'])) {
+                    $parts[] = "• " . $movement['practice'];
+                }
+            }
+        }
+
+        // Reflection questions
+        if (!empty($response['reflection_questions']) && is_array($response['reflection_questions'])) {
+            $parts[] = "";
+            $parts[] = "**Reflect on these questions:**";
+            foreach ($response['reflection_questions'] as $q) {
+                $parts[] = "• " . $q;
+            }
+        }
+
+        // Prayer
+        if (!empty($response['prayer'])) {
+            $parts[] = "";
+            $parts[] = "*" . $response['prayer'] . "*";
+        }
+
+        // Fallback to analysis field if structured fields are empty
+        if (empty($parts) && !empty($response['analysis'])) {
+            return $response['analysis'];
         }
 
         return implode("\n\n", array_filter($parts));

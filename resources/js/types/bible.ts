@@ -106,6 +106,12 @@ export interface Sermon {
     description: string | null;
     share_token: string;
     is_public: boolean;
+    detected_theme: string | null;
+    analysis: string | null;
+    big_takeaway?: string;
+    movements?: LessonMovement[];
+    reflection_questions?: string[];
+    prayer?: string;
     created_at: string;
     updated_at: string;
     lessons?: Lesson[];

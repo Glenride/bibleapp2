@@ -211,8 +211,8 @@ export default function SermonShow({ sermon, isOwner, availableLessons }: Props)
                     </header>
 
                     {/* Sermon Analysis Section */}
-                    {(sermon.detected_theme || sermon.analysis) && (
-                        <div className="mb-8 p-6 bg-card border rounded-xl shadow-sm space-y-4">
+                    {(sermon.detected_theme || sermon.analysis || sermon.big_takeaway || sermon.movements?.length) && (
+                        <div className="mb-8 p-6 bg-card border rounded-xl shadow-sm space-y-6">
                             <div className="flex items-center gap-2 mb-2">
                                 <Sparkles className="text-primary" size={20} />
                                 <h3 className="font-serif text-xl font-medium">Spiritual Culmination</h3>
@@ -224,7 +224,67 @@ export default function SermonShow({ sermon, isOwner, availableLessons }: Props)
                                 </div>
                             )}
 
-                            {sermon.analysis && (
+                            {/* Structured content display */}
+                            {(sermon.big_takeaway || sermon.movements?.length) ? (
+                                <div className="space-y-6">
+                                    {/* Big Takeaway */}
+                                    {sermon.big_takeaway && (
+                                        <div className="bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg">
+                                            <p className="text-lg font-medium leading-relaxed">{sermon.big_takeaway}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Movements */}
+                                    {sermon.movements && sermon.movements.length > 0 && (
+                                        <div className="space-y-4">
+                                            {sermon.movements.map((movement, index) => (
+                                                <div key={index} className="border border-border rounded-lg overflow-hidden">
+                                                    <div className="bg-muted/50 px-4 py-3 border-b border-border">
+                                                        <h4 className="font-semibold">{movement.focus}</h4>
+                                                    </div>
+                                                    <div className="p-4 space-y-4">
+                                                        <div className="prose prose-stone dark:prose-invert max-w-none prose-p:leading-relaxed text-muted-foreground">
+                                                            {movement.teaching.split('\n\n').map((para, i) => (
+                                                                <p key={i}>{para}</p>
+                                                            ))}
+                                                        </div>
+                                                        {movement.practice && (
+                                                            <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-4 py-3 rounded-lg text-sm">
+                                                                <span className="font-medium">Try this: </span>
+                                                                {movement.practice}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Reflection Questions */}
+                                    {sermon.reflection_questions && sermon.reflection_questions.length > 0 && (
+                                        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-5">
+                                            <h4 className="font-semibold text-blue-800 dark:text-blue-300 mb-3">Reflect on these questions</h4>
+                                            <ul className="space-y-2">
+                                                {sermon.reflection_questions.map((question, index) => (
+                                                    <li key={index} className="flex items-start gap-2 text-blue-700 dark:text-blue-300">
+                                                        <span className="font-medium">{index + 1}.</span>
+                                                        <span>{question}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {/* Prayer */}
+                                    {sermon.prayer && (
+                                        <div className="border-t border-border pt-4">
+                                            <p className="text-muted-foreground italic leading-relaxed whitespace-pre-line">
+                                                {sermon.prayer}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : sermon.analysis && (
                                 <div className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed">
                                     <ReactMarkdown>{sermon.analysis}</ReactMarkdown>
                                 </div>

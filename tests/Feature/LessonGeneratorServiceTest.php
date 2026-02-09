@@ -79,12 +79,22 @@ class LessonGeneratorServiceTest extends TestCase
         $lessonPayload = [
             'title' => 'Enduring Hope',
             'detected_theme' => 'Hope',
-            'content' => '## Proposition\nHope anchors the soul in God.',
+            'big_takeaway' => 'Hope anchors the soul in God.',
+            'movements' => [
+                ['focus' => 'Hope in Storms', 'teaching' => 'Teaching content here.', 'practice' => 'Practice step.'],
+            ],
+            'reflection_questions' => ['What gives you hope?'],
+            'prayer' => 'Lord, anchor us in hope.',
         ];
 
         $analysisPayload = [
             'detected_theme' => 'Hope Anchored in Christ',
-            'analysis' => '## Introduction\nA long-form sermon that guides the reader toward hope.',
+            'big_takeaway' => 'Christ is our eternal hope.',
+            'movements' => [
+                ['focus' => 'Eternal Hope', 'teaching' => 'Sermon teaching content.', 'practice' => 'Trust God today.'],
+            ],
+            'reflection_questions' => ['Where do you find hope?'],
+            'prayer' => 'Lord, be our anchor.',
         ];
 
         OpenAI::fake([
@@ -117,14 +127,14 @@ class LessonGeneratorServiceTest extends TestCase
 
         $sermon->refresh();
 
-        $this->assertSame($analysisPayload['analysis'], $sermon->analysis);
+        $this->assertSame($analysisPayload['big_takeaway'], $sermon->big_takeaway);
         $this->assertSame($analysisPayload['detected_theme'], $sermon->detected_theme);
 
         OpenAI::chat()->assertSent(2);
         OpenAI::chat()->assertSent(function (string $method, array $params): bool {
             return $method === 'create'
                 && ($params['model'] ?? null) === 'gpt-5.2'
-                && ($params['max_completion_tokens'] ?? null) === 3000;
+                && ($params['max_completion_tokens'] ?? null) === 3500;
         });
     }
 

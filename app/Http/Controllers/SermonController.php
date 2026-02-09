@@ -204,6 +204,10 @@ class SermonController extends Controller
             $sermon->update([
                 'detected_theme' => $analysis['detected_theme'] ?? null,
                 'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
             ]);
         } catch (\Exception $e) {
             // Silently fail analysis generation so we don't block sermon creation
@@ -244,6 +248,10 @@ class SermonController extends Controller
             $sermon->update([
                 'detected_theme' => $analysis['detected_theme'] ?? null,
                 'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
             ]);
         } catch (\Exception $e) {
             // Log::error("Failed to update sermon analysis: " . $e->getMessage());
@@ -280,6 +288,10 @@ class SermonController extends Controller
             $sermon->update([
                 'detected_theme' => $analysis['detected_theme'] ?? null,
                 'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
             ]);
         } catch (\Exception $e) {
             // Log::error("Failed to update sermon analysis: " . $e->getMessage());
