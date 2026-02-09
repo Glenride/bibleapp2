@@ -11,6 +11,10 @@ class Lesson extends Model
         'sermon_id',
         'title',
         'content',
+        'big_takeaway',
+        'movements',
+        'reflection_questions',
+        'prayer',
         'source_verses',
         'source_highlights',
         'source_favorites',
@@ -22,6 +26,8 @@ class Lesson extends Model
         'source_verses' => 'array',
         'source_highlights' => 'array',
         'source_favorites' => 'array',
+        'movements' => 'array',
+        'reflection_questions' => 'array',
     ];
 
     public function user()

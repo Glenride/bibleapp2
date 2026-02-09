@@ -72,12 +72,22 @@ export interface UserInteractions {
     bookmark: Bookmark | null;
 }
 
+export interface LessonMovement {
+    focus: string;
+    teaching: string;
+    practice: string;
+}
+
 export interface Lesson {
     id: number;
     user_id: number;
     sermon_id: number | null;
     title: string;
     content: string;
+    big_takeaway?: string;
+    movements?: LessonMovement[];
+    reflection_questions?: string[];
+    prayer?: string;
     source_verses: number[];
     source_highlights: number[];
     source_favorites: number[];

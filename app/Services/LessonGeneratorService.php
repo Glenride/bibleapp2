@@ -37,10 +37,17 @@ class LessonGeneratorService
         $prompt = $this->buildPrompt($versesContext, $theme);
         $response = $this->callOpenAI($prompt, 2000, true);
 
+        // Build backward-compatible content from structured fields
+        $content = $this->buildContentFromStructured($response);
+
         $lesson = $user->lessons()->create([
             'sermon_id' => $sermonId,
             'title' => $response['title'],
-            'content' => $response['content'],
+            'content' => $content,
+            'big_takeaway' => $response['big_takeaway'] ?? null,
+            'movements' => $response['movements'] ?? null,
+            'reflection_questions' => $response['reflection_questions'] ?? null,
+            'prayer' => $response['prayer'] ?? null,
             'source_verses' => $this->extractVerseIds($highlights, $favorites),
             'source_highlights' => $highlights->pluck('id')->toArray(),
             'source_favorites' => $favorites->pluck('id')->toArray(),
@@ -140,13 +147,13 @@ class LessonGeneratorService
     protected function buildPrompt(string $versesContext, ?string $theme): string
     {
         $themeInstruction = $theme
-            ? "Your sermon design must be centered around this specific proposition/theme: {$theme}"
-            : "Derive a single, clear proposition from these verses that will serve as the main theme";
+            ? "Create a lesson centered around this unifying claim: {$theme}"
+            : "(If context is missing, derive a single, clear unifying claim from the verses.)";
 
         return <<<PROMPT
-You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis in "Sermon Design and Sermon Structure in the Effective Development of Expository Preaching."
+You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis. Create an expository Bible study lesson that is faithful to the text, clear to a modern reader, and optimized for learning and application.
 
-OBJECTIVE: Create a structured expository lesson following homiletical design principles. The sermon structure serves as a "skeleton" upon which the "flesh" of content is built. Aim for 700-800 words.
+LENGTH: 700–800 words total across all fields.
 
 INPUT CONTEXT:
 {$themeInstruction}
@@ -154,60 +161,54 @@ INPUT CONTEXT:
 VERSES THE READER HAS MARKED:
 {$versesContext}
 
-REQUIRED LESSON STRUCTURE:
+WRITING RULES (for better user interaction and learning):
+- Do NOT use obvious outline labels like: Proposition, Introduction, Main Point, Point 1, Transition, Conclusion.
+- Write as a guided learning flow with natural phrases.
+- Keep each movement 2–4 short paragraphs.
 
-1. **Proposition** (The Big Idea):
-   - A single, clear sentence stating the timeless truth of the lesson (15 words or less)
-   - This is "a statement about God and human life" - not a statement about the sermon
-   - The proposition provides the "hook" from which all supporting points are based
-
-2. **Introduction**:
-   - Arrest the attention of the hearer
-   - Awaken interest in the subject
-   - Introduce the subject and the text
-   - Make a smooth transition into the body of the sermon
-
-3. **Main Points** (2-3 distinct points derived directly from the text):
-   - Each point should be faithful to the text, capturing "a specific distinct emphasis, thought, or movement"
-   - Points should be ordered logically with clear movement toward a climax
-   - For EACH main point, include these functional elements:
-     * **Explanation**: Clarify the meaning of the text. "What does it say?"
-     * **Application**: Implications for the hearer. "What does this say to us/me?"
-     * **Illustration**: A tangible image or story to clarify the truth. "What is it like?"
-
-4. **Transitions**:
-   - Connect main points with smooth transitions that are "inconspicuous, simple, and brief"
-   - Help listeners sense order and progression
-
-5. **Conclusion**:
-   - The conclusion is "not just a wrap-up, but a call to action"
-   - Summarize the main argument
-   - Provide a final exhortation or call to response
-   - Include a closing prayer
-
-QUALITY PRINCIPLES:
-- Unity: Focus on one subject and one aspect of that subject
-- Order: Discernible, meaningful movement between parts
-- Balance: Equal attention given to each component
-- Harmony: Points that "echo one another" in parallel structure
-
-Format your response as JSON with this exact structure:
+OUTPUT FORMAT:
+Return valid JSON with exactly this structure:
 {
   "title": "A compelling, brief title (5-10 words)",
-  "detected_theme": "The proposition/theme used",
-  "content": "The full lesson content in rigorous markdown format, using headers (##, ###) for the sections described above."
+  "detected_theme": "The main theme in 2-4 words",
+  "big_takeaway": "One clear sentence summarizing the lesson's core truth",
+  "movements": [
+    {
+      "focus": "Short phrase describing this movement's focus",
+      "teaching": "2-4 paragraphs: what the text says/means, how to live it, with a brief story or analogy woven in",
+      "practice": "One concrete action step for this movement"
+    },
+    {
+      "focus": "...",
+      "teaching": "...",
+      "practice": "..."
+    },
+    {
+      "focus": "...",
+      "teaching": "...",
+      "practice": "..."
+    }
+  ],
+  "reflection_questions": ["Question 1?", "Question 2?"],
+  "prayer": "A short closing prayer (4-6 lines)"
 }
 
-Make the tone spiritually nourishing but intellectually rigorous. The ultimate goal is the glory of God and the transformation of lives.
+CONTENT RULES:
+- The "teaching" field should naturally include explanation, application, and illustration without labeling them.
+- Include smooth bridging ideas between movements within the teaching text.
+- Use plain text with light formatting only (short paragraphs).
+- Do not include markdown headings.
 PROMPT;
     }
 
     protected function callOpenAI(string $prompt, int $maxCompletionTokens = 2000, bool $validateContent = false): array
     {
+        $systemMessage = 'You are a thoughtful Bible study teacher and expository preacher. You design lessons for learning and retention: clear, warm, accurate to the text, and practical. Write in a way that sounds like a guided lesson, not a formal outline. Always return valid JSON only (no markdown outside JSON). Do not use obvious outline headers such as "Proposition," "Introduction," "Main Point," "Transition," or "Conclusion."';
+
         $response = OpenAI::chat()->create([
             'model' => 'gpt-5.2',
             'messages' => [
-                ['role' => 'system', 'content' => 'You are a thoughtful Bible study teacher. Always respond with valid JSON.'],
+                ['role' => 'system', 'content' => $systemMessage],
                 ['role' => 'user', 'content' => $prompt],
             ],
             'max_completion_tokens' => $maxCompletionTokens,
@@ -287,57 +288,43 @@ PROMPT;
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
-You are a scholarly expository preacher and theologian, deeply knowledgeable in homiletics as described by Kenneth R. Lewis in "Sermon Design and Sermon Structure in the Effective Development of Expository Preaching."
+You have a series of Bible study lessons that form a coherent sermon series. Synthesize them into a single comprehensive Master Sermon that feels unified, pastoral, and easy to follow.
 
-You have a series of Bible study lessons that form a coherent sermon series. Your task is to synthesize these lessons into a single, comprehensive "Master Sermon" document. Write at least 1000 words.
+LENGTH: At least 1000 words.
 
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
 
-LESSONS (to be used as main points):
+LESSONS (use these as the core teaching movements, in order):
 {$lessonsContext}
 
-REQUIRED MASTER SERMON STRUCTURE:
+UNIFYING TASK:
+- Identify one clear unifying theme that ties all lessons together and state it near the beginning as a single sentence (not labeled "proposition").
 
-1. **Proposition** (The Big Idea):
-   - A unifying theme that ties all the lessons together into one message
-   - A single, clear sentence (15 words or less) stating a timeless truth
-   - This is "a statement about God and human life"
+STRUCTURE & STYLE (optimize for listening + learning):
+- Do NOT use obvious outline headers such as: Introduction, Main Point, Point 1, Transition, Conclusion.
+- Use subtle, natural section phrases (short lines that sound like a preacher guiding listeners).
+- Each movement should include:
+  - What we're seeing in the text/idea
+  - Why it matters
+  - A concrete example or illustration
+  - A practical next step
+- Include smooth "bridge" sentences that show how one movement leads to the next.
+- End with:
+  - A direct call-to-action
+  - 3 reflection questions
+  - A closing prayer (6–10 lines)
 
-2. **Introduction**:
-   - Arrest the attention of the hearer
-   - Introduce the series theme and provide context for the journey
-   - Make a smooth transition into the body
-
-3. **Main Points (The Lessons)**:
-   - Treat each Lesson as a major movement or Main Point
-   - Use smooth transitions between points that are "inconspicuous, simple, and brief"
-   - For each point, provide:
-     * **Synthesized Explanation**: What does this lesson teach?
-     * **Application**: How does it connect to the main Proposition and the hearer's life?
-   - Do not just copy the lesson content; summarize its spiritual essence
-
-4. **Conclusion**:
-   - The conclusion is "not just a wrap-up, but a call to action"
-   - A powerful culminating synthesis of the main argument
-   - Final exhortation or life-changing takeaway
-
-5. **Reflection & Writing Prompts**:
-   - 3-5 prompts that invite personal writing and spiritual reflection
-
-QUALITY PRINCIPLES:
-- Unity: Focus on one unifying theme across all lessons
-- Order: Discernible, meaningful movement toward a climax
-- Balance: Equal attention given to each lesson/component
-- Harmony: Points that "echo one another" in parallel structure
-
-Format your response as JSON:
+OUTPUT FORMAT:
+Return valid JSON with exactly this structure:
 {
-  "detected_theme": "The unifying proposition",
-  "analysis": "The full Master Sermon content in valid markdown. Use H2 for sections and H3 for individual Lesson points."
+  "detected_theme": "...",
+  "analysis": "..."
 }
 
-The ultimate goal is the glory of God and the transformation of lives.
+FORMATTING inside the JSON "analysis" field:
+- Write in clean markdown, but avoid markdown headings (# / ## / ###).
+- You may use short breaks, italics, and bullet lists sparingly for readability.
 PROMPT;
         $response = $this->callOpenAI($prompt, 3000);
 
@@ -358,5 +345,56 @@ PROMPT;
             ->unique()
             ->values()
             ->toArray();
+    }
+
+    /**
+     * Build backward-compatible content string from structured response.
+     */
+    protected function buildContentFromStructured(array $response): string
+    {
+        $parts = [];
+
+        // Big takeaway
+        if (!empty($response['big_takeaway'])) {
+            $parts[] = "**" . $response['big_takeaway'] . "**";
+        }
+
+        // Movements
+        if (!empty($response['movements']) && is_array($response['movements'])) {
+            foreach ($response['movements'] as $i => $movement) {
+                $parts[] = "";
+                if (!empty($movement['focus'])) {
+                    $parts[] = "**" . $movement['focus'] . "**";
+                }
+                if (!empty($movement['teaching'])) {
+                    $parts[] = $movement['teaching'];
+                }
+                if (!empty($movement['practice'])) {
+                    $parts[] = "• " . $movement['practice'];
+                }
+            }
+        }
+
+        // Reflection questions
+        if (!empty($response['reflection_questions']) && is_array($response['reflection_questions'])) {
+            $parts[] = "";
+            $parts[] = "**Reflect on these questions:**";
+            foreach ($response['reflection_questions'] as $q) {
+                $parts[] = "• " . $q;
+            }
+        }
+
+        // Prayer
+        if (!empty($response['prayer'])) {
+            $parts[] = "";
+            $parts[] = "*" . $response['prayer'] . "*";
+        }
+
+        // Fallback to content field if structured fields are empty
+        if (empty($parts) && !empty($response['content'])) {
+            return $response['content'];
+        }
+
+        return implode("\n\n", array_filter($parts));
     }
 }
