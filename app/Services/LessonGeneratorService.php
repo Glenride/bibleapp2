@@ -234,7 +234,11 @@ PROMPT;
 
         // Validate lesson content only when explicitly requested
         if ($validateContent) {
-            if (empty($decoded['content']) || trim($decoded['content']) === '') {
+            // Check for structured fields OR legacy content field
+            $hasStructuredContent = !empty($decoded['big_takeaway']) || !empty($decoded['movements']);
+            $hasLegacyContent = !empty($decoded['content']) && trim($decoded['content']) !== '';
+            
+            if (!$hasStructuredContent && !$hasLegacyContent) {
                 throw new \Exception('AI generated an empty lesson. Please try again.');
             }
 
