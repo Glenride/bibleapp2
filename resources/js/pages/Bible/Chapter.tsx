@@ -239,10 +239,10 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
 
     const getHighlightColor = (color: string) => {
         switch (color) {
-            case 'yellow': return 'bg-yellow-200/50 dark:bg-yellow-900/30';
-            case 'green': return 'bg-green-200/50 dark:bg-green-900/30';
-            case 'blue': return 'bg-blue-200/50 dark:bg-blue-900/30';
-            case 'pink': return 'bg-pink-200/50 dark:bg-pink-900/30';
+            case 'yellow': return 'bg-yellow-200/50';
+            case 'green': return 'bg-green-200/50';
+            case 'blue': return 'bg-blue-200/50';
+            case 'pink': return 'bg-pink-200/50';
             default: return '';
         }
     };
@@ -439,7 +439,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                 {/* Verses */}
                 <div
                     className={cn(
-                        "prose prose-lg dark:prose-invert max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
+                        "prose prose-lg max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
                         zenMode && "prose-xl leading-relaxed"
                     )}
                     style={{ fontSize: `${fontSize}px` }}
@@ -458,8 +458,8 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
                                 className={cn(
                                     "relative inline transition-colors duration-200 cursor-pointer select-text decoration-clone p-0.5 rounded box-decoration-clone",
-                                    highlight ? getHighlightColor(highlight.color) : "hover:bg-black/5 dark:hover:bg-white/5",
-                                    isSelected && "bg-black/10 dark:bg-white/10",
+                                    highlight ? getHighlightColor(highlight.color) : "hover:bg-black/5",
+                                    isSelected && "bg-black/10",
                                     highlightedVerseNum === verse.number && "ring-2 ring-primary ring-offset-2 bg-primary/10 animate-pulse"
                                 )}
                             >
