@@ -20,9 +20,10 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
 
     const features = [
         { num: '01', title: 'Scripture Reading', desc: 'Immerse yourself in the Word with a distraction-free reading experience' },
-        { num: '02', title: 'Personal Journaling', desc: 'Capture your spiritual insights, prayers, and reflections' },
-        { num: '03', title: 'The Assistant', desc: 'Transform your study into structured lessons powered by AI' },
-        { num: '04', title: 'Sermon Builder', desc: 'Craft meaningful sermons with intelligent assistance' },
+        { num: '02', title: 'S.C.R.I.P.T. Method', desc: 'Follow our denomination-neutral six-step flow for deeper reading and reflection' },
+        { num: '03', title: 'Personal Journaling', desc: 'Capture your spiritual insights, prayers, and reflections' },
+        { num: '04', title: 'The Assistant', desc: 'Transform your study into structured lessons powered by AI' },
+        { num: '05', title: 'Sermon Builder', desc: 'Craft meaningful sermons with intelligent assistance' },
     ];
 
     const stats = [
@@ -41,11 +42,11 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     return (
         <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
-            <Head title="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling">
-                <meta name="description" content="InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features Easy Read mode, verse highlighting, and AI sermon generation." />
-                <meta name="keywords" content="Bible app, Bible reading, spiritual journaling, AI sermon generator, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
-                <meta property="og:title" content="InspireWrite by Glenride - AI Bible Reading & Spiritual Journaling" />
-                <meta property="og:description" content="The AI-powered Bible reading and spiritual journaling companion for modern believers." />
+            <Head title="InspireWrite by Glenride - S.C.R.I.P.T. Bible Reading & Spiritual Journaling">
+                <meta name="description" content="InspireWrite by Glenride helps believers read Scripture with the denomination-neutral S.C.R.I.P.T. method, journal reflections, and create AI-assisted lessons and sermons." />
+                <meta name="keywords" content="Bible app, S.C.R.I.P.T. method, Bible reading method, spiritual journaling, AI sermon generator, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
+                <meta property="og:title" content="InspireWrite by Glenride - S.C.R.I.P.T. Bible Reading & Spiritual Journaling" />
+                <meta property="og:description" content="Read Scripture with InspireWrite's S.C.R.I.P.T. method: context, clarity, and life application." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://inspirewrite.online" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -61,10 +62,11 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             "price": "0",
                             "priceCurrency": "USD"
                         },
-                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access with Easy Read mode, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
+                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access, the denomination-neutral S.C.R.I.P.T. reading method, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
                         "featureList": [
                             "Complete Bible Access with 66 books",
                             "Distraction-free Easy Read mode",
+                            "S.C.R.I.P.T. method for guided Bible reading and reflection",
                             "Color-coded verse highlighting",
                             "Verse favorites and bookmarks",
                             "Personal notes on any verse",
@@ -159,7 +161,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             The AI-powered Bible reading and spiritual journaling companion for modern believers.
                         </p>
                         <p className="text-lg text-gray-500 mb-8 max-w-md leading-relaxed">
-                            Read all 66 books in distraction-free Easy Read mode. Highlight verses, capture reflections, and generate sermons with AI assistance.
+                            Read all 66 books in distraction-free Easy Read mode and follow the S.C.R.I.P.T. method for denomination-neutral study. Highlight verses, capture reflections, and generate sermons with AI assistance.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link

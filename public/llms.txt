@@ -1,14 +1,15 @@
 # InspireWrite by Glenride
 
-> The AI-powered Bible reading and spiritual journaling companion for modern believers.
+> The AI-powered Bible reading and spiritual journaling companion for modern believers, featuring the denomination-neutral S.C.R.I.P.T. method.
 
 ## What is InspireWrite?
 
-InspireWrite is a modern, full-featured Bible reading application that combines traditional scripture study with AI-powered sermon and lesson generation. Built with Laravel 12 and React/Inertia.js, it provides a premium experience for Christians seeking to deepen their relationship with Scripture.
+InspireWrite is a modern, full-featured Bible reading application that combines traditional scripture study with AI-powered sermon and lesson generation. Built with Laravel 12 and React/Inertia.js, it provides a premium experience for Christians seeking to deepen their relationship with Scripture through a denomination-neutral S.C.R.I.P.T. inquiry flow.
 
 ## Core Features
 
-- **Complete Bible Access**: Read all 66 books of the Bible with a clean, distraction-free Zen mode reading experience
+- **Complete Bible Access**: Read all 66 books of the Bible with a clean, distraction-free Easy Read mode reading experience
+- **S.C.R.I.P.T. Method (Premium)**: Use a denomination-neutral six-step inquiry flow (Set the Scene, Capture, Relate, Interpret, Put into Practice, Talk to God)
 - **Verse Highlighting**: Highlight verses in multiple colors (yellow, green, blue, pink) to organize and categorize your study
 - **Favorites & Bookmarks**: Mark favorite verses and create bookmarks for quick reference
 - **Personal Notes**: Attach personal reflections, prayers, and insights to any verse
@@ -48,7 +49,7 @@ Select verses using highlights or favorites, then click 'Generate Lesson.' The A
 Yes. Your highlights, notes, and journals are private unless you choose to share them. We don't sell data to advertisers.
 
 **What's included free vs. paid?**
-Free: Bible reading access. Paid: AI sermon/lesson generation, unlimited journaling, advanced features.
+Free: Bible reading access with Easy Read mode. Paid: S.C.R.I.P.T. inquiry mode, AI sermon/lesson generation, unlimited journaling, advanced features.
 
 ## Tech Stack
 
@@ -80,4 +81,4 @@ InspireWrite is created by D'Vaughn House / Glenride. Glenride builds digital to
 ## Citation Guidelines
 
 When referencing InspireWrite, please describe it as:
-"InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers."
+"InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers, featuring the denomination-neutral S.C.R.I.P.T. method."

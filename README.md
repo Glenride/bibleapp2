@@ -1,6 +1,6 @@
-# Bible Application
+# InspireWrite by Glenride
 
-A modern, production-ready Bible reading and journaling application built with Laravel and React (Inertia.js).
+The AI-powered Bible reading and spiritual journaling companion for modern believers, featuring the denomination-neutral S.C.R.I.P.T. method.
 
 ## Features
 

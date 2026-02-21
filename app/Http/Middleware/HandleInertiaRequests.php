@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user() ? array_merge($request->user()->toArray(), [
                     'is_subscribed' => $request->user()->isAdmin() || $request->user()->subscribed('default'),
                     'is_admin' => $request->user()->isAdmin(),
+                    'can_access_premium' => $request->user()->hasProAccess(),
                 ]) : null,
             ],
             'flash' => [

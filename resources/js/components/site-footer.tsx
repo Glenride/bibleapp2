@@ -18,7 +18,7 @@ export function SiteFooter({ zenMode = false }: SiteFooterProps) {
                     <div className="col-span-1 md:col-span-2">
                         <h3 className="text-2xl tracking-[0.3em] mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>INSPIREWRITE.</h3>
                         <p className="text-gray-400 leading-relaxed max-w-md">
-                            A spiritual writing companion by Glenride. Read scripture, journal your thoughts, and create meaningful lessons with AI-powered assistance.
+                            The AI-powered Bible reading and spiritual journaling companion by Glenride, featuring the denomination-neutral S.C.R.I.P.T. method.
                         </p>
                     </div>
 

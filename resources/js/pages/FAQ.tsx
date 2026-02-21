@@ -87,6 +87,10 @@ export default function FAQ() {
                     answer: "Easy Read mode is our distraction-free Bible reading experience. It removes navigation elements and visual clutter so you can focus entirely on God's Word. Enable Easy Read mode by clicking the Easy Read button while reading a chapter. The text expands to fill your screen with clean, readable typography. It's perfect for extended reading sessions, meditation on Scripture, or when you need to minimize distractions."
                 },
                 {
+                    question: "What is the S.C.R.I.P.T. method in InspireWrite?",
+                    answer: "The S.C.R.I.P.T. method is InspireWrite's denomination-neutral guided inquiry flow for deeper Bible reading. S.C.R.I.P.T. stands for Set the Scene, Capture What It Says, Relate to the Rest of Scripture, Interpret the Meaning, Put It Into Practice, and Talk to God. Premium users can enable S.C.R.I.P.T. Inquiry Mode directly in the chapter reader for step-by-step reflection prompts."
+                },
+                {
                     question: "How do I create and organize notes?",
                     answer: "Notes in InspireWrite are attached directly to verses, making them easy to find later. Click on any verse and select the note icon to add your reflection. Notes are saved in your dashboard under the highlights section. You can write prayers, record insights, track questions, or document how God is speaking to you. This creates a personal spiritual journal tied directly to Scripture."
                 }

@@ -22,8 +22,8 @@ export default function About() {
 
     return (
         <BibleLayout>
-            <Head title="About InspireWrite - AI Bible Reading & Spiritual Journaling App">
-                <meta name="description" content="Learn about InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion. Built by D'Vaughn House to help believers deepen their relationship with scripture." />
+            <Head title="About InspireWrite - S.C.R.I.P.T. Bible Reading & Spiritual Journaling App">
+                <meta name="description" content="Learn about InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion featuring the denomination-neutral S.C.R.I.P.T. method." />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
             </Head>
 
@@ -38,7 +38,7 @@ export default function About() {
                     </div>
 
                     <p className="text-xl text-gray-700 leading-relaxed max-w-2xl mb-6">
-                        <strong>InspireWrite by Glenride</strong> is the AI-powered Bible reading and spiritual journaling companion for modern believers.
+                        <strong>InspireWrite by Glenride</strong> is the AI-powered Bible reading and spiritual journaling companion for modern believers, centered on the denomination-neutral S.C.R.I.P.T. method.
                     </p>
                     <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
                         We combine the timeless wisdom of Scripture with thoughtful technology to help you read, reflect, and grow in your faith journey.

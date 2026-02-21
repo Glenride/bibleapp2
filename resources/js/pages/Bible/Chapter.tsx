@@ -162,7 +162,7 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
 
     const handleInquiryModeToggle = () => {
         if (!auth.user) return router.visit('/login');
-        if (!auth.user.is_subscribed) return router.visit('/pricing');
+        if (!auth.user.can_access_premium) return router.visit('/pricing');
 
         setInquiryMode(!inquiryMode);
     };

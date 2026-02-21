@@ -1,6 +1,10 @@
 User-agent: *
 Disallow:
 
+# LLM discovery assets
+# /llms.txt
+# /for-llms
+
 # Allow AI/LLM scrapers
 User-agent: GPTBot
 Allow: /
