@@ -3,7 +3,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Book, Chapter as ChapterType, Verse, UserInteractions, BookNav } from '@/types/bible';
 import { SharedData } from '@/types';
 import { useState, useEffect } from 'react';
-import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown } from 'lucide-react';
+import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -59,6 +59,13 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
         return false;
     });
 
+    const [inquiryMode, setInquiryMode] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('bible-inquiry-mode') === 'true';
+        }
+        return false;
+    });
+
     // Track verse to highlight from URL hash (e.g., #verse-5)
     const [highlightedVerseNum, setHighlightedVerseNum] = useState<number | null>(() => {
         if (typeof window !== 'undefined') {
@@ -73,6 +80,10 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     useEffect(() => {
         localStorage.setItem('bible-zen-mode', String(zenMode));
     }, [zenMode]);
+
+    useEffect(() => {
+        localStorage.setItem('bible-inquiry-mode', String(inquiryMode));
+    }, [inquiryMode]);
 
     // Scroll to highlighted verse on mount or when hash changes
     useEffect(() => {
@@ -115,6 +126,46 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     }, [noteDialog.isOpen, noteDialog.initialNote]);
 
     const isBookmarked = !!userInteractions.bookmark;
+
+    const scriptPrompts = [
+        {
+            key: 'S',
+            title: 'Set the Scene',
+            prompt: 'Who is speaking, to whom, and what is happening in this passage?',
+        },
+        {
+            key: 'C',
+            title: 'Capture What It Says',
+            prompt: 'What words, actions, commands, or promises are emphasized?',
+        },
+        {
+            key: 'R',
+            title: 'Relate to the Rest of Scripture',
+            prompt: 'Where else does Scripture speak to this same theme?',
+        },
+        {
+            key: 'I',
+            title: 'Interpret the Meaning',
+            prompt: 'What did this mean then, and what does it reveal about God today?',
+        },
+        {
+            key: 'P',
+            title: 'Put It Into Practice',
+            prompt: 'What one action or attitude should change this week?',
+        },
+        {
+            key: 'T',
+            title: 'Talk to God',
+            prompt: 'How will you respond to God in prayer based on this passage?',
+        },
+    ];
+
+    const handleInquiryModeToggle = () => {
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
+
+        setInquiryMode(!inquiryMode);
+    };
 
     const handleBookmarkClick = () => {
         if (!auth.user) return router.visit('/login');
@@ -400,8 +451,47 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 {zenMode ? <Minimize className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
                             </Button>
                         </div>
+
+                        <div className="border-l border-border pl-4">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleInquiryModeToggle}
+                                title={inquiryMode ? "Exit S.C.R.I.P.T. Inquiry Mode" : "Enter S.C.R.I.P.T. Inquiry Mode (Premium)"}
+                                className={cn("transition-colors", inquiryMode ? "text-primary" : "hover:text-primary")}
+                            >
+                                <Sparkles className="h-5 w-5" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
+
+                {inquiryMode && (
+                    <section className="mb-10 rounded-2xl border border-primary/20 bg-primary/5 p-5 md:p-6">
+                        <div className="mb-4 flex items-start justify-between gap-4">
+                            <div>
+                                <h2 className="font-serif text-2xl text-foreground">S.C.R.I.P.T. Inquiry Mode</h2>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    A denomination-neutral reading and reflection flow designed for InspireWrite subscribers.
+                                </p>
+                            </div>
+                            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+                                Premium
+                            </span>
+                        </div>
+
+                        <div className="grid gap-3 md:grid-cols-2">
+                            {scriptPrompts.map((step) => (
+                                <article key={step.key} className="rounded-xl border border-border/70 bg-background/80 p-4">
+                                    <h3 className="text-sm font-semibold uppercase tracking-wide text-primary">
+                                        {step.key} — {step.title}
+                                    </h3>
+                                    <p className="mt-2 text-sm text-foreground/80">{step.prompt}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* Chapter Navigation */}
                 <div className={cn(

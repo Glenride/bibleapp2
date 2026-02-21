@@ -6,6 +6,7 @@ A modern, production-ready Bible reading and journaling application built with L
 
 - **Read Bible**: Browse books, chapters, and verses.
 - **Easy Read Mode**: Distraction-free reading experience with persistent preference.
+- **S.C.R.I.P.T. Inquiry Mode (Premium)**: Denomination-neutral, guided six-step reading and reflection flow for subscribers.
 - **User Interactions**:
     - **Highlights**: Color-coded highlights (Yellow, Green, Blue, Pink) with notes.
     - **Favorites**: Mark verses as favorites with notes.
