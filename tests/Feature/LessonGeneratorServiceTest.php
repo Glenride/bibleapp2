@@ -138,7 +138,7 @@ class LessonGeneratorServiceTest extends TestCase
         });
     }
 
-    public function test_basic_plan_cannot_generate_lessons(): void
+    public function test_basic_plan_can_generate_lessons_within_monthly_limit(): void
     {
         $user = User::factory()->create();
         Subscription::factory()->state([
@@ -147,6 +147,63 @@ class LessonGeneratorServiceTest extends TestCase
             'stripe_price' => User::BASIC_PLAN_PRICE_ID,
         ])->create();
 
+        $verse = Verse::factory()->create();
+        $highlight = Highlight::create([
+            'user_id' => $user->id,
+            'verse_id' => $verse->id,
+            'color' => 'yellow',
+            'note' => 'Test note',
+        ]);
+
+        $lessonPayload = [
+            'title' => 'Faith That Endures',
+            'detected_theme' => 'Faith',
+            'content' => '## Proposition\nGod strengthens believers to endure.',
+        ];
+
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode($lessonPayload),
+                        ],
+                    ],
+                ],
+            ]),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->from(route('lessons.index'))
+            ->post(route('lessons.generate'), [
+                'theme' => 'Faith',
+                'highlight_ids' => [$highlight->id],
+                'favorite_ids' => [],
+            ]);
+
+        $response->assertRedirect(route('lessons.index'));
+        $response->assertSessionHas('success', 'Lesson generated successfully!');
+    }
+
+    public function test_basic_plan_cannot_generate_lessons_after_monthly_limit(): void
+    {
+        $user = User::factory()->create();
+        Subscription::factory()->state([
+            'user_id' => $user->id,
+            'type' => 'default',
+            'stripe_price' => User::BASIC_PLAN_PRICE_ID,
+        ])->create();
+
+        $user->lessons()->create([
+            'title' => 'Lesson 1',
+            'content' => 'Content',
+        ]);
+
+        $user->lessons()->create([
+            'title' => 'Lesson 2',
+            'content' => 'Content',
+        ]);
+
         $response = $this->actingAs($user)
             ->from(route('lessons.index'))
             ->post(route('lessons.generate'), [
@@ -154,7 +211,7 @@ class LessonGeneratorServiceTest extends TestCase
             ]);
 
         $response->assertRedirect(route('lessons.index'));
-        $response->assertSessionHas('error', 'Pro plan required to generate AI lessons.');
+        $response->assertSessionHas('error', 'You have reached your monthly lesson limit (2).');
     }
 
     public function test_pro_plan_can_generate_lessons(): void
@@ -228,7 +285,7 @@ class LessonGeneratorServiceTest extends TestCase
             ]);
 
         $response->assertRedirect(route('lessons.index'));
-        $response->assertSessionHas('error', 'Pro plan required to generate AI sermons.');
+        $response->assertSessionHas('error', 'Your plan does not include sermon generation.');
     }
 
     public function test_pro_plan_can_generate_sermons(): void
@@ -303,5 +360,34 @@ class LessonGeneratorServiceTest extends TestCase
             'user_id' => $user->id,
             'title' => $lessonPayload['title'],
         ]);
+    }
+
+    public function test_pro_plan_cannot_generate_more_than_five_sermons_per_month(): void
+    {
+        $user = User::factory()->create();
+        Subscription::factory()->state([
+            'user_id' => $user->id,
+            'type' => 'default',
+            'stripe_price' => User::PRO_PLAN_PRICE_ID,
+        ])->create();
+
+        for ($i = 0; $i < 5; $i++) {
+            $user->sermons()->create([
+                'title' => "Sermon {$i}",
+                'description' => 'Existing sermon',
+            ]);
+        }
+
+        $response = $this->actingAs($user)
+            ->from(route('lessons.index'))
+            ->post(route('sermons.generate'), [
+                'title' => 'Sermon 6',
+                'description' => 'Should be blocked',
+                'lesson_count' => 1,
+                'themes' => ['Hope'],
+            ]);
+
+        $response->assertRedirect(route('lessons.index'));
+        $response->assertSessionHas('error', 'You have reached your monthly sermon limit (5).');
     }
 }

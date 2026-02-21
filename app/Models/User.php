@@ -135,6 +135,32 @@ class User extends Authenticatable
         return $plan === 'pro' || $plan === 'trial';
     }
 
+    public function monthlyLessonLimit(): ?int
+    {
+        if ($this->isAdmin() || $this->isBetaTester()) {
+            return null;
+        }
+
+        return match ($this->currentPlan()) {
+            'basic' => 2,
+            'pro', 'trial' => null,
+            default => 0,
+        };
+    }
+
+    public function monthlySermonLimit(): ?int
+    {
+        if ($this->isAdmin() || $this->isBetaTester()) {
+            return null;
+        }
+
+        return match ($this->currentPlan()) {
+            'pro', 'trial' => 5,
+            'basic', 'none' => 0,
+            default => 0,
+        };
+    }
+
     public function highlights()
     {
         return $this->hasMany(Highlight::class);

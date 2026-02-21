@@ -97,8 +97,19 @@ class LessonController extends Controller
 
         $user = Auth::user();
 
-        if (!$user->hasProAccess()) {
-            return back()->with('error', 'Pro plan required to generate AI lessons.');
+        $lessonLimit = $user->monthlyLessonLimit();
+        if ($lessonLimit === 0) {
+            return back()->with('error', 'Your plan does not include lesson generation.');
+        }
+
+        if ($lessonLimit !== null) {
+            $lessonsThisMonth = $user->lessons()
+                ->where('created_at', '>=', now()->startOfMonth())
+                ->count();
+
+            if ($lessonsThisMonth >= $lessonLimit) {
+                return back()->with('error', "You have reached your monthly lesson limit ({$lessonLimit}).");
+            }
         }
 
         if ($request->sermon_id) {

@@ -49,8 +49,19 @@ class SermonController extends Controller
 
         $user = Auth::user();
 
-        if (!$user->hasProAccess()) {
-            return back()->with('error', 'Pro plan required to generate AI sermons.');
+        $sermonLimit = $user->monthlySermonLimit();
+        if ($sermonLimit === 0) {
+            return back()->with('error', 'Your plan does not include sermon generation.');
+        }
+
+        if ($sermonLimit !== null) {
+            $sermonsThisMonth = $user->sermons()
+                ->where('created_at', '>=', now()->startOfMonth())
+                ->count();
+
+            if ($sermonsThisMonth >= $sermonLimit) {
+                return back()->with('error', "You have reached your monthly sermon limit ({$sermonLimit}).");
+            }
         }
 
         try {

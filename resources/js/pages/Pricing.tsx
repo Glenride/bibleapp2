@@ -17,11 +17,13 @@ export default function Pricing() {
                     <div className="border border-border/50 rounded-lg p-8 bg-card shadow-sm">
                         <h2 className="text-2xl font-serif mb-2">Basic</h2>
                         <div className="text-4xl font-bold mb-6">$7<span className="text-lg font-normal text-muted-foreground">/mo</span></div>
-                        <p className="text-muted-foreground mb-6">Essential tools for daily reading.</p>
+                        <p className="text-muted-foreground mb-6">Great for consistent weekly study.</p>
                         <ul className="space-y-3 mb-8">
                             <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Full Bible Access</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Basic Search</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Personal Notes</li>
+                            <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Up to 2 AI lessons / month</li>
+                            <li className="flex items-center gap-2"><Check className="size-4 text-green-500" /> Sermon generation not included</li>
                         </ul>
                         <a href="/checkout/price_1SqIgMLenlwJrzcOoUWAw2qf" className="w-full block text-center py-2 px-4 border border-primary text-primary hover:bg-primary/5 rounded-md transition-colors">
                             Get Started
@@ -33,12 +35,14 @@ export default function Pricing() {
                         <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-bl-lg font-medium">RECOMMENDED</div>
                         <h2 className="text-2xl font-serif mb-2">Journal Pro</h2>
                         <div className="text-4xl font-bold mb-6">$27<span className="text-lg font-normal text-muted-foreground">/mo</span></div>
-                        <p className="text-muted-foreground mb-6">Advanced study tools and unlimited journaling.</p>
+                        <p className="text-muted-foreground mb-6">For pastors, teachers, and deeper prep.</p>
                         <ul className="space-y-3 mb-8">
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Everything in Basic</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Advanced AI Insights</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Unlimited Journals</li>
                             <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Reading Plans</li>
+                            <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Unlimited AI lessons</li>
+                            <li className="flex items-center gap-2"><Check className="size-4 text-primary" /> Up to 5 AI sermons / month</li>
                         </ul>
                         <a href="/checkout/price_1SqIgxLenlwJrzcOw7OEiD4n" className="w-full block text-center py-2 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-sm">
                             Subscribe Now
