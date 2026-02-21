@@ -17,7 +17,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a] flex flex-col transition-colors duration-500" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <div className="force-light min-h-screen bg-[#F5F2EA] text-[#1a1a1a] flex flex-col transition-colors duration-500" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
 
             {/* Header */}
