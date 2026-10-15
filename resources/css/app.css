@@ -7,6 +7,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Keep native form controls (especially password inputs) in sync with the
+   active theme. Without an explicit color-scheme, the browser can render dark
+   native controls while the page itself is light (e.g. solid black password
+   boxes when the OS is in dark mode). */
+:root {
+    color-scheme: light;
+}
+
+.dark {
+    color-scheme: dark;
+}
+
+/* Keep autofilled credentials readable against the theme background. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 @theme {
     --font-sans:
         'Lato', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,

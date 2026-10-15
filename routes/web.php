@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\BibleController;
 use App\Http\Controllers\BibleInteractionController;
+use App\Http\Controllers\BibleSearchController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\SermonController;
+use App\Models\BibleVersion;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -12,6 +14,16 @@ use Laravel\Fortify\Features;
 Route::get('/', [BibleController::class, 'index'])->name('home');
 Route::get('/about', function () { return Inertia::render('About'); })->name('about');
 Route::get('/pricing', function () { return Inertia::render('Pricing'); })->name('pricing');
+// NOTE: /bible/search must be registered before /bible/{book}/{chapter?},
+// otherwise "search" is captured as a book abbreviation.
+Route::get('/bible/search', [BibleSearchController::class, 'search'])->name('bible.search');
+// Version-prefixed Bible URLs (additive only). Registered before
+// /bible/{book}/{chapter?} so a version slug is never captured as a book
+// abbreviation. The unprefixed routes below are untouched: they remain the
+// canonical KJV URLs and must never redirect.
+Route::get('/bible/{version}/{book}/{chapter?}', [BibleController::class, 'showVersioned'])
+    ->where('version', implode('|', array_keys(BibleVersion::VERSION_SLUGS)))
+    ->name('bible.version.chapter');
 Route::get('/bible/{book}/{chapter?}', [BibleController::class, 'show'])->name('bible.chapter');
 
 Route::get('/shared/{token}', [SermonController::class, 'shared'])->name('sermons.shared');

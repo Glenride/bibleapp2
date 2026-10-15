@@ -1,11 +1,39 @@
-import { Link, usePage } from '@inertiajs/react';
-import { PropsWithChildren } from 'react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { PropsWithChildren, useState, type FormEvent } from 'react';
 import { SharedData } from '@/types';
 import { cn } from '@/lib/utils';
 import { FlashToaster } from '@/components/flash-toaster';
+import { Search } from 'lucide-react';
 
 interface BibleLayoutProps extends PropsWithChildren {
     zenMode?: boolean;
+}
+
+function HeaderSearch() {
+    const [value, setValue] = useState('');
+
+    const submit = (e: FormEvent) => {
+        e.preventDefault();
+        const q = value.trim();
+
+        if (q.length >= 2) {
+            router.visit(`/bible/search?q=${encodeURIComponent(q)}`);
+        }
+    };
+
+    return (
+        <form onSubmit={submit} className="relative" role="search">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+            <input
+                type="search"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search scripture…"
+                aria-label="Search the Bible"
+                className="w-40 md:w-48 rounded-full border border-input bg-background pl-9 pr-3 py-1.5 text-xs normal-case tracking-normal text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none transition-all focus:w-52 md:focus:w-64"
+            />
+        </form>
+    );
 }
 
 export default function BibleLayout({ children, zenMode = false }: BibleLayoutProps) {
@@ -28,8 +56,9 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                     <Link href="/" className="hover:text-primary/70 transition-colors">Home</Link>
                     <Link href={route('about')} className="hover:text-primary/70 transition-colors">About</Link>
                     <Link href={route('pricing')} className="hover:text-primary/70 transition-colors">Pricing</Link>
-                    <Link href="#" className="hover:text-primary/70 transition-colors">Old Testament</Link>
-                    <Link href="#" className="hover:text-primary/70 transition-colors">New Testament</Link>
+                    <Link href="/#old-testament" className="hover:text-primary/70 transition-colors">Old Testament</Link>
+                    <Link href="/#new-testament" className="hover:text-primary/70 transition-colors">New Testament</Link>
+                    <HeaderSearch />
 
                     {auth.user ? (
                         <Link href="/dashboard" className="hover:text-primary/70 transition-colors font-bold text-primary">
@@ -100,6 +129,11 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                 <div className="border-t border-border/30 mt-12 pt-6 text-center text-xs text-muted-foreground uppercase tracking-widest">
                     &copy; {new Date().getFullYear()} Glenride Holy Bible and Journal. All Rights Reserved. v1.1
                 </div>
+                <p className="max-w-3xl mx-auto mt-4 text-center text-[11px] leading-relaxed text-muted-foreground/80">
+                    AI may be used to generate text and other content on this site, including study
+                    assistance. Scripture quotations are from the King James Version, which is in the
+                    public domain. Please verify important information independently.
+                </p>
             </footer>
         </div>
     );

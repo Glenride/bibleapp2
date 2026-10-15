@@ -2,7 +2,7 @@ import BibleLayout from '@/layouts/bible-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Book, Chapter as ChapterType, Verse, UserInteractions } from '@/types/bible';
 import { SharedData } from '@/types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,9 @@ interface Props {
     book: Book;
     chapter: ChapterType;
     verses: Verse[];
+    version: { name: string; abbreviation: string; language: string; slug: string; label: string };
+    available_versions: { slug: string; label: string; name: string }[];
+    total_chapters: number;
     prev_link: string | null;
     next_link: string | null;
     userInteractions: UserInteractions;
@@ -34,7 +37,45 @@ interface NoteDialogState {
     color?: string; // For highlights
 }
 
-export default function Chapter({ book, chapter, verses, prev_link, next_link, userInteractions }: Props) {
+// The source dataset has no paragraph markers, so verses are grouped into
+// readable paragraph blocks of this size.
+const PARAGRAPH_SIZE = 5;
+
+/** Strip KJV crawler brace artifacts (for meta descriptions / snippets). */
+function stripBraceArtifacts(text: string): string {
+    return text
+        .replace(/\{[^}]*\}/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * Render verse text, converting KJV crawler artifacts into proper typography:
+ * - short {segments} (words added for readability) -> true italics
+ * - longer {translator notes} (contain ":" or are long) -> subtle muted
+ *   footnote-style spans
+ * Raw curly braces are never rendered.
+ */
+function renderVerseText(text: string): ReactNode[] {
+    return text.split(/(\{[^}]*\})/g).map((part, i) => {
+        if (part.length > 2 && part.startsWith('{') && part.endsWith('}')) {
+            const inner = part.slice(1, -1).trim();
+            const isNote = inner.includes(':') || inner.length > 40;
+
+            return isNote ? (
+                <span key={i} className="mx-1 align-baseline text-[0.8em] italic text-muted-foreground/80">
+                    [{inner}]
+                </span>
+            ) : (
+                <em key={i}>{inner}</em>
+            );
+        }
+
+        return <span key={i}>{part}</span>;
+    });
+}
+
+export default function Chapter({ book, chapter, verses, version, available_versions, total_chapters, prev_link, next_link, userInteractions }: Props) {
     const { auth } = usePage<SharedData>().props;
     const [fontSize, setFontSize] = useState(20);
     const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
@@ -72,6 +113,17 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     }, [noteDialog.isOpen, noteDialog.initialNote]);
 
     const isBookmarked = !!userInteractions.bookmark;
+
+    // Group verses into readable paragraph blocks (the source data carries
+    // no paragraph markers, so we chunk by a fixed size).
+    const paragraphs: Verse[][] = [];
+    for (let i = 0; i < verses.length; i += PARAGRAPH_SIZE) {
+        paragraphs.push(verses.slice(i, i + PARAGRAPH_SIZE));
+    }
+
+    const versionLabel = version.label;
+    const firstVerseClean = stripBraceArtifacts(verses[0]?.text ?? '');
+    const metaDescription = `Read ${book.name} chapter ${chapter.number} online free in the ${version.name}. ${firstVerseClean.substring(0, 140)}${firstVerseClean.length > 140 ? '…' : ''}`;
 
     const handleBookmarkClick = () => {
         if (!auth.user) return router.visit('/login');
@@ -202,10 +254,11 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
     return (
         <BibleLayout zenMode={zenMode}>
             <Head>
-                <title>{`${book.name} ${chapter.number}`}</title>
-                <meta name="description" content={`Read ${book.name} Chapter ${chapter.number} of the Bible. ${verses[0]?.text.substring(0, 150)}...`} />
-                <meta property="og:title" content={`${book.name} ${chapter.number} - Holy Bible`} />
-                <meta property="og:description" content={`Read ${book.name} Chapter ${chapter.number}. ${verses[0]?.text.substring(0, 100)}...`} />
+                <title>{`${book.name} ${chapter.number} (${versionLabel}) — Read the Bible Online | InspireWrite`}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={`${book.name} ${chapter.number} (${versionLabel}) — InspireWrite`} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:type" content="article" />
             </Head>
             
             <div className={cn(
@@ -286,15 +339,17 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                     )}
                 </div>
 
-                {/* Verses */}
-                <div 
+                {/* Verses — grouped into readable paragraph blocks */}
+                <div
                     className={cn(
                         "prose prose-lg dark:prose-invert max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
                         zenMode && "prose-xl leading-relaxed"
-                    )} 
+                    )}
                     style={{ fontSize: `${fontSize}px` }}
                 >
-                    {verses.map((verse, index) => {
+                    {paragraphs.map((group, pIndex) => (
+                        <p key={pIndex} className="mb-6">
+                            {group.map((verse) => {
                         const highlight = userInteractions.highlights[verse.id];
                         const isFavorited = !!userInteractions.favorites[verse.id];
                         const isSelected = selectedVerseId === verse.id;
@@ -312,23 +367,24 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 )}
                             >
                                 <sup className={cn(
-                                    "text-[0.6em] text-primary/40 mr-1 select-none font-sans font-bold align-top relative top-[-0.2em] transition-opacity",
+                                    "mr-2 align-super select-none font-sans text-[0.72em] font-bold tracking-wide text-primary transition-opacity",
                                     isFirstVerse && "hidden" // Hide verse number 1 for drop cap effect
                                 )}>
                                     {verse.number}
-                                    {isFavorited && <Heart className="inline-block h-2 w-2 ml-0.5 text-red-500 fill-red-500" />}
-                                    {hasNote && <MessageSquare className="inline-block h-2 w-2 ml-0.5 text-blue-500 fill-blue-500" />}
+                                    {isFavorited && <Heart className="inline-block h-2.5 w-2.5 ml-1 text-red-500 fill-red-500" />}
+                                    {hasNote && <MessageSquare className="inline-block h-2.5 w-2.5 ml-1 text-blue-500 fill-blue-500" />}
                                 </sup>
-                                
-                                <span className={cn(
-                                    isFirstVerse && "float-left text-7xl leading-[0.8] pr-3 pt-1 font-bold text-primary font-serif",
-                                )}>
-                                    {isFirstVerse ? verse.text.charAt(0) : ''}
-                                </span>
-                                
-                                <span>
-                                    {isFirstVerse ? verse.text.substring(1) : verse.text}{' '}
-                                </span>
+
+                                {isFirstVerse && !verse.text.startsWith('{') ? (
+                                    <>
+                                        <span className="float-left text-7xl leading-[0.8] pr-3 pt-1 font-bold text-primary font-serif">
+                                            {verse.text.charAt(0)}
+                                        </span>
+                                        <span>{renderVerseText(verse.text.substring(1))}{' '}</span>
+                                    </>
+                                ) : (
+                                    <span>{renderVerseText(verse.text)}{' '}</span>
+                                )}
 
                                 {/* Floating Toolbar for Selected Verse */}
                                 {isSelected && (
@@ -378,7 +434,63 @@ export default function Chapter({ book, chapter, verses, prev_link, next_link, u
                                 )}
                             </span>
                         );
-                    })}
+                            })}
+                        </p>
+                    ))}
+                </div>
+
+                {/* Chapter quick-jump (no 150 clicks for Psalms) + version switcher */}
+                <div className={cn(
+                    "flex flex-wrap justify-center gap-6 mt-10 transition-opacity duration-300",
+                    zenMode && "opacity-20 hover:opacity-100"
+                )}>
+                    {available_versions.length > 1 && (
+                        <label className="flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+                            Version
+                            <select
+                                value={version.slug}
+                                onChange={(e) => {
+                                    const slug = e.target.value;
+                                    if (slug === 'kjv') {
+                                        router.visit(route('bible.chapter', { book: book.abbreviation, chapter: chapter.number }));
+                                    } else {
+                                        router.visit(route('bible.version.chapter', { version: slug, book: book.abbreviation, chapter: chapter.number }));
+                                    }
+                                }}
+                                className="rounded-md border border-input bg-background px-3 py-2 font-sans text-sm normal-case tracking-normal text-foreground"
+                                aria-label="Switch Bible translation"
+                            >
+                                {available_versions.map((v) => (
+                                    <option key={v.slug} value={v.slug} title={v.name}>
+                                        {v.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    )}
+                    <label className="flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+                        Chapter
+                        <select
+                            value={chapter.number}
+                            onChange={(e) => {
+                                const ch = Number(e.target.value);
+                                if (version.slug === 'kjv') {
+                                    router.visit(route('bible.chapter', { book: book.abbreviation, chapter: ch }));
+                                } else {
+                                    router.visit(route('bible.version.chapter', { version: version.slug, book: book.abbreviation, chapter: ch }));
+                                }
+                            }}
+                            className="rounded-md border border-input bg-background px-3 py-2 font-sans text-sm normal-case tracking-normal text-foreground"
+                            aria-label={`Jump to a chapter of ${book.name}`}
+                        >
+                            {Array.from({ length: total_chapters }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>
+                                    {i + 1}
+                                </option>
+                            ))}
+                        </select>
+                        <span className="normal-case tracking-normal">of {total_chapters}</span>
+                    </label>
                 </div>
                 
                 {/* Bottom Navigation */}

@@ -36,19 +36,26 @@ class GenerateSitemap extends Command
         // Home
         $sitemap .= $this->addUrl($baseUrl . '/', 'daily', '1.0');
 
-        // Bible Chapters
-        // Assuming single version for now, or primary version
-        $version = BibleVersion::first();
-        
-        if ($version) {
+        // Bible Chapters, for every imported version.
+        // The default version (KJV) keeps the canonical unprefixed URLs;
+        // alternate versions get additive prefixed URLs (e.g. /bible/bbe/gen/1).
+        // These are genuinely different translated texts, not duplicate content.
+        foreach (BibleVersion::VERSION_SLUGS as $slug => $abbreviation) {
+            $version = BibleVersion::where('abbreviation', $abbreviation)->first();
+
+            if (! $version) {
+                continue;
+            }
+
+            $prefix = $slug === 'kjv' ? '' : '/' . $slug;
             $books = $version->books()->with('chapters')->get();
 
             foreach ($books as $book) {
                 // Book Index (if exists) or just chapters
-                $sitemap .= $this->addUrl($baseUrl . "/bible/{$book->abbreviation}", 'weekly', '0.8');
+                $sitemap .= $this->addUrl($baseUrl . "/bible{$prefix}/{$book->abbreviation}", 'weekly', '0.8');
 
                 foreach ($book->chapters as $chapter) {
-                    $sitemap .= $this->addUrl($baseUrl . "/bible/{$book->abbreviation}/{$chapter->number}", 'monthly', '0.7');
+                    $sitemap .= $this->addUrl($baseUrl . "/bible{$prefix}/{$book->abbreviation}/{$chapter->number}", 'monthly', '0.7');
                 }
             }
         }

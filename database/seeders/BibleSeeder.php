@@ -9,9 +9,20 @@ use App\Models\Verse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class BibleSeeder extends Seeder
 {
+    /**
+     * Translations imported into the database. Deliberately an allowlist —
+     * the other vendored translations in bible/json are excluded for now.
+     *
+     * NOTE: pt_nvi (Nova Versão Internacional / Portuguese NIV) must NEVER
+     * be added here. It is copyrighted by Biblica and cannot be freely
+     * distributed.
+     */
+    private const ALLOWED_VERSIONS = ['en_kjv', 'en_bbe'];
+
     /**
      * Run the database seeds.
      */
@@ -40,8 +51,8 @@ class BibleSeeder extends Seeder
                     $versionName = $versionData['name'];
                     $abbreviation = $versionData['abbreviation'];
 
-                    // Only import KJV for now
-                    if ($abbreviation !== 'en_kjv') {
+                    // Only import allowlisted versions (see ALLOWED_VERSIONS above)
+                    if (! in_array($abbreviation, self::ALLOWED_VERSIONS, true)) {
                         continue;
                     }
 
@@ -140,5 +151,13 @@ class BibleSeeder extends Seeder
                 }
             }
         });
+
+        // Keep the SQLite FTS5 search index in sync with the imported verses.
+        // (MySQL/Postgres use native indexes; see the verses_fts migration.)
+        if (DB::getDriverName() === 'sqlite' && Schema::hasTable('verses_fts')) {
+            $this->command->info('Populating verses_fts search index...');
+            DB::statement('DELETE FROM verses_fts');
+            DB::statement('INSERT INTO verses_fts (verse_id, text) SELECT id, text FROM verses');
+        }
     }
 }

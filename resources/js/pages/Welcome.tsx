@@ -7,6 +7,7 @@ interface Book {
     abbreviation: string;
     position: number;
     image?: string;
+    chapters_count?: number;
 }
 
 export default function Welcome({ oldTestament = [], newTestament = [] }: { oldTestament?: Book[], newTestament?: Book[] }) {
@@ -38,7 +39,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto">
 
                     {/* Old Testament */}
-                    <section className="mb-16">
+                    <section id="old-testament" className="mb-16 scroll-mt-24">
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#733000]">Old Testament</h2>
                             <div className="h-px bg-[#733000]/20 flex-1" />
@@ -51,13 +52,18 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                                     className="p-4 rounded-lg bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all group"
                                 >
                                     <h3 className="font-serif font-medium text-lg group-hover:text-primary transition-colors">{book.name}</h3>
+                                    {typeof book.chapters_count === 'number' && (
+                                        <span className="text-xs text-muted-foreground mt-1">
+                                            {book.chapters_count} chapter{book.chapters_count === 1 ? '' : 's'}
+                                        </span>
+                                    )}
                                 </Link>
                             ))}
                         </div>
                     </section>
 
                     {/* New Testament */}
-                    <section>
+                    <section id="new-testament" className="scroll-mt-24">
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#4B0600]">New Testament</h2>
                             <div className="h-px bg-[#4B0600]/20 flex-1" />
@@ -70,6 +76,11 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                                     className="p-4 rounded-lg bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all group"
                                 >
                                     <h3 className="font-serif font-medium text-lg group-hover:text-primary transition-colors">{book.name}</h3>
+                                    {typeof book.chapters_count === 'number' && (
+                                        <span className="text-xs text-muted-foreground mt-1">
+                                            {book.chapters_count} chapter{book.chapters_count === 1 ? '' : 's'}
+                                        </span>
+                                    )}
                                 </Link>
                             ))}
                         </div>
