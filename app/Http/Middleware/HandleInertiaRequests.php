@@ -44,6 +44,11 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                // The logged-in user's affiliate record (if any): code + status only.
+                // Used for the conditional sidebar link and dashboard widget.
+                'affiliate' => fn () => $request->user()?->affiliate
+                    ? $request->user()->affiliate->only(['code', 'status'])
+                    : null,
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

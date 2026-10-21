@@ -22,5 +22,13 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
+
+        // Affiliate attribution: Fortify dispatches Registered on every
+        // signup (including beta signups), and this listener credits the
+        // affiliate behind the referral cookie, if any.
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Registered::class,
+            \App\Listeners\AttributeAffiliateSignup::class
+        );
     }
 }

@@ -47,7 +47,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * The creator's affiliate record, if they are an affiliate.
+     */
+    public function affiliate()
+    {
+        return $this->hasOne(\App\Models\Affiliate::class);
     }
 
     public function highlights()

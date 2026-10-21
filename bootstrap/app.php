@@ -20,6 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
+        // Standalone-fallback admin gate for the affiliate module. When mounting
+        // inside the existing homelab admin panel, use that panel's middleware
+        // instead (see docs/affiliate-admin-integration.md).
+        $middleware->alias([
+            'is_admin' => \App\Http\Middleware\EnsureIsAdmin::class,
+        ]);
+
         $middleware->web(append: [
             EnsureSecurityHeaders::class,
             HandleAppearance::class,

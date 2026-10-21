@@ -13,7 +13,12 @@ interface Book {
 export default function Welcome({ oldTestament = [], newTestament = [] }: { oldTestament?: Book[], newTestament?: Book[] }) {
     return (
         <BibleLayout>
-            <Head title="Home" />
+            <Head title="InspireWrite by Glenride — Read the Bible Online Free">
+                <meta
+                    name="description"
+                    content="Read the Bible online free in a beautiful, distraction-free reader. Highlight verses, keep a spiritual journal, and build lessons and sermons with the Assistant."
+                />
+            </Head>
 
             {/* Hero Section */}
             <div className="relative bg-[#1a1a1a] text-white py-24 px-4 overflow-hidden">
@@ -41,8 +46,8 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     {/* Old Testament */}
                     <section id="old-testament" className="mb-16 scroll-mt-24">
                         <div className="flex items-center gap-4 mb-8">
-                            <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#733000]">Old Testament</h2>
-                            <div className="h-px bg-[#733000]/20 flex-1" />
+                            <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#733000] dark:text-[#e8a76f]">Old Testament</h2>
+                            <div className="h-px bg-[#733000]/20 dark:bg-[#e8a76f]/25 flex-1" />
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                             {oldTestament.map((book) => (
@@ -65,8 +70,8 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     {/* New Testament */}
                     <section id="new-testament" className="scroll-mt-24">
                         <div className="flex items-center gap-4 mb-8">
-                            <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#4B0600]">New Testament</h2>
-                            <div className="h-px bg-[#4B0600]/20 flex-1" />
+                            <h2 className="font-serif text-3xl font-bold uppercase tracking-widest text-[#4B0600] dark:text-[#e08e6d]">New Testament</h2>
+                            <div className="h-px bg-[#4B0600]/20 dark:bg-[#e08e6d]/25 flex-1" />
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                             {newTestament.map((book) => (

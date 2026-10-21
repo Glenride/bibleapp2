@@ -243,10 +243,10 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
     const getHighlightColor = (color: string) => {
         switch (color) {
-            case 'yellow': return 'bg-yellow-200/50 dark:bg-yellow-900/30';
-            case 'green': return 'bg-green-200/50 dark:bg-green-900/30';
-            case 'blue': return 'bg-blue-200/50 dark:bg-blue-900/30';
-            case 'pink': return 'bg-pink-200/50 dark:bg-pink-900/30';
+            case 'yellow': return 'bg-yellow-200/50 dark:bg-yellow-400/25';
+            case 'green': return 'bg-green-200/50 dark:bg-green-400/25';
+            case 'blue': return 'bg-blue-200/50 dark:bg-blue-400/25';
+            case 'pink': return 'bg-pink-200/50 dark:bg-pink-400/25';
             default: return '';
         }
     };

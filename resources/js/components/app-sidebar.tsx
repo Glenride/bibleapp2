@@ -11,9 +11,9 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Sparkles, Users } from 'lucide-react';
+import { type NavItem, type SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { BadgeDollarSign, BookOpen, Folder, LayoutGrid, Sparkles, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -28,7 +28,7 @@ const mainNavItems: NavItem[] = [
         icon: BookOpen,
     },
     {
-        title: 'AI Lessons',
+        title: 'Lessons',
         href: '/lessons',
         icon: Sparkles,
     },
@@ -53,6 +53,19 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+
+    const items: NavItem[] = [...mainNavItems];
+
+    // Affiliate link, visible only to users with an affiliate record.
+    if (auth.affiliate) {
+        items.push({
+            title: 'Affiliate',
+            href: '/affiliate',
+            icon: BadgeDollarSign,
+        });
+    }
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -68,7 +81,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={items} />
             </SidebarContent>
 
             <SidebarFooter>

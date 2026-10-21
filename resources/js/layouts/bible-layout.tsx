@@ -3,6 +3,7 @@ import { PropsWithChildren, useState, type FormEvent } from 'react';
 import { SharedData } from '@/types';
 import { cn } from '@/lib/utils';
 import { FlashToaster } from '@/components/flash-toaster';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { Search } from 'lucide-react';
 
 interface BibleLayoutProps extends PropsWithChildren {
@@ -59,6 +60,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                     <Link href="/#old-testament" className="hover:text-primary/70 transition-colors">Old Testament</Link>
                     <Link href="/#new-testament" className="hover:text-primary/70 transition-colors">New Testament</Link>
                     <HeaderSearch />
+                    <AppearanceToggleDropdown />
 
                     {auth.user ? (
                         <Link href="/dashboard" className="hover:text-primary/70 transition-colors font-bold text-primary">
@@ -118,7 +120,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                             <input
                                 type="email"
                                 placeholder="Your email"
-                                className="bg-white dark:bg-zinc-900 border border-border px-3 py-2 text-sm w-full focus:outline-none focus:border-primary"
+                                className="bg-white dark:bg-background border border-border px-3 py-2 text-sm w-full focus:outline-none focus:border-primary"
                             />
                             <button className="bg-primary text-primary-foreground px-4 py-2 text-xs uppercase tracking-widest hover:opacity-90">
                                 Join

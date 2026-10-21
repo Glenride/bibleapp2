@@ -1,8 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { BookOpen, Bookmark as BookmarkIcon, Heart, Highlighter, MessageSquare } from 'lucide-react';
+import { type BreadcrumbItem, type SharedData } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { BookOpen, Bookmark as BookmarkIcon, Heart, Highlighter, MessageSquare, BadgeDollarSign, Copy, Check } from 'lucide-react';
+import { useState } from 'react';
 import { Bookmark, Highlight, Book, Chapter, Verse } from '@/types/bible';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +48,19 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ bookmarks, favorites, highlights }: DashboardProps) {
+    const { auth } = usePage<SharedData>().props;
+    const [linkCopied, setLinkCopied] = useState(false);
+
+    const copyAffiliateLink = async () => {
+        if (!auth.affiliate) return;
+        try {
+            await navigator.clipboard.writeText(`${window.location.origin}/r/${auth.affiliate.code}`);
+            setLinkCopied(true);
+            setTimeout(() => setLinkCopied(false), 2000);
+        } catch {
+            /* clipboard unavailable */
+        }
+    };
     
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -84,6 +98,46 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                         </Link>
                     </div>
                 </div>
+
+                {/* Affiliate card — only for users with an affiliate record */}
+                {auth.affiliate && (
+                    <div className="rounded-xl border border-primary/30 bg-primary/5 p-6 shadow-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                                    <BadgeDollarSign size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-lg">Your affiliate link</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Code <span className="font-mono font-medium">{auth.affiliate.code}</span>
+                                        {' · '}
+                                        <span className="capitalize">{auth.affiliate.status}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <code className="rounded-md border bg-background px-3 py-2 text-sm break-all">
+                                    {typeof window !== 'undefined' ? `${window.location.origin}/r/${auth.affiliate.code}` : `/r/${auth.affiliate.code}`}
+                                </code>
+                                <button
+                                    type="button"
+                                    onClick={copyAffiliateLink}
+                                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
+                                >
+                                    {linkCopied ? <Check size={16} /> : <Copy size={16} />}
+                                    {linkCopied ? 'Copied!' : 'Copy'}
+                                </button>
+                                <Link
+                                    href="/affiliate"
+                                    className="inline-flex items-center gap-2 border border-border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted transition-colors"
+                                >
+                                    Dashboard
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="grid gap-6 md:grid-cols-3">
                     {/* Bookmarks Column */}

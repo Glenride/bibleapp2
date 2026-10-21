@@ -3,6 +3,7 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
     user: User;
+    affiliate: { code: string; status: string } | null;
 }
 
 export interface BreadcrumbItem {
