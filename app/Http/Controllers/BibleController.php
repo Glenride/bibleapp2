@@ -80,7 +80,7 @@ class BibleController extends Controller
         // reader never silently drops out of (or into) another translation.
         $chapterLink = fn (string $bookAbbr, int $chapterNum) => $versionSlug === 'kjv'
             ? route('bible.chapter', ['book' => $bookAbbr, 'chapter' => $chapterNum])
-            : route('bible.version.chapter', ['version' => $versionSlug, 'book' => $bookAbbr, 'chapter' => $chapterNum);
+            : route('bible.version.chapter', ['version' => $versionSlug, 'book' => $bookAbbr, 'chapter' => $chapterNum]);
 
         // Navigation
         $prevLink = null;
