@@ -48,7 +48,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             {oldTestament.map((book) => (
                                 <Link
                                     key={book.id}
-                                    href={route('bible.chapter', { book: book.abbreviation })}
+                                    href={`/bible/${book.abbreviation}`}
                                     className="p-4 rounded-lg bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all group"
                                 >
                                     <h3 className="font-serif font-medium text-lg group-hover:text-primary transition-colors">{book.name}</h3>
@@ -72,7 +72,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             {newTestament.map((book) => (
                                 <Link
                                     key={book.id}
-                                    href={route('bible.chapter', { book: book.abbreviation })}
+                                    href={`/bible/${book.abbreviation}`}
                                     className="p-4 rounded-lg bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all group"
                                 >
                                     <h3 className="font-serif font-medium text-lg group-hover:text-primary transition-colors">{book.name}</h3>

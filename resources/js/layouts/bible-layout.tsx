@@ -54,8 +54,8 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
 
                 <nav className="flex items-center space-x-6 text-sm tracking-widest uppercase">
                     <Link href="/" className="hover:text-primary/70 transition-colors">Home</Link>
-                    <Link href={route('about')} className="hover:text-primary/70 transition-colors">About</Link>
-                    <Link href={route('pricing')} className="hover:text-primary/70 transition-colors">Pricing</Link>
+                    <Link href="/about" className="hover:text-primary/70 transition-colors">About</Link>
+                    <Link href="/pricing" className="hover:text-primary/70 transition-colors">Pricing</Link>
                     <Link href="/#old-testament" className="hover:text-primary/70 transition-colors">Old Testament</Link>
                     <Link href="/#new-testament" className="hover:text-primary/70 transition-colors">New Testament</Link>
                     <HeaderSearch />
@@ -97,8 +97,8 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                         <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Quick Links</h4>
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             <li><Link href="/" className="hover:text-primary">Home</Link></li>
-                            <li><Link href={route('about')} className="hover:text-primary">About</Link></li>
-                            <li><Link href={route('pricing')} className="hover:text-primary">Pricing</Link></li>
+                            <li><Link href="/about" className="hover:text-primary">About</Link></li>
+                            <li><Link href="/pricing" className="hover:text-primary">Pricing</Link></li>
                             <li><Link href="#" className="hover:text-primary">Contact</Link></li>
                         </ul>
                     </div>

@@ -452,9 +452,9 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                                 onChange={(e) => {
                                     const slug = e.target.value;
                                     if (slug === 'kjv') {
-                                        router.visit(route('bible.chapter', { book: book.abbreviation, chapter: chapter.number }));
+                                        router.visit(`/bible/${book.abbreviation}/${chapter.number}`);
                                     } else {
-                                        router.visit(route('bible.version.chapter', { version: slug, book: book.abbreviation, chapter: chapter.number }));
+                                        router.visit(`/bible/${slug}/${book.abbreviation}/${chapter.number}`);
                                     }
                                 }}
                                 className="rounded-md border border-input bg-background px-3 py-2 font-sans text-sm normal-case tracking-normal text-foreground"
@@ -475,9 +475,9 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                             onChange={(e) => {
                                 const ch = Number(e.target.value);
                                 if (version.slug === 'kjv') {
-                                    router.visit(route('bible.chapter', { book: book.abbreviation, chapter: ch }));
+                                    router.visit(`/bible/${book.abbreviation}/${ch}`);
                                 } else {
-                                    router.visit(route('bible.version.chapter', { version: version.slug, book: book.abbreviation, chapter: ch }));
+                                    router.visit(`/bible/${version.slug}/${book.abbreviation}/${ch}`);
                                 }
                             }}
                             className="rounded-md border border-input bg-background px-3 py-2 font-sans text-sm normal-case tracking-normal text-foreground"
