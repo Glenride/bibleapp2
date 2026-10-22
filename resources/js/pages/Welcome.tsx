@@ -17,11 +17,11 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const features = [
-        { num: '01', title: 'Scripture Reading', desc: 'Immerse yourself in the Word with a distraction-free reading experience' },
-        { num: '02', title: 'S.C.R.I.P.T. Method', desc: 'Follow our denomination-neutral six-step flow for deeper reading and reflection' },
-        { num: '03', title: 'Personal Journaling', desc: 'Capture your spiritual insights, prayers, and reflections' },
-        { num: '04', title: 'The Assistant', desc: 'Transform your study into structured lessons powered by AI' },
-        { num: '05', title: 'Sermon Builder', desc: 'Craft meaningful sermons with intelligent assistance' },
+        { title: 'Scripture Reading', desc: 'Immerse yourself in the Word with a distraction-free reading experience' },
+        { title: 'S.C.R.I.P.T. Method', desc: 'Follow our denomination-neutral six-step flow for deeper reading and reflection' },
+        { title: 'Personal Journaling', desc: 'Capture your spiritual insights, prayers, and reflections' },
+        { title: 'The Assistant', desc: 'Transform your study into structured lessons with the Assistant' },
+        { title: 'Sermon Builder', desc: "Craft meaningful sermons with the Assistant's help" },
     ];
 
     const stats = [
@@ -41,8 +41,8 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
         <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
             <Head title="InspireWrite by Glenride - S.C.R.I.P.T. Bible Reading & Spiritual Journaling">
-                <meta name="description" content="InspireWrite by Glenride helps believers read Scripture with the denomination-neutral S.C.R.I.P.T. method, journal reflections, and create AI-assisted lessons and sermons." />
-                <meta name="keywords" content="Bible app, S.C.R.I.P.T. method, Bible reading method, spiritual journaling, AI sermon generator, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
+                <meta name="description" content="InspireWrite by Glenride helps believers read Scripture with the denomination-neutral S.C.R.I.P.T. method, journal reflections, and build lessons and sermons with the Assistant." />
+                <meta name="keywords" content="Bible app, S.C.R.I.P.T. method, Bible reading method, spiritual journaling, verse highlighting, Bible study, Christian app, InspireWrite, Glenride" />
                 <meta property="og:title" content="InspireWrite by Glenride - S.C.R.I.P.T. Bible Reading & Spiritual Journaling" />
                 <meta property="og:description" content="Read Scripture with InspireWrite's S.C.R.I.P.T. method: context, clarity, and life application." />
                 <meta property="og:type" content="website" />
@@ -60,7 +60,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             "price": "0",
                             "priceCurrency": "USD"
                         },
-                        "description": "InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access, the denomination-neutral S.C.R.I.P.T. reading method, verse highlighting, bookmarks, notes, AI sermon generation, and spiritual journaling.",
+                        "description": "InspireWrite by Glenride - the Bible reading and spiritual journaling companion for modern believers. Features include complete Bible access, the denomination-neutral S.C.R.I.P.T. reading method, verse highlighting, bookmarks, notes, sermon building with the Assistant, and spiritual journaling.",
                         "featureList": [
                             "Complete Bible Access with 66 books",
                             "Distraction-free Easy Read mode",
@@ -68,8 +68,8 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             "Color-coded verse highlighting",
                             "Verse favorites and bookmarks",
                             "Personal notes on any verse",
-                            "AI-powered sermon generation",
-                            "AI-powered lesson creation",
+                            "Sermon building with the Assistant",
+                            "Structured lesson creation with the Assistant",
                             "Spiritual journaling dashboard"
                         ],
                         "creator": {
@@ -100,13 +100,13 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         <Link href="/pricing" className="hover:text-yellow-600 transition-colors">Pricing</Link>
                         <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors">Scripture</Link>
                         {auth.user ? (
-                            <Link href="/dashboard" className="bg-yellow-500 text-white px-5 py-2.5 hover:bg-yellow-600 transition-colors">
+                            <Link href="/dashboard" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-5 py-2.5 hover:bg-yellow-400 transition-colors">
                                 My Studio
                             </Link>
                         ) : (
                             <>
                                 <Link href="/login" className="hover:text-yellow-600 transition-colors">Log in</Link>
-                                <Link href="/register" className="bg-yellow-500 text-white px-5 py-2.5 hover:bg-yellow-600 transition-colors">
+                                <Link href="/register" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-5 py-2.5 hover:bg-yellow-400 transition-colors">
                                     Get Started
                                 </Link>
                             </>
@@ -129,13 +129,13 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             <Link href="/pricing" className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
                             <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
                             {auth.user ? (
-                                <Link href="/dashboard" className="bg-yellow-500 text-white px-5 py-2.5 text-center hover:bg-yellow-600 transition-colors">
+                                <Link href="/dashboard" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-5 py-2.5 text-center hover:bg-yellow-400 transition-colors">
                                     My Studio
                                 </Link>
                             ) : (
                                 <>
                                     <Link href="/login" className="hover:text-yellow-600 transition-colors py-2">Log in</Link>
-                                    <Link href="/register" className="bg-yellow-500 text-white px-5 py-2.5 text-center hover:bg-yellow-600 transition-colors">
+                                    <Link href="/register" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-5 py-2.5 text-center hover:bg-yellow-400 transition-colors">
                                         Get Started
                                     </Link>
                                 </>
@@ -157,16 +157,16 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                         <h1 className="text-6xl md:text-8xl font-bold leading-[0.9] mb-6" style={{ fontFamily: 'DM Serif Display, serif' }}>
                             INSPIRE<span className="text-yellow-500">WRITE</span>.
                         </h1>
-                        <p className="text-xl text-gray-600 mb-4 max-w-md leading-relaxed">
-                            The AI-powered Bible reading and spiritual journaling companion for modern believers.
+                        <p className="text-xl text-gray-700 mb-4 max-w-md leading-relaxed">
+                            The Bible reading and spiritual journaling companion for modern believers.
                         </p>
-                        <p className="text-lg text-gray-500 mb-8 max-w-md leading-relaxed">
-                            Read all 66 books in distraction-free Easy Read mode and follow the S.C.R.I.P.T. method for denomination-neutral study. Highlight verses, capture reflections, and generate sermons with AI assistance.
+                        <p className="text-lg text-gray-600 mb-8 max-w-md leading-relaxed">
+                            Read all 66 books in distraction-free Easy Read mode and follow the S.C.R.I.P.T. method for denomination-neutral reflection. Highlight verses, capture insights, and build lessons and sermons with the Assistant.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link
                                 href="/bible/gn/1"
-                                className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 text-sm uppercase tracking-widest hover:bg-gray-800 transition-colors group"
+                                className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-4 text-sm uppercase tracking-widest hover:bg-gray-800 transition-colors group font-medium"
                             >
                                 Start Reading
                                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -174,7 +174,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             {!auth.user && (
                                 <Link
                                     href="/register"
-                                    className="inline-flex items-center gap-2 border-2 border-[#1a1a1a] px-8 py-4 text-sm uppercase tracking-widest hover:bg-[#1a1a1a] hover:text-white transition-colors"
+                                    className="inline-flex items-center gap-2 border-2 border-[#1a1a1a] px-8 py-4 text-sm uppercase tracking-widest hover:bg-[#1a1a1a] hover:text-white transition-colors font-medium"
                                 >
                                     Create Account
                                 </Link>
@@ -184,16 +184,16 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
 
                     {/* Decorative Typography */}
                     <div className="hidden md:block relative">
-                        <div className="text-[12rem] font-bold text-yellow-500/10 leading-none absolute -top-20 -right-10 select-none" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                        <div className="text-[12rem] font-bold text-yellow-500/10 leading-none absolute -top-20 -right-10 select-none pointer-events-none" style={{ fontFamily: 'DM Serif Display, serif' }}>
                             IW
                         </div>
-                        <div className="bg-white p-8 shadow-2xl relative z-10">
-                            <div className="border border-gray-100 p-6">
-                                <Quote className="text-yellow-500 mb-4" size={32} />
-                                <p className="text-lg italic text-gray-700 mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                        <div className="bg-white p-10 md:p-12 shadow-2xl relative z-10 border border-black/5">
+                            <div className="border border-yellow-500/30 p-8 bg-[#FDFBF7]">
+                                <Quote className="text-yellow-600 mb-6" size={36} />
+                                <p className="text-xl md:text-2xl italic text-gray-800 mb-6 leading-relaxed" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                     "Thy word is a lamp unto my feet, and a light unto my path."
                                 </p>
-                                <p className="text-sm text-gray-500 uppercase tracking-widest">Psalm 119:105</p>
+                                <p className="text-xs text-yellow-700 uppercase tracking-[0.25em] font-semibold">Psalm 119:105</p>
                             </div>
                         </div>
                     </div>
@@ -205,18 +205,15 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            FEAT<span className="text-yellow-500">URES</span>.
+                            FEATURES.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature) => (
-                            <div key={feature.num} className="group p-6 border border-gray-100 hover:border-yellow-500 hover:shadow-lg transition-all duration-300">
-                                <span className="text-5xl font-bold text-yellow-500/20 group-hover:text-yellow-500/40 transition-colors" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                                    {feature.num}
-                                </span>
-                                <h3 className="text-lg font-bold uppercase tracking-wider mt-4 mb-2">{feature.title}</h3>
+                            <div key={feature.title} className="group p-8 border border-gray-100 hover:border-yellow-500 hover:shadow-lg transition-all duration-300 bg-[#FDFBF7]">
+                                <h3 className="text-lg font-bold uppercase tracking-wider mb-3 text-gray-900 group-hover:text-yellow-600 transition-colors">{feature.title}</h3>
                                 <p className="text-gray-600 text-sm leading-relaxed">{feature.desc}</p>
                             </div>
                         ))}
@@ -230,7 +227,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                     <div>
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                                AB<span className="text-yellow-500">OUT</span> US.
+                                ABOUT US.
                             </h2>
                             <div className="h-px bg-white/20 flex-1" />
                         </div>
@@ -238,7 +235,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                             InspireWrite by Glenride is a spiritual writing platform designed for those who want to deepen their relationship with scripture through thoughtful journaling and creative expression.
                         </p>
                         <p className="text-gray-300 leading-relaxed mb-8">
-                            We combine the timeless wisdom of the Bible with modern AI technology to help you create lessons, build sermons, and capture your spiritual insights in meaningful ways.
+                            We combine the timeless wisdom of the Bible with thoughtful modern tools to help you create lessons, build sermons with the Assistant, and capture your spiritual insights in meaningful ways.
                         </p>
                         <Link href="/about" className="inline-flex items-center gap-2 text-yellow-500 uppercase tracking-widest text-sm hover:text-yellow-400 transition-colors group">
                             Learn More <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -260,7 +257,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            SCRIP<span className="text-yellow-500">TURE</span>.
+                            SCRIPTURE.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -308,7 +305,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-center gap-4 mb-16">
                         <h2 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            REVI<span className="text-yellow-500">EWS</span>.
+                            REVIEWS.
                         </h2>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -331,24 +328,24 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
             </section>
 
             {/* CTA Section */}
-            <section className="py-24 bg-yellow-500 text-white">
+            <section className="py-24 bg-[#1a1a1a] text-white">
                 <div className="max-w-4xl mx-auto px-6 text-center">
                     <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                        GET IN TOUCH.
+                        START YOUR JOURNEY.
                     </h2>
-                    <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-                        Ready to transform your spiritual writing journey? Join InspireWrite today and discover a new way to engage with scripture.
+                    <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                        Ready to deepen your relationship with scripture? Join InspireWrite today to read, journal, and reflect.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             href="/register"
-                            className="inline-flex items-center justify-center gap-2 bg-white text-yellow-600 px-10 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
+                            className="inline-flex items-center justify-center gap-2 bg-yellow-500 text-[#1a1a1a] px-10 py-4 text-sm uppercase tracking-widest hover:bg-yellow-400 transition-colors font-semibold"
                         >
                             Create Account
                         </Link>
                         <Link
                             href="/pricing"
-                            className="inline-flex items-center justify-center gap-2 border-2 border-white px-10 py-4 text-sm uppercase tracking-widest hover:bg-white/10 transition-colors"
+                            className="inline-flex items-center justify-center gap-2 border-2 border-white/80 text-white px-10 py-4 text-sm uppercase tracking-widest hover:bg-white hover:text-[#1a1a1a] transition-colors font-medium"
                         >
                             View Pricing
                         </Link>

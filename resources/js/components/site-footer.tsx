@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/react';
-import { about, pricing } from '@/routes';
 import { cn } from '@/lib/utils';
 
 interface SiteFooterProps {
@@ -18,7 +17,7 @@ export function SiteFooter({ zenMode = false }: SiteFooterProps) {
                     <div className="col-span-1 md:col-span-2">
                         <h3 className="text-2xl tracking-[0.3em] mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>INSPIREWRITE.</h3>
                         <p className="text-gray-400 leading-relaxed max-w-md">
-                            The AI-powered Bible reading and spiritual journaling companion by Glenride, featuring the denomination-neutral S.C.R.I.P.T. method.
+                            The Bible reading and spiritual journaling companion by Glenride, featuring the denomination-neutral S.C.R.I.P.T. method.
                         </p>
                     </div>
 
@@ -27,8 +26,8 @@ export function SiteFooter({ zenMode = false }: SiteFooterProps) {
                         <h4 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4">Quick Links</h4>
                         <ul className="space-y-3 text-sm">
                             <li><Link href="/" className="hover:text-yellow-500 transition-colors">Home</Link></li>
-                            <li><Link href={about.url()} className="hover:text-yellow-500 transition-colors">About</Link></li>
-                            <li><Link href={pricing.url()} className="hover:text-yellow-500 transition-colors">Pricing</Link></li>
+                            <li><Link href="/about" className="hover:text-yellow-500 transition-colors">About</Link></li>
+                            <li><Link href="/pricing" className="hover:text-yellow-500 transition-colors">Pricing</Link></li>
                             <li><Link href="/faq" className="hover:text-yellow-500 transition-colors">FAQ</Link></li>
                             <li><Link href="/bible/gn/1" className="hover:text-yellow-500 transition-colors">Start Reading</Link></li>
                         </ul>
@@ -64,6 +63,10 @@ export function SiteFooter({ zenMode = false }: SiteFooterProps) {
                         <a href="https://inspirewrite.online" className="hover:text-yellow-500 transition-colors">inspirewrite.online</a>
                     </p>
                 </div>
+
+                <p className="max-w-3xl mx-auto mt-6 text-center text-[11px] leading-relaxed text-gray-400">
+                    AI may be used to generate text and other content on this site, including study assistance. Scripture quotations are from the King James Version, which is in the public domain. Please verify important information independently.
+                </p>
             </div>
         </footer>
     );

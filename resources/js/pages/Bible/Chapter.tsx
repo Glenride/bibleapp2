@@ -3,7 +3,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Book, Chapter as ChapterType, Verse, UserInteractions, BookNav } from '@/types/bible';
 import { SharedData } from '@/types';
 import { useState, useEffect, type ReactNode } from 'react';
-import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown, Sparkles } from 'lucide-react';
+import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown, Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -62,8 +62,8 @@ function stripBraceArtifacts(text: string): string {
 /**
  * Render verse text, converting KJV crawler artifacts into proper typography:
  * - short {segments} (words added for readability) -> true italics
- * - longer {translator notes} (contain ":" or are long) -> subtle muted
- *   footnote-style spans
+ * - longer {translator notes} (contain ":" or are long) -> footnote markers
+ *   hoverable/tappable outside the main text flow
  * Raw curly braces are never rendered.
  */
 function renderVerseText(text: string): ReactNode[] {
@@ -73,8 +73,14 @@ function renderVerseText(text: string): ReactNode[] {
             const isNote = inner.includes(':') || inner.length > 40;
 
             return isNote ? (
-                <span key={i} className="mx-1 align-baseline text-[0.8em] italic text-muted-foreground/80">
-                    [{inner}]
+                <span
+                    key={i}
+                    className="inline-block align-super text-[0.68em] font-sans font-semibold text-yellow-600/90 dark:text-yellow-400/90 cursor-help px-0.5 select-none hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors"
+                    title={`Translator note: ${inner}`}
+                    role="note"
+                    aria-label={`Translator note: ${inner}`}
+                >
+                    [*]
                 </span>
             ) : (
                 <em key={i}>{inner}</em>
@@ -87,10 +93,34 @@ function renderVerseText(text: string): ReactNode[] {
 
 export default function Chapter({ book, chapter, verses, version, available_versions, total_chapters, prev_link, next_link, userInteractions, allBooks, bookChapters }: Props) {
     const { auth } = usePage<SharedData>().props;
-    const [fontSize, setFontSize] = useState(20);
+    const [fontSize, setFontSize] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('bible-font-size');
+            if (saved) {
+                const parsed = parseInt(saved, 10);
+                if (!isNaN(parsed) && parsed >= 14 && parsed <= 32) {
+                    return parsed;
+                }
+            }
+        }
+        return 20;
+    });
     const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
     const [navOpen, setNavOpen] = useState(false);
     const [expandedBook, setExpandedBook] = useState<string | null>(book.abbreviation);
+    const [showStickyHeader, setShowStickyHeader] = useState(false);
+
+    useEffect(() => {
+        localStorage.setItem('bible-font-size', String(fontSize));
+    }, [fontSize]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowStickyHeader(window.scrollY > 220);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     // Initialize Easy Read mode from localStorage
     const [zenMode, setZenMode] = useState(() => {
@@ -360,6 +390,38 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                 <meta property="og:type" content="article" />
             </Head>
 
+            {/* Sticky mini-header on scroll */}
+            {showStickyHeader && (
+                <div className="fixed top-0 left-0 right-0 z-40 bg-[#F5F2EA]/95 dark:bg-[#1a1a1a]/95 backdrop-blur border-b border-border/40 py-2.5 px-6 flex items-center justify-between shadow-sm animate-in fade-in duration-200">
+                    <div className="flex items-center gap-3">
+                        <span className="font-serif font-semibold text-sm tracking-wide">
+                            {book.name} {chapter.number}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                            (Chapter {chapter.number} of {total_chapters})
+                        </span>
+                        <span className="text-[11px] uppercase tracking-wider text-muted-foreground/80 font-mono px-1.5 py-0.5 bg-muted rounded">
+                            {versionLabel}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {prev_link && (
+                            <Link href={prev_link} className="text-xs uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors">
+                                &larr; Prev
+                            </Link>
+                        )}
+                        {next_link && (
+                            <Link href={next_link} className="text-xs uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors">
+                                Next &rarr;
+                            </Link>
+                        )}
+                        <Link href="/bible/search" className="text-muted-foreground hover:text-primary transition-colors ml-2" title="Search Scripture">
+                            <Search className="h-4 w-4" />
+                        </Link>
+                    </div>
+                </div>
+            )}
+
             <div className={cn(
                 "mx-auto py-8 px-4 md:px-8 relative transition-all duration-500 ease-in-out",
                 zenMode ? "max-w-3xl pt-12" : "max-w-4xl"
@@ -478,6 +540,39 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                     </Sheet>
 
                     <div className="flex items-center gap-4">
+                        {/* Top chapter quick nav and position */}
+                        <div className="flex items-center gap-1 border-r border-border pr-4">
+                            {prev_link ? (
+                                <Link
+                                    href={prev_link}
+                                    className="text-xs uppercase tracking-wider text-muted-foreground hover:text-primary px-1.5 py-1 transition-colors"
+                                    title="Previous Chapter"
+                                >
+                                    &larr; Prev
+                                </Link>
+                            ) : (
+                                <span className="text-xs uppercase tracking-wider text-muted-foreground/30 px-1.5 py-1 select-none">
+                                    &larr; Prev
+                                </span>
+                            )}
+                            <span className="text-xs text-muted-foreground/70 px-1 font-mono">
+                                {chapter.number}/{total_chapters}
+                            </span>
+                            {next_link ? (
+                                <Link
+                                    href={next_link}
+                                    className="text-xs uppercase tracking-wider text-muted-foreground hover:text-primary px-1.5 py-1 transition-colors"
+                                    title="Next Chapter"
+                                >
+                                    Next &rarr;
+                                </Link>
+                            ) : (
+                                <span className="text-xs uppercase tracking-wider text-muted-foreground/30 px-1.5 py-1 select-none">
+                                    Next &rarr;
+                                </span>
+                            )}
+                        </div>
+
                         <Button
                             variant="ghost"
                             size="icon"
@@ -562,10 +657,14 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                         <div className="w-20"></div>
                     )}
 
-                    <h1 className="font-serif text-5xl md:text-6xl text-center text-foreground/90 font-medium tracking-tight">
-                        <span className="text-2xl md:text-3xl block mb-2 text-muted-foreground italic font-normal">Chapter</span>
-                        {chapter.number}
-                    </h1>
+                    <div className="text-center">
+                        <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium block mb-1">
+                            {book.name} &bull; Chapter {chapter.number} of {total_chapters}
+                        </span>
+                        <h1 className="font-serif text-5xl md:text-6xl text-center text-foreground/90 font-medium tracking-tight">
+                            {chapter.number}
+                        </h1>
+                    </div>
 
                     {next_link ? (
                         <Link
@@ -579,11 +678,11 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                     )}
                 </div>
 
-                {/* Verses — grouped into readable paragraph blocks */}
+                {/* Verses — grouped into readable paragraph blocks with comfortable line measure */}
                 <div
                     className={cn(
-                        "prose prose-lg max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
-                        zenMode && "prose-xl leading-relaxed"
+                        "max-w-[68ch] mx-auto font-serif leading-[1.8] text-foreground/85 selection:bg-primary/20",
+                        zenMode && "leading-[1.85]"
                     )}
                     style={{ fontSize: `${fontSize}px` }}
                 >

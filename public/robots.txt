@@ -5,7 +5,7 @@ Disallow:
 # /llms.txt
 # /for-llms
 
-# Allow AI/LLM scrapers
+# Allow web crawlers and machine readers
 User-agent: GPTBot
 Allow: /
 

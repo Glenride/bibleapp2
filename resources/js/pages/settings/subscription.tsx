@@ -41,8 +41,8 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                 <h3 className="font-medium">Current Plan</h3>
                                 <p className="text-muted-foreground text-sm mt-1">
                                     {currentPlan === 'none' && 'No active subscription'}
-                                    {currentPlan === 'basic' && 'Basic - $7/month'}
-                                    {currentPlan === 'pro' && 'Journal Pro - $27/month'}
+                                    {currentPlan === 'basic' && 'Study - $7/month'}
+                                    {currentPlan === 'pro' && 'Pro - $27/month'}
                                     {currentPlan === 'trial' && 'Trial - Free'}
                                 </p>
                                 {subscriptionEndsAt && (
@@ -81,12 +81,12 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                             </h3>
 
                             <div className="grid gap-4">
-                                {/* Basic Plan */}
+                                {/* Study Plan */}
                                 {(currentPlan === 'none' || currentPlan === 'trial') && (
                                     <div className="rounded-lg border border-border/50 bg-card p-6">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <h4 className="font-medium">Basic</h4>
+                                                <h4 className="font-medium">Study</h4>
                                                 <p className="text-2xl font-bold mt-1">$7<span className="text-sm font-normal text-muted-foreground">/month</span></p>
                                                 <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                                                     <li className="flex items-center gap-2">
@@ -116,14 +116,14 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                     </div>
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
-                                            <h4 className="font-medium">Journal Pro</h4>
+                                            <h4 className="font-medium">Pro</h4>
                                             <p className="text-2xl font-bold mt-1">$27<span className="text-sm font-normal text-muted-foreground">/month</span></p>
                                             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                                                 <li className="flex items-center gap-2">
-                                                    <Check className="size-4 text-primary" /> Everything in Basic
+                                                    <Check className="size-4 text-primary" /> Everything in Study
                                                 </li>
                                                 <li className="flex items-center gap-2">
-                                                    <Check className="size-4 text-primary" /> Advanced AI Insights
+                                                    <Check className="size-4 text-primary" /> Advanced study insights
                                                 </li>
                                                 <li className="flex items-center gap-2">
                                                     <Check className="size-4 text-primary" /> Unlimited Journals
@@ -154,7 +154,7 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                 <div>
                                     <h3 className="font-medium">You're a Pro Member!</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        You have access to all premium features including AI insights and unlimited journals.
+                                        You have access to all premium features including study insights and unlimited journals.
                                     </p>
                                 </div>
                             </div>

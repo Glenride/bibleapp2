@@ -58,11 +58,11 @@ export default function FAQ() {
                 },
                 {
                     question: "How do I pray effectively?",
-                    answer: "Effective prayer isn't about using perfect words—it's about honest conversation with God. Start with thanksgiving, then confession, then bring your requests. The ACTS model helps: Adoration (praising God), Confession (acknowledging sins), Thanksgiving (expressing gratitude), and Supplication (making requests). Pray Scripture back to God—our AI features can help you identify key verses to pray over. Most importantly, make time to listen in silence, not just speak."
+                    answer: "Effective prayer isn't about using perfect words—it's about honest conversation with God. Start with thanksgiving, then confession, then bring your requests. The ACTS model helps: Adoration (praising God), Confession (acknowledging sins), Thanksgiving (expressing gratitude), and Supplication (making requests). Pray Scripture back to God—the Assistant can help you identify key verses to pray over. Most importantly, make time to listen in silence, not just speak."
                 },
                 {
                     question: "How do I study the Bible deeply, not just read it?",
-                    answer: "Deep Bible study involves observation (what does the text say?), interpretation (what does it mean?), and application (how does it change my life?). Use InspireWrite's highlighting to mark key themes in different colors. Write notes asking questions about the passage. Look up cross-references to see how passages connect. Our AI lesson generator can help you structure your study into formal insights. Consider joining a Bible study group for discussion and accountability."
+                    answer: "Deep Bible study involves observation (what does the text say?), interpretation (what does it mean?), and application (how does it change my life?). Use InspireWrite's highlighting to mark key themes in different colors. Write notes asking questions about the passage. Look up cross-references to see how passages connect. The Assistant can help you structure your study into formal insights. Consider joining a Bible study group for discussion and accountability."
                 }
             ]
         },
@@ -71,8 +71,8 @@ export default function FAQ() {
             icon: <Sparkles className="text-yellow-500" size={24} />,
             items: [
                 {
-                    question: "How does the AI sermon generator work?",
-                    answer: "InspireWrite's AI sermon generator uses advanced language models to help you create structured sermons from Scripture. Select the verses you want to preach from using highlights or favorites, then click 'Generate Lesson.' The AI analyzes the passage and produces a structured sermon outline with introduction, main points, illustrations, and application. Review and edit the content—the AI is an assistant, not a replacement for your spiritual discernment and personal study."
+                    question: "How does sermon building with the Assistant work?",
+                    answer: "InspireWrite's Assistant helps you create structured sermons from Scripture. Select the verses you want to preach from using highlights or favorites, then click 'Generate Lesson.' The Assistant analyzes the passage and produces a structured sermon outline with introduction, main points, illustrations, and application. Review and edit the content—the Assistant is a helper, not a replacement for your spiritual discernment and personal study."
                 },
                 {
                     question: "Can I share my sermons with others?",
@@ -102,7 +102,7 @@ export default function FAQ() {
             items: [
                 {
                     question: "What's included in the free version?",
-                    answer: "The free features of InspireWrite include full access to read all 66 books of the Bible, basic navigation and search, and the ability to create an account to save your place. Paid plans unlock AI-powered sermon and lesson generation, unlimited highlighting and notes, advanced journaling features, and the ability to share your content with others."
+                    answer: "The free features of InspireWrite include full access to read all 66 books of the Bible, basic navigation and search, and the ability to create an account to save your place. Paid plans unlock lesson and sermon building with the Assistant, unlimited highlighting and notes, advanced journaling features, and the ability to share your content with others."
                 },
                 {
                     question: "How do I upgrade to a paid plan?",
@@ -127,8 +127,8 @@ export default function FAQ() {
                     answer: "Yes, your privacy is important to us. Your highlights, notes, and journals are private and only visible to you unless you choose to share them. We don't sell your data to advertisers or third parties. Read our full Privacy Policy for details on how we handle your information."
                 },
                 {
-                    question: "How is AI-generated content handled?",
-                    answer: "When you use our AI features, selected Bible verses are sent to OpenAI to generate sermons and lessons. Your personal notes are not sent unless you include them in the generation request. Generated content is stored privately in your account. We don't use your content to train AI models."
+                    question: "How is generated content handled?",
+                    answer: "When you use the Assistant, selected Bible verses are used to generate sermon outlines and lessons. Your personal notes are not included unless you choose to add them. Generated content is stored privately in your account. As noted in our footer disclaimer, generated content should always be verified independently against Scripture."
                 },
                 {
                     question: "Can I delete my account and data?",
@@ -157,7 +157,7 @@ export default function FAQ() {
     return (
         <BibleLayout>
             <Head title="FAQ - Frequently Asked Questions | InspireWrite">
-                <meta name="description" content="Find answers to common questions about InspireWrite. Learn how to read the Bible, use AI features, manage your subscription, and grow spiritually." />
+                <meta name="description" content="Find answers to common questions about InspireWrite. Learn how to read the Bible, study with the Assistant, manage your subscription, and grow spiritually." />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             </Head>
 
@@ -166,7 +166,7 @@ export default function FAQ() {
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-4 mb-8">
                         <h1 className="text-5xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            F<span className="text-yellow-500">A</span>Q.
+                            FAQ.
                         </h1>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -227,18 +227,18 @@ export default function FAQ() {
             </section>
 
             {/* Still Have Questions */}
-            <section className="py-16 px-6 md:px-12 bg-yellow-500 text-white">
+            <section className="py-16 px-6 md:px-12 bg-[#1a1a1a] text-white">
                 <div className="max-w-4xl mx-auto text-center">
-                    <HelpCircle className="mx-auto mb-4" size={48} />
+                    <HelpCircle className="mx-auto mb-4 text-yellow-500" size={48} />
                     <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
                         Still Have Questions?
                     </h2>
-                    <p className="text-white/80 mb-8 max-w-xl mx-auto">
+                    <p className="text-gray-300 mb-8 max-w-xl mx-auto">
                         We're here to help! Reach out directly and we'll get back to you within 24-48 hours.
                     </p>
                     <Link
                         href="/contact"
-                        className="inline-flex items-center gap-2 bg-white text-yellow-600 px-8 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
+                        className="inline-flex items-center gap-2 bg-yellow-500 text-[#1a1a1a] font-semibold px-8 py-4 text-sm uppercase tracking-widest hover:bg-yellow-400 transition-colors"
                     >
                         Contact Us
                     </Link>

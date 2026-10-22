@@ -14,7 +14,7 @@ export default function Privacy() {
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-4 mb-6">
                         <h1 className="text-4xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            PRIV<span className="text-yellow-500">ACY</span> POLICY.
+                            PRIVACY POLICY.
                         </h1>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
@@ -32,7 +32,7 @@ export default function Privacy() {
                             <h2 className="text-2xl font-bold m-0">Introduction</h2>
                         </div>
                         <p className="text-gray-700 leading-relaxed">
-                            At Glenride ("we," "our," or "us"), we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use InspireWrite ("the Service"), our AI-powered Bible reading and spiritual journaling application.
+                            At Glenride ("we," "our," or "us"), we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use InspireWrite ("the Service"), our Bible reading and spiritual journaling application.
                         </p>
                         <p className="text-gray-700 leading-relaxed">
                             By using InspireWrite, you agree to the collection and use of information in accordance with this policy.
@@ -82,7 +82,7 @@ export default function Privacy() {
                         </div>
                         <p className="text-gray-700 leading-relaxed">We use your information to:</p>
                         <ul className="text-gray-700 space-y-2">
-                            <li><strong>Provide the Service:</strong> Enable Bible reading, journaling, and AI-powered features</li>
+                            <li><strong>Provide the Service:</strong> Enable Bible reading, journaling, and study assistance</li>
                             <li><strong>Personalize your experience:</strong> Save your preferences, highlights, and notes</li>
                             <li><strong>Process payments:</strong> Manage subscriptions and billing</li>
                             <li><strong>Improve the Service:</strong> Analyze usage patterns to enhance features</li>
@@ -91,20 +91,20 @@ export default function Privacy() {
                         </ul>
                     </div>
 
-                    {/* AI Features and Data */}
+                    {/* Generated Content and Data */}
                     <div className="mb-12 p-6 bg-[#F5F2EA] border-l-4 border-yellow-500">
                         <div className="flex items-center gap-3 mb-4">
                             <Lock className="text-yellow-500" size={28} />
-                            <h2 className="text-2xl font-bold m-0">AI Features and Your Data</h2>
+                            <h2 className="text-2xl font-bold m-0">Generated Content and Your Data</h2>
                         </div>
                         <p className="text-gray-700 leading-relaxed">
-                            InspireWrite uses OpenAI's GPT technology to generate sermons and lessons. When you use these AI features:
+                            InspireWrite provides study assistance to help generate sermon outlines and lessons. When you use these features:
                         </p>
                         <ul className="text-gray-700 space-y-2">
-                            <li>Selected Bible verses are sent to OpenAI to generate content</li>
-                            <li>Your personal notes and reflections are <strong>not</strong> shared with OpenAI unless you explicitly include them in a generation request</li>
+                            <li>Selected Bible verses are sent to our language model service to generate content</li>
+                            <li>Your personal notes and reflections are <strong>not</strong> shared unless you explicitly include them in a generation request</li>
                             <li>Generated content is stored in your account and is private to you unless you choose to share it</li>
-                            <li>We do not use your data to train AI models</li>
+                            <li>We do not use your data to train machine learning models</li>
                         </ul>
                     </div>
 
@@ -137,7 +137,7 @@ export default function Privacy() {
                             We do not sell your personal information. We may share data with:
                         </p>
                         <ul className="text-gray-700 space-y-2">
-                            <li><strong>Service providers:</strong> Hosting (Laravel Cloud), payments (Stripe), AI (OpenAI) — only as necessary to provide the Service</li>
+                            <li><strong>Service providers:</strong> Hosting (Laravel Cloud), payments (Stripe), language model infrastructure (OpenAI) — only as necessary to provide the Service</li>
                             <li><strong>Legal requirements:</strong> If required by law or to protect our rights</li>
                             <li><strong>With your consent:</strong> When you explicitly choose to share (e.g., sharing sermons with others)</li>
                         </ul>

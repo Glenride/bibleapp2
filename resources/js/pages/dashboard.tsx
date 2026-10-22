@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { BookOpen, Bookmark as BookmarkIcon, Heart, Highlighter, MessageSquare, ArrowRight, PenTool, BadgeDollarSign, Copy, Check } from 'lucide-react';
+import { BookOpen, Bookmark as BookmarkIcon, Heart, Highlighter, MessageSquare, ArrowRight, PenTool, BadgeDollarSign, Copy, Check, CheckCircle2, Circle, X, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Bookmark, Highlight, Book, Chapter, Verse } from '@/types/bible';
 import { cn } from '@/lib/utils';
@@ -50,6 +50,19 @@ interface DashboardProps {
 export default function Dashboard({ bookmarks, favorites, highlights }: DashboardProps) {
     const { auth } = usePage<SharedData>().props;
     const [linkCopied, setLinkCopied] = useState(false);
+    const [showChecklist, setShowChecklist] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('bible-onboarding-dismissed') !== 'true';
+        }
+        return true;
+    });
+
+    const dismissChecklist = () => {
+        setShowChecklist(false);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('bible-onboarding-dismissed', 'true');
+        }
+    };
 
     const copyAffiliateLink = async () => {
         if (!auth.affiliate) return;
@@ -88,7 +101,7 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                 <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] text-white p-10 rounded-none shadow-xl">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 bg-yellow-500 flex items-center justify-center">
-                            <PenTool size={20} />
+                            <PenTool size={20} className="text-[#1a1a1a]" />
                         </div>
                         <h2 className="text-3xl font-bold tracking-wider uppercase" style={{ fontFamily: 'DM Serif Display, serif' }}>
                             INSPIRE<span className="text-yellow-500">WRITE</span> STUDIO
@@ -99,13 +112,89 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     </p>
                     <Link
                         href="/bible/gn/1"
-                        className="inline-flex items-center gap-2 bg-yellow-500 text-white px-6 py-3 text-sm uppercase tracking-widest hover:bg-yellow-600 transition-colors group"
+                        className="inline-flex items-center gap-2 bg-yellow-500 text-[#1a1a1a] font-semibold px-6 py-3 text-sm uppercase tracking-widest hover:bg-yellow-400 transition-colors group"
                     >
                         <BookOpen size={18} />
                         Continue Reading
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>
+
+                {/* First Steps Onboarding Checklist */}
+                {showChecklist && (
+                    <div className="rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-500/10 via-background to-background p-6 shadow-sm relative">
+                        <button
+                            type="button"
+                            onClick={dismissChecklist}
+                            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors p-1"
+                            title="Dismiss checklist"
+                        >
+                            <X size={18} />
+                        </button>
+                        <div className="flex items-center gap-2 mb-2">
+                            <Sparkles className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                            <h3 className="font-serif font-bold text-lg">First Steps in InspireWrite</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4 max-w-xl">
+                            Get started on your spiritual reading and reflection journey with these three simple actions:
+                        </p>
+                        <div className="grid gap-3 sm:grid-cols-3">
+                            <Link
+                                href="/bible/jn/1"
+                                className="flex items-start gap-3 p-3.5 rounded-lg border border-border/80 bg-background/90 hover:border-yellow-500 hover:shadow-sm transition-all group"
+                            >
+                                <div className="mt-0.5 text-yellow-600 shrink-0">
+                                    <CheckCircle2 size={18} />
+                                </div>
+                                <div>
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground block mb-0.5">Step 1</span>
+                                    <span className="text-sm font-medium text-foreground group-hover:text-yellow-600 transition-colors block">
+                                        Open John 1 in Easy Read &rarr;
+                                    </span>
+                                    <span className="text-xs text-muted-foreground mt-0.5 block">
+                                        Distraction-free reading experience
+                                    </span>
+                                </div>
+                            </Link>
+
+                            <Link
+                                href="/bible/jn/1"
+                                className="flex items-start gap-3 p-3.5 rounded-lg border border-border/80 bg-background/90 hover:border-yellow-500 hover:shadow-sm transition-all group"
+                            >
+                                <div className={cn("mt-0.5 shrink-0", highlights.length > 0 ? "text-yellow-600" : "text-muted-foreground/40")}>
+                                    {highlights.length > 0 ? <CheckCircle2 size={18} /> : <Circle size={18} />}
+                                </div>
+                                <div>
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground block mb-0.5">Step 2</span>
+                                    <span className="text-sm font-medium text-foreground group-hover:text-yellow-600 transition-colors block">
+                                        Highlight a Verse &rarr;
+                                    </span>
+                                    <span className="text-xs text-muted-foreground mt-0.5 block">
+                                        {highlights.length > 0 ? `${highlights.length} verse(s) highlighted` : 'Tap any verse to choose a highlight color'}
+                                    </span>
+                                </div>
+                            </Link>
+
+                            <Link
+                                href="/bible/jn/1"
+                                className="flex items-start gap-3 p-3.5 rounded-lg border border-border/80 bg-background/90 hover:border-yellow-500 hover:shadow-sm transition-all group"
+                            >
+                                <div className={cn("mt-0.5 shrink-0", (favorites.some(f => !!f.note) || bookmarks.some(b => !!b.note) || highlights.some(h => !!h.note)) ? "text-yellow-600" : "text-muted-foreground/40")}>
+                                    {(favorites.some(f => !!f.note) || bookmarks.some(b => !!b.note) || highlights.some(h => !!h.note)) ? <CheckCircle2 size={18} /> : <Circle size={18} />}
+                                </div>
+                                <div>
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-muted-foreground block mb-0.5">Step 3</span>
+                                    <span className="text-sm font-medium text-foreground group-hover:text-yellow-600 transition-colors block">
+                                        Write a Reflection &rarr;
+                                    </span>
+                                    <span className="text-xs text-muted-foreground mt-0.5 block">
+                                        Add personal notes using the S.C.R.I.P.T. method
+                                    </span>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                )}
 
                 {/* Stats Overview */}
                 <div className="grid grid-cols-3 gap-4">
@@ -204,8 +293,12 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-10 text-center border-2 border-dashed border-gray-200 text-gray-400 text-sm uppercase tracking-wider">
-                                    No bookmarks yet
+                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
+                                    <BookmarkIcon className="h-6 w-6 text-gray-400" />
+                                    <p className="text-gray-600">Save chapters you want to return to.</p>
+                                    <Link href="/bible/gn/1" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                        Start Reading Genesis 1 &rarr;
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -214,7 +307,7 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     {/* Favorites Column */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-yellow-500 text-white">
+                            <div className="p-2 bg-yellow-500 text-[#1a1a1a]">
                                 <Heart size={18} />
                             </div>
                             <h3 className="text-sm font-bold uppercase tracking-widest">Favorites</h3>
@@ -250,8 +343,12 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-10 text-center border-2 border-dashed border-gray-200 text-gray-400 text-sm uppercase tracking-wider">
-                                    No favorites yet
+                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
+                                    <Heart className="h-6 w-6 text-gray-400" />
+                                    <p className="text-gray-600">Save verses that speak to your heart.</p>
+                                    <Link href="/bible/jn/1" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                        Explore John 1 &rarr;
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -260,7 +357,7 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     {/* Highlights Column */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-yellow-500 text-white">
+                            <div className="p-2 bg-yellow-500 text-[#1a1a1a]">
                                 <Highlighter size={18} />
                             </div>
                             <h3 className="text-sm font-bold uppercase tracking-widest">Highlights</h3>
@@ -299,8 +396,12 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-10 text-center border-2 border-dashed border-gray-200 text-gray-400 text-sm uppercase tracking-wider">
-                                    No highlights yet
+                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
+                                    <Highlighter className="h-6 w-6 text-gray-400" />
+                                    <p className="text-gray-600">Click any verse while reading to highlight it.</p>
+                                    <Link href="/bible/ps/23" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                        Read Psalm 23 &rarr;
+                                    </Link>
                                 </div>
                             )}
                         </div>

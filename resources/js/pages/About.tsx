@@ -23,7 +23,7 @@ export default function About() {
     return (
         <BibleLayout>
             <Head title="About InspireWrite - S.C.R.I.P.T. Bible Reading & Spiritual Journaling App">
-                <meta name="description" content="Learn about InspireWrite by Glenride - the AI-powered Bible reading and spiritual journaling companion featuring the denomination-neutral S.C.R.I.P.T. method." />
+                <meta name="description" content="Learn about InspireWrite by Glenride - the Bible reading and spiritual journaling companion featuring the denomination-neutral S.C.R.I.P.T. method." />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
             </Head>
 
@@ -32,13 +32,13 @@ export default function About() {
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-4 mb-8">
                         <h1 className="text-5xl font-bold uppercase tracking-wider" style={{ fontFamily: 'DM Serif Display, serif' }}>
-                            AB<span className="text-yellow-500">OUT</span> US.
+                            ABOUT US.
                         </h1>
                         <div className="h-px bg-black/20 flex-1" />
                     </div>
 
                     <p className="text-xl text-gray-700 leading-relaxed max-w-2xl mb-6">
-                        <strong>InspireWrite by Glenride</strong> is the AI-powered Bible reading and spiritual journaling companion for modern believers, centered on the denomination-neutral S.C.R.I.P.T. method.
+                        <strong>InspireWrite by Glenride</strong> is the Bible reading and spiritual journaling companion for modern believers, centered on the denomination-neutral S.C.R.I.P.T. method.
                     </p>
                     <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
                         We combine the timeless wisdom of Scripture with thoughtful technology to help you read, reflect, and grow in your faith journey.
@@ -58,9 +58,6 @@ export default function About() {
                     <p className="text-lg text-gray-700 leading-relaxed mb-6">
                         Whether you're a new believer taking your first steps in Scripture, a pastor preparing Sunday's message, or a Bible study leader creating curriculum, InspireWrite provides the tools you need to engage with the Bible in a fresh, transformative way.
                     </p>
-                    <p className="text-lg text-gray-700 leading-relaxed">
-                        We use AI responsibly to assist—never replace—your personal study and reflection. Our AI features help you organize thoughts, generate sermon outlines, and discover connections in Scripture, while keeping your human wisdom and spiritual discernment at the center.
-                    </p>
                 </div>
             </section>
 
@@ -76,7 +73,7 @@ export default function About() {
 
                     <div className="grid md:grid-cols-3 gap-8 items-start">
                         <div className="bg-yellow-500 w-32 h-32 flex items-center justify-center">
-                            <User size={64} className="text-white" />
+                            <User size={64} className="text-[#1a1a1a]" />
                         </div>
                         <div className="md:col-span-2">
                             <h3 className="text-xl font-bold mb-2">D'Vaughn House</h3>
@@ -85,7 +82,7 @@ export default function About() {
                                 D'Vaughn House is a software developer and the founder of Glenride, the group that creates InspireWrite and other digital products for Christian communities. With years of experience building web and mobile applications, he started Glenride to craft thoughtful tools that help people engage with Scripture.
                             </p>
                             <p className="text-gray-300 leading-relaxed">
-                                InspireWrite was born from a desire to have a better Bible reading and journaling experience—one that combines the reverence of Scripture with the convenience of modern technology. Glenride builds each product with responsible AI assistance to support study and reflection.
+                                InspireWrite was born from a desire to have a better Bible reading and journaling experience—one that combines the reverence of Scripture with the convenience of modern technology. Glenride builds each product to support thoughtful scripture reading, personal journaling, and spiritual reflection.
                             </p>
                         </div>
                     </div>
@@ -109,9 +106,6 @@ export default function About() {
                         </p>
                         <p>
                             We believe the Bible is the inspired Word of God, useful for teaching, rebuking, correcting, and training in righteousness (2 Timothy 3:16). Our tools are designed to help you engage with Scripture on its own terms, without imposing any particular doctrinal interpretation.
-                        </p>
-                        <p>
-                            Our AI-generated content is meant to assist your study, not replace pastoral guidance or personal discernment. We encourage users to bring their insights to their local church community and spiritual mentors for deeper discussion.
                         </p>
                     </div>
                 </div>
@@ -138,7 +132,7 @@ export default function About() {
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">
                             <Sparkles className="text-yellow-500 mb-4" size={32} />
                             <h3 className="text-lg font-bold uppercase tracking-wider mb-2">The Assistant</h3>
-                            <p className="text-gray-600 leading-relaxed">Transform your Bible study into structured lessons and sermons with intelligent AI assistance. Save hours of preparation time.</p>
+                            <p className="text-gray-600 leading-relaxed">Transform your Bible study into structured lessons and sermons with the Assistant. Save hours of preparation time.</p>
                         </div>
                         <div className="bg-white p-8 border border-gray-100 hover:shadow-lg transition-shadow">
                             <Heart className="text-yellow-500 mb-4" size={32} />
@@ -150,17 +144,17 @@ export default function About() {
             </section>
 
             {/* Contact CTA */}
-            <section className="py-16 px-6 md:px-12 bg-yellow-500 text-white">
+            <section className="py-16 px-6 md:px-12 bg-[#1a1a1a] text-white">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
                         Questions? We'd Love to Hear From You
                     </h2>
-                    <p className="text-white/80 mb-8 max-w-xl mx-auto">
+                    <p className="text-gray-300 mb-8 max-w-xl mx-auto">
                         Whether you have feedback, questions, or just want to say hello, we're here for you.
                     </p>
                     <Link
                         href="/contact"
-                        className="inline-flex items-center gap-2 bg-white text-yellow-600 px-8 py-4 text-sm uppercase tracking-widest hover:bg-gray-100 transition-colors font-bold"
+                        className="inline-flex items-center gap-2 bg-yellow-500 text-[#1a1a1a] font-semibold px-8 py-4 text-sm uppercase tracking-widest hover:bg-yellow-400 transition-colors"
                     >
                         <Mail size={18} />
                         Contact Us

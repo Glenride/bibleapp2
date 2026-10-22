@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Lesson, Sermon } from '@/types/bible';
 import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
-import { Sparkles, Trash2, FileText, Library, Loader2, Check, Heart, Highlighter, Plus } from 'lucide-react';
+import { Sparkles, Trash2, FileText, Library, Loader2, Check, Heart, Highlighter, Plus, BookOpen } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -452,8 +452,19 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center border border-dashed border-border rounded-lg text-muted-foreground text-sm">
-                                    No sermons yet. Create your first Bible study!
+                                <div className="p-8 text-center border border-dashed border-border rounded-lg text-muted-foreground text-sm flex flex-col items-center gap-3">
+                                    <BookOpen className="h-6 w-6 text-muted-foreground/50" />
+                                    <p>No sermons yet. Create your first Bible study with the Assistant!</p>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setShowSermonDialog(true)}
+                                        className="gap-2 mt-1"
+                                    >
+                                        <Sparkles size={14} />
+                                        Build a Sermon
+                                    </Button>
                                 </div>
                             )}
                         </div>
@@ -585,8 +596,19 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center border border-dashed border-border rounded-lg text-muted-foreground text-sm">
-                                    No standalone lessons yet. Generate your first lesson above!
+                                <div className="p-8 text-center border border-dashed border-border rounded-lg text-muted-foreground text-sm flex flex-col items-center gap-3">
+                                    <FileText className="h-6 w-6 text-muted-foreground/50" />
+                                    <p>No standalone lessons yet. Transform your scripture highlights into lessons!</p>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setShowLessonDialog(true)}
+                                        className="gap-2 mt-1"
+                                    >
+                                        <Sparkles size={14} />
+                                        Generate Lesson
+                                    </Button>
                                 </div>
                             )}
                         </div>

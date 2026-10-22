@@ -68,7 +68,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                     <HeaderSearch />
 
                     {auth.user ? (
-                        <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
+                        <Link href="/dashboard" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-4 py-2 hover:bg-yellow-400 transition-colors">
                             My Studio
                         </Link>
                     ) : (
@@ -76,7 +76,7 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                             <Link href="/login" className="hover:text-yellow-600 transition-colors">
                                 Log in
                             </Link>
-                            <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
+                            <Link href="/register" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-4 py-2 hover:bg-yellow-400 transition-colors">
                                 Get Started
                             </Link>
                         </>
@@ -92,13 +92,13 @@ export default function BibleLayout({ children, zenMode = false }: BibleLayoutPr
                             <Link href="/pricing" className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
                             <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
                             {auth.user ? (
-                                <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
+                                <Link href="/dashboard" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-4 py-2 text-center hover:bg-yellow-400 transition-colors">
                                     My Studio
                                 </Link>
                             ) : (
                                 <>
                                     <Link href="/login" className="hover:text-yellow-600 transition-colors py-2">Log in</Link>
-                                    <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
+                                    <Link href="/register" className="bg-yellow-500 text-[#1a1a1a] font-semibold px-4 py-2 text-center hover:bg-yellow-400 transition-colors">
                                         Get Started
                                     </Link>
                                 </>
