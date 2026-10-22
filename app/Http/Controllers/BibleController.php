@@ -14,6 +14,33 @@ class BibleController extends Controller
 {
     public function index()
     {
+        $version = BibleVersion::first();
+
+        if (! $version) {
+            return Inertia::render('Welcome', [
+                'oldTestament' => [],
+                'newTestament' => [],
+            ]);
+        }
+
+        $books = $version->books()->orderBy('position')->get();
+
+        $oldTestament = $books->filter(function ($book) {
+            return $book->position <= 39;
+        })->values();
+
+        $newTestament = $books->filter(function ($book) {
+            return $book->position >= 40;
+        })->values();
+
+        return Inertia::render('Welcome', [
+            'oldTestament' => $oldTestament,
+            'newTestament' => $newTestament,
+        ]);
+    }
+
+    public function bibleIndex()
+    {
         // The book index always shows the default version (KJV).
         $version = BibleVersion::resolveSlug('kjv') ?? BibleVersion::first();
 
@@ -127,6 +154,26 @@ class BibleController extends Controller
                 ->first();
         }
 
+        // Get all books with chapter counts for navigation
+        $allBooks = $version->books()
+            ->orderBy('position')
+            ->withCount('chapters')
+            ->get()
+            ->map(function ($b) {
+                return [
+                    'id' => $b->id,
+                    'name' => $b->name,
+                    'abbreviation' => $b->abbreviation,
+                    'position' => $b->position,
+                    'chapters_count' => $b->chapters_count,
+                ];
+            });
+
+        // Get all chapters for current book
+        $bookChapters = $book->chapters()
+            ->orderBy('number')
+            ->get(['id', 'number']);
+
         return Inertia::render('Bible/Chapter', [
             'book' => $book,
             'chapter' => $chapter,
@@ -143,6 +190,8 @@ class BibleController extends Controller
             'prev_link' => $prevLink,
             'next_link' => $nextLink,
             'userInteractions' => $userInteractions,
+            'allBooks' => $allBooks,
+            'bookChapters' => $bookChapters,
         ]);
     }
 }

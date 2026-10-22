@@ -214,7 +214,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
 
                 {/* Header */}
                 <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border p-8 bg-card shadow-sm">
-                    <h2 className="text-2xl font-serif font-bold mb-4">Bible Study with the Assistant</h2>
+                    <h2 className="text-2xl font-serif font-bold mb-4">The Assistant</h2>
                     <p className="max-w-2xl text-muted-foreground leading-relaxed">
                         Transform your highlights, favorites, and notes into personalized Bible study lessons with the Assistant.
                         Combine lessons into sermons to create complete Bible studies you can share with friends.
@@ -233,15 +233,15 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                     Generate Lesson
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
-                                <form onSubmit={generateLesson} className="flex flex-col flex-1 overflow-hidden">
+                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col min-h-0">
+                                <form onSubmit={generateLesson} className="flex flex-col flex-1 overflow-hidden min-h-0">
                                     <DialogHeader>
                                         <DialogTitle>Generate a Lesson</DialogTitle>
                                         <DialogDescription>
                                             Select verses from your highlights and favorites to include in your lesson.
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <div className="flex flex-col gap-4 py-4 flex-1 overflow-hidden">
+                                    <div className="flex flex-col gap-4 py-4 flex-1 overflow-hidden min-h-0">
                                         <div className="grid gap-2">
                                             <Label htmlFor="theme">Theme (Optional)</Label>
                                             <Input
@@ -252,7 +252,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                             />
                                         </div>
 
-                                        <Tabs defaultValue="highlights" className="flex-1 flex flex-col overflow-hidden">
+                                        <Tabs defaultValue="highlights" className="flex-1 flex flex-col overflow-hidden min-h-0">
                                             <TabsList className="w-full">
                                                 <TabsTrigger value="highlights" className="flex-1 gap-2">
                                                     <Highlighter size={14} />
@@ -263,7 +263,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                     Favorites ({selectedFavorites.length}/{favorites.length})
                                                 </TabsTrigger>
                                             </TabsList>
-                                            <TabsContent value="highlights" className="flex-1 overflow-hidden">
+                                            <TabsContent value="highlights" className="flex-1 overflow-hidden min-h-0">
                                                 <div className="border rounded-lg overflow-hidden h-full flex flex-col">
                                                     <div className="p-2 bg-muted/50 border-b flex justify-between items-center">
                                                         <span className="text-sm text-muted-foreground">
@@ -275,7 +275,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="h-48">
+                                                    <ScrollArea className="h-[300px]">
                                                         <div className="p-2 space-y-1">
                                                             {highlights.map((item) => (
                                                                 <SelectableSourceItem
@@ -289,7 +289,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                     </ScrollArea>
                                                 </div>
                                             </TabsContent>
-                                            <TabsContent value="favorites" className="flex-1 overflow-hidden">
+                                            <TabsContent value="favorites" className="flex-1 overflow-hidden min-h-0">
                                                 <div className="border rounded-lg overflow-hidden h-full flex flex-col">
                                                     <div className="p-2 bg-muted/50 border-b flex justify-between items-center">
                                                         <span className="text-sm text-muted-foreground">
@@ -301,7 +301,7 @@ export default function LessonsIndex({ lessons, sermons, highlights, favorites }
                                                             </Button>
                                                         )}
                                                     </div>
-                                                    <ScrollArea className="h-48">
+                                                    <ScrollArea className="h-[300px]">
                                                         <div className="p-2 space-y-1">
                                                             {favorites.map((item) => (
                                                                 <SelectableSourceItem

@@ -15,10 +15,16 @@ class Sermon extends Model
         'is_public',
         'detected_theme',
         'analysis',
+        'big_takeaway',
+        'movements',
+        'reflection_questions',
+        'prayer',
     ];
 
     protected $casts = [
         'is_public' => 'boolean',
+        'movements' => 'array',
+        'reflection_questions' => 'array',
     ];
 
     protected static function booted(): void

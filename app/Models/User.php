@@ -8,10 +8,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
+use Laravel\Cashier\Billable;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, Billable;
+
+    public const TRIAL_PLAN_PRICE_ID = 'price_1SqIvELenlwJrzcOf7LO0U6T';
+    public const PRO_PLAN_PRICE_ID = 'price_1SqIgxLenlwJrzcOw7OEiD4n';
+    public const BASIC_PLAN_PRICE_ID = 'price_1SqIgMLenlwJrzcOoUWAw2qf';
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +28,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'is_beta_tester',
+        'beta_expires_at',
     ];
 
     /**
@@ -48,6 +57,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_admin' => 'boolean',
+            'is_beta_tester' => 'boolean',
+            'beta_expires_at' => 'datetime',
         ];
     }
 
@@ -57,6 +68,105 @@ class User extends Authenticatable
     public function affiliate()
     {
         return $this->hasOne(\App\Models\Affiliate::class);
+    }
+
+    /**
+     * Check if user is super admin (hardcoded email).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->email === 'dvaughnhouse@gmail.com';
+    }
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->is_admin || $this->isSuperAdmin();
+    }
+
+    /**
+     * Check if user is an active beta tester.
+     */
+    public function isBetaTester(): bool
+    {
+        if (!$this->is_beta_tester) {
+            return false;
+        }
+
+        // If no expiration set, beta access is permanent
+        if (!$this->beta_expires_at) {
+            return true;
+        }
+
+        // Check if beta access has expired
+        return $this->beta_expires_at->isFuture();
+    }
+
+    public function currentPlan(): string
+    {
+        $subscription = $this->subscription('default');
+
+        if (!$subscription || !$subscription->valid()) {
+            return 'none';
+        }
+
+        if ($subscription->hasPrice(self::TRIAL_PLAN_PRICE_ID)) {
+            return 'trial';
+        }
+
+        if ($subscription->hasPrice(self::PRO_PLAN_PRICE_ID)) {
+            return 'pro';
+        }
+
+        if ($subscription->hasPrice(self::BASIC_PLAN_PRICE_ID)) {
+            return 'basic';
+        }
+
+        return 'none';
+    }
+
+    public function hasProAccess(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        // Beta testers get full pro access
+        if ($this->isBetaTester()) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+
+        return $plan === 'pro' || $plan === 'trial';
+    }
+
+    public function monthlyLessonLimit(): ?int
+    {
+        if ($this->isAdmin() || $this->isBetaTester()) {
+            return null;
+        }
+
+        return match ($this->currentPlan()) {
+            'basic' => 2,
+            'pro', 'trial' => null,
+            default => 0,
+        };
+    }
+
+    public function monthlySermonLimit(): ?int
+    {
+        if ($this->isAdmin() || $this->isBetaTester()) {
+            return null;
+        }
+
+        return match ($this->currentPlan()) {
+            'pro', 'trial' => 5,
+            'basic', 'none' => 0,
+            default => 0,
+        };
     }
 
     public function highlights()

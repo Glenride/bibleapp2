@@ -3,8 +3,8 @@ import { PropsWithChildren, useState, type FormEvent } from 'react';
 import { SharedData } from '@/types';
 import { cn } from '@/lib/utils';
 import { FlashToaster } from '@/components/flash-toaster';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
-import { Search } from 'lucide-react';
+import { SiteFooter } from '@/components/site-footer';
+import { Menu, Search, X } from 'lucide-react';
 
 interface BibleLayoutProps extends PropsWithChildren {
     zenMode?: boolean;
@@ -39,104 +39,80 @@ function HeaderSearch() {
 
 export default function BibleLayout({ children, zenMode = false }: BibleLayoutProps) {
     const { auth } = usePage<SharedData>().props;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans flex flex-col transition-colors duration-500">
+        <div className="force-light min-h-screen bg-[#F5F2EA] text-[#1a1a1a] flex flex-col transition-colors duration-500" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
+
+            {/* Header */}
             <header className={cn(
-                "py-6 px-4 md:px-12 flex flex-col md:flex-row justify-between items-center border-b border-border/50 transition-all duration-500 overflow-hidden",
+                "py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center border-b border-black/10 bg-[#F5F2EA]/95 backdrop-blur-sm transition-all duration-500 overflow-hidden sticky top-0 z-50",
                 zenMode ? "h-0 py-0 opacity-0 border-none" : "h-auto opacity-100"
             )}>
-                <div className="mb-4 md:mb-0">
-                    <Link href="/" className="font-serif text-2xl tracking-widest uppercase font-bold">
-                        Glenride holy Bible
+                <div className="flex items-center justify-between w-full md:w-auto mb-0">
+                    <Link href="/" className="text-xl tracking-[0.2em] uppercase font-bold" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                        INSPIREWRITE.
                     </Link>
+                    <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
 
-                <nav className="flex items-center space-x-6 text-sm tracking-widest uppercase">
-                    <Link href="/" className="hover:text-primary/70 transition-colors">Home</Link>
-                    <Link href="/about" className="hover:text-primary/70 transition-colors">About</Link>
-                    <Link href="/pricing" className="hover:text-primary/70 transition-colors">Pricing</Link>
-                    <Link href="/#old-testament" className="hover:text-primary/70 transition-colors">Old Testament</Link>
-                    <Link href="/#new-testament" className="hover:text-primary/70 transition-colors">New Testament</Link>
+                {/* Desktop Nav */}
+                <nav className="hidden md:flex items-center gap-6 text-xs tracking-widest uppercase">
+                    <Link href="/" className="hover:text-yellow-600 transition-colors">Home</Link>
+                    <Link href="/about" className="hover:text-yellow-600 transition-colors">About</Link>
+                    <Link href="/pricing" className="hover:text-yellow-600 transition-colors">Pricing</Link>
+                    <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors">Scripture</Link>
                     <HeaderSearch />
-                    <AppearanceToggleDropdown />
 
                     {auth.user ? (
-                        <Link href="/dashboard" className="hover:text-primary/70 transition-colors font-bold text-primary">
-                            My Journal
+                        <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
+                            My Studio
                         </Link>
                     ) : (
                         <>
-                            <Link href="/login" className="hover:text-primary/70 transition-colors">
+                            <Link href="/login" className="hover:text-yellow-600 transition-colors">
                                 Log in
                             </Link>
-                            <Link href="/register" className="bg-primary text-primary-foreground px-4 py-2 text-xs hover:opacity-90 transition-opacity">
-                                Register
+                            <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 hover:bg-yellow-600 transition-colors">
+                                Get Started
                             </Link>
                         </>
                     )}
                 </nav>
+
+                {/* Mobile Nav */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden w-full pt-4 border-t border-black/5 mt-4">
+                        <nav className="flex flex-col gap-3 text-xs tracking-widest uppercase">
+                            <Link href="/" className="hover:text-yellow-600 transition-colors py-2">Home</Link>
+                            <Link href="/about" className="hover:text-yellow-600 transition-colors py-2">About</Link>
+                            <Link href="/pricing" className="hover:text-yellow-600 transition-colors py-2">Pricing</Link>
+                            <Link href="/bible/gn/1" className="hover:text-yellow-600 transition-colors py-2">Scripture</Link>
+                            {auth.user ? (
+                                <Link href="/dashboard" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
+                                    My Studio
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link href="/login" className="hover:text-yellow-600 transition-colors py-2">Log in</Link>
+                                    <Link href="/register" className="bg-yellow-500 text-white px-4 py-2 text-center hover:bg-yellow-600 transition-colors">
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
+                        </nav>
+                    </div>
+                )}
             </header>
 
             <main className="flex-grow">
                 {children}
             </main>
 
-            <footer className={cn(
-                "bg-[#F5F2EA] dark:bg-card border-t border-border/50 px-4 md:px-12 transition-all duration-500 overflow-hidden",
-                zenMode ? "max-h-0 py-0 opacity-0 border-none" : "max-h-[1000px] py-12 opacity-100 mt-auto"
-            )}>
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="col-span-1 md:col-span-1">
-                        <h3 className="font-serif text-lg uppercase tracking-widest mb-4">Glenride Holy Bible</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            The Word of God, accessible to everyone. Read, study, and share the Bible in multiple languages and versions.
-                        </p>
-                    </div>
-
-                    <div className="col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Quick Links</h4>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><Link href="/" className="hover:text-primary">Home</Link></li>
-                            <li><Link href="/about" className="hover:text-primary">About</Link></li>
-                            <li><Link href="/pricing" className="hover:text-primary">Pricing</Link></li>
-                            <li><Link href="#" className="hover:text-primary">Contact</Link></li>
-                        </ul>
-                    </div>
-
-                    <div className="col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Connect</h4>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><a href="#" className="hover:text-primary">Twitter</a></li>
-                            <li><a href="#" className="hover:text-primary">Facebook</a></li>
-                            <li><a href="#" className="hover:text-primary">Instagram</a></li>
-                        </ul>
-                    </div>
-
-                    <div className="col-span-1 md:col-span-1">
-                        <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Subscribe</h4>
-                        <div className="flex gap-2">
-                            <input
-                                type="email"
-                                placeholder="Your email"
-                                className="bg-white dark:bg-background border border-border px-3 py-2 text-sm w-full focus:outline-none focus:border-primary"
-                            />
-                            <button className="bg-primary text-primary-foreground px-4 py-2 text-xs uppercase tracking-widest hover:opacity-90">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="border-t border-border/30 mt-12 pt-6 text-center text-xs text-muted-foreground uppercase tracking-widest">
-                    &copy; {new Date().getFullYear()} Glenride Holy Bible and Journal. All Rights Reserved. v1.1
-                </div>
-                <p className="max-w-3xl mx-auto mt-4 text-center text-[11px] leading-relaxed text-muted-foreground/80">
-                    AI may be used to generate text and other content on this site, including study
-                    assistance. Scripture quotations are from the King James Version, which is in the
-                    public domain. Please verify important information independently.
-                </p>
-            </footer>
+            <SiteFooter zenMode={zenMode} />
         </div>
     );
 }

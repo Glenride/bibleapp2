@@ -43,7 +43,11 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? array_merge($request->user()->toArray(), [
+                    'is_subscribed' => $request->user()->isAdmin() || $request->user()->subscribed('default'),
+                    'is_admin' => $request->user()->isAdmin(),
+                    'can_access_premium' => $request->user()->hasProAccess(),
+                ]) : null,
                 // The logged-in user's affiliate record (if any): code + status only.
                 // Used for the conditional sidebar link and dashboard widget.
                 'affiliate' => fn () => $request->user()?->affiliate

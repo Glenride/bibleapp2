@@ -9,12 +9,15 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarGroup,
+    SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BadgeDollarSign, BookOpen, Folder, LayoutGrid, Sparkles, Users } from 'lucide-react';
+import { BadgeDollarSign, BookOpen, Clock, Folder, LayoutGrid, Search, Sparkles, Users, Shield } from 'lucide-react';
 import AppLogo from './app-logo';
+import { useActiveUrl } from '@/hooks/use-active-url';
 
 const mainNavItems: NavItem[] = [
     {
@@ -23,12 +26,17 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Search',
+        href: '/search',
+        icon: Search,
+    },
+    {
         title: 'Read Bible',
-        href: '/',
+        href: '/bible/gn/1',
         icon: BookOpen,
     },
     {
-        title: 'Lessons',
+        title: 'The Assistant',
         href: '/lessons',
         icon: Sparkles,
     },
@@ -41,19 +49,34 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'FAQ',
+        href: '/faq',
+        icon: BookOpen,
+    },
+];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'User Management',
+        href: '/admin/users',
+        icon: Users,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Trials Management',
+        href: '/admin/trials',
+        icon: Clock,
+    },
+    {
+        title: 'Affiliates',
+        href: '/admin/affiliates',
+        icon: BadgeDollarSign,
     },
 ];
 
 export function AppSidebar() {
     const { auth } = usePage<SharedData>().props;
+    const isAdmin = auth.user?.is_admin;
+    const { urlIsActive } = useActiveUrl();
 
     const items: NavItem[] = [...mainNavItems];
 
@@ -82,6 +105,28 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={items} />
+
+                {isAdmin && (
+                    <SidebarGroup className="px-2 py-0">
+                        <SidebarGroupLabel>Admin</SidebarGroupLabel>
+                        <SidebarMenu>
+                            {adminNavItems.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        isActive={urlIsActive(item.href)}
+                                        tooltip={{ children: item.title }}
+                                    >
+                                        <Link href={item.href} prefetch>
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroup>
+                )}
             </SidebarContent>
 
             <SidebarFooter>

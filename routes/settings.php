@@ -25,4 +25,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');
+
+    Route::get('settings/subscription', function () {
+        $user = auth()->user();
+        $currentPlan = $user->currentPlan();
+        $subscriptionEndsAt = null;
+
+        if ($user->subscribed('default')) {
+            $subscription = $user->subscription('default');
+            if ($subscription->ends_at) {
+                $subscriptionEndsAt = $subscription->ends_at->format('M d, Y');
+            } elseif ($subscription->asStripeSubscription()->current_period_end) {
+                $subscriptionEndsAt = \Carbon\Carbon::createFromTimestamp(
+                    $subscription->asStripeSubscription()->current_period_end
+                )->format('M d, Y');
+            }
+        }
+
+        return Inertia::render('settings/subscription', [
+            'currentPlan' => $currentPlan,
+            'subscriptionEndsAt' => $subscriptionEndsAt,
+        ]);
+    })->name('subscription.edit');
 });

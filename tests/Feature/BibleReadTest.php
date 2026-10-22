@@ -29,13 +29,37 @@ class BibleReadTest extends TestCase
             'position' => 1,
         ]);
 
-        $response = $this->get('/');
+        $response = $this->get('/bible');
 
         $response->assertStatus(200);
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Bible/Index')
             ->has('version')
             ->has('books', 1)
+        );
+    }
+
+    public function test_welcome_page_can_be_rendered(): void
+    {
+        $version = BibleVersion::factory()->create([
+            'name' => 'King James Version',
+            'abbreviation' => 'KJV',
+        ]);
+        
+        $book = Book::factory()->create([
+            'bible_version_id' => $version->id,
+            'name' => 'Genesis',
+            'abbreviation' => 'gen',
+            'position' => 1,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Welcome')
+            ->has('oldTestament')
+            ->has('newTestament')
         );
     }
 

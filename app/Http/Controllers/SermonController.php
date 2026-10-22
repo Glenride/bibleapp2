@@ -49,6 +49,21 @@ class SermonController extends Controller
 
         $user = Auth::user();
 
+        $sermonLimit = $user->monthlySermonLimit();
+        if ($sermonLimit === 0) {
+            return back()->with('error', 'Your plan does not include sermon generation.');
+        }
+
+        if ($sermonLimit !== null) {
+            $sermonsThisMonth = $user->sermons()
+                ->where('created_at', '>=', now()->startOfMonth())
+                ->count();
+
+            if ($sermonsThisMonth >= $sermonLimit) {
+                return back()->with('error', "You have reached your monthly sermon limit ({$sermonLimit}).");
+            }
+        }
+
         try {
             $sermon = $this->lessonGenerator->generateSermon($user, $request->title, [
                 'description' => $request->description,
@@ -200,6 +215,10 @@ class SermonController extends Controller
             $sermon->update([
                 'detected_theme' => $analysis['detected_theme'] ?? null,
                 'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
             ]);
         } catch (\Exception $e) {
             // Silently fail analysis generation so we don't block sermon creation
@@ -234,6 +253,21 @@ class SermonController extends Controller
             'position' => $position,
         ]);
 
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->lessonGenerator->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            // Log::error("Failed to update sermon analysis: " . $e->getMessage());
+        }
+
         return back()->with('success', 'Lesson added to sermon!');
     }
 
@@ -258,6 +292,21 @@ class SermonController extends Controller
 
         $sermon->lessons()->where('position', '>', $lesson->position)
             ->decrement('position');
+
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->lessonGenerator->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            // Log::error("Failed to update sermon analysis: " . $e->getMessage());
+        }
 
         return back()->with('success', 'Lesson removed from sermon.');
     }

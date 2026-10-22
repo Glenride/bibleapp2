@@ -35,12 +35,19 @@ class LessonGeneratorService
         }
 
         $prompt = $this->buildPrompt($versesContext, $theme);
-        $response = $this->callOpenAI($prompt);
+        $response = $this->callOpenAI($prompt, 2000, true);
+
+        // Build backward-compatible content from structured fields
+        $content = $this->buildContentFromStructured($response);
 
         $lesson = $user->lessons()->create([
             'sermon_id' => $sermonId,
             'title' => $response['title'],
-            'content' => $response['content'],
+            'content' => $content,
+            'big_takeaway' => $response['big_takeaway'] ?? null,
+            'movements' => $response['movements'] ?? null,
+            'reflection_questions' => $response['reflection_questions'] ?? null,
+            'prayer' => $response['prayer'] ?? null,
             'source_verses' => $this->extractVerseIds($highlights, $favorites),
             'source_highlights' => $highlights->pluck('id')->toArray(),
             'source_favorites' => $favorites->pluck('id')->toArray(),
@@ -79,7 +86,22 @@ class LessonGeneratorService
                 'sermon_id' => $sermon->id,
             ]);
         }
-
+        $sermon->load('lessons');
+        try {
+            $analysis = $this->generateSermonAnalysis($sermon);
+            $sermon->update([
+                'detected_theme' => $analysis['detected_theme'] ?? null,
+                'analysis' => $analysis['analysis'] ?? null,
+                'big_takeaway' => $analysis['big_takeaway'] ?? null,
+                'movements' => $analysis['movements'] ?? null,
+                'reflection_questions' => $analysis['reflection_questions'] ?? null,
+                'prayer' => $analysis['prayer'] ?? null,
+            ]);
+        } catch (
+            \Exception $e
+        ) {
+            // Silently fail analysis generation so we don't block sermon creation
+        }
         return $sermon->load('lessons');
     }
 
@@ -118,7 +140,6 @@ class LessonGeneratorService
             return $context;
         })->implode("\n\n");
     }
-
     protected function formatReference($verse): string
     {
         $book = $verse->chapter->book->name ?? 'Unknown';
@@ -130,46 +151,71 @@ class LessonGeneratorService
     protected function buildPrompt(string $versesContext, ?string $theme): string
     {
         $themeInstruction = $theme
-            ? "Focus the lesson around this theme: {$theme}"
-            : "Identify a central theme that connects these verses";
+            ? "Create a lesson centered around this unifying claim: {$theme}"
+            : "(If context is missing, derive a single, clear unifying claim from the verses.)";
 
         return <<<PROMPT
-You are a thoughtful Bible study teacher creating a personalized lesson based on verses that a reader has highlighted and favorited. These verses represent what resonates with them spiritually.
+You are a scholarly expository preacher and Bible study teacher, deeply knowledgeable in homiletics as described by Kenneth R. Lewis. Create an expository Bible study lesson that is faithful to the text, clear to a modern reader, and optimized for learning and application.
 
+LENGTH: 700–800 words total across all fields.
+
+INPUT CONTEXT:
 {$themeInstruction}
 
 VERSES THE READER HAS MARKED:
 {$versesContext}
 
-Create a Bible study lesson with:
-1. A compelling title (5-10 words)
-2. An introduction connecting the verses to daily life
-3. 2-3 key insights drawn from these specific verses
-4. Reflection questions for personal growth
-5. A practical application section
-6. A closing prayer or meditation
+WRITING RULES (for better user interaction and learning):
+- Do NOT use obvious outline labels like: Proposition, Introduction, Main Point, Point 1, Transition, Conclusion.
+- Write as a guided learning flow with natural phrases.
+- Keep each movement 2–4 short paragraphs.
 
-Format your response as JSON with this structure:
+OUTPUT FORMAT:
+Return valid JSON with exactly this structure:
 {
-  "title": "Lesson title here",
-  "detected_theme": "The main theme you identified",
-  "content": "The full lesson content in markdown format"
+  "title": "A compelling, brief title (5-10 words)",
+  "detected_theme": "The main theme in 2-4 words",
+  "big_takeaway": "One clear sentence summarizing the lesson's core truth",
+  "movements": [
+    {
+      "focus": "Short phrase describing this movement's focus",
+      "teaching": "2-4 paragraphs: what the text says/means, how to live it, with a brief story or analogy woven in",
+      "practice": "One concrete action step for this movement"
+    },
+    {
+      "focus": "...",
+      "teaching": "...",
+      "practice": "..."
+    },
+    {
+      "focus": "...",
+      "teaching": "...",
+      "practice": "..."
+    }
+  ],
+  "reflection_questions": ["Question 1?", "Question 2?"],
+  "prayer": "A short closing prayer (4-6 lines)"
 }
 
-Make the lesson personal, warm, and spiritually nourishing. Reference the specific verses throughout.
+CONTENT RULES:
+- The "teaching" field should naturally include explanation, application, and illustration without labeling them.
+- Include smooth bridging ideas between movements within the teaching text.
+- Use plain text with light formatting only (short paragraphs).
+- Do not include markdown headings.
 PROMPT;
     }
 
-    protected function callOpenAI(string $prompt): array
+    protected function callOpenAI(string $prompt, int $maxCompletionTokens = 2000, bool $validateContent = false): array
     {
+        $systemMessage = 'You are a thoughtful Bible study teacher and expository preacher. You design lessons for learning and retention: clear, warm, accurate to the text, and practical. Write in a way that sounds like a guided lesson, not a formal outline. Always return valid JSON only (no markdown outside JSON). Do not use obvious outline headers such as "Proposition," "Introduction," "Main Point," "Transition," or "Conclusion."';
+
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-4o',
+            'model' => 'gpt-5.2',
             'messages' => [
-                ['role' => 'system', 'content' => 'You are a thoughtful Bible study teacher. Always respond with valid JSON.'],
+                ['role' => 'system', 'content' => $systemMessage],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'temperature' => 0.7,
-            'max_tokens' => 2000,
+            'max_completion_tokens' => $maxCompletionTokens,
         ]);
 
         $content = $response->choices[0]->message->content;
@@ -190,6 +236,22 @@ PROMPT;
             ];
         }
 
+        // Validate lesson content only when explicitly requested
+        if ($validateContent) {
+            // Check for structured fields OR legacy content field
+            $hasStructuredContent = !empty($decoded['big_takeaway']) || !empty($decoded['movements']);
+            $hasLegacyContent = !empty($decoded['content']) && trim($decoded['content']) !== '';
+            
+            if (!$hasStructuredContent && !$hasLegacyContent) {
+                throw new \Exception('AI generated an empty lesson. Please try again.');
+            }
+
+            // Ensure title has a meaningful value
+            if (empty($decoded['title']) || trim($decoded['title']) === '') {
+                $decoded['title'] = 'Bible Study Lesson';
+            }
+        }
+
         return $decoded;
     }
 
@@ -208,13 +270,12 @@ Example: ["God's Faithfulness", "Finding Peace", "Living with Purpose"]
 PROMPT;
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-4o',
+            'model' => 'gpt-5.2',
             'messages' => [
                 ['role' => 'system', 'content' => 'You analyze Bible verses and identify themes. Respond only with a JSON array.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'temperature' => 0.7,
-            'max_tokens' => 200,
+            'max_completion_tokens' => 200,
         ]);
 
         $content = $response->choices[0]->message->content;
@@ -231,39 +292,59 @@ PROMPT;
     {
         $sermon->load('lessons');
         $lessonsContext = $sermon->lessons->map(function ($lesson) {
-            return "LESSON: {$lesson->title}\nTHEME: {$lesson->theme}\nCONTENT SUMMARY: " . Str::limit($lesson->content, 500);
+            $content = $lesson->big_takeaway ?? Str::limit($lesson->content, 500);
+            return "LESSON: {$lesson->title}\nTHEME: {$lesson->theme}\nBIG TAKEAWAY: {$content}";
         })->implode("\n\n");
 
         $prompt = <<<PROMPT
-You are a wise theologian and pastor. I need you to analyze a series of Bible study lessons that form a complete sermon series.
-Your goal is to identify the overarching prophetic or spiritual theme that connects all these lessons and write a culminating analysis.
+You have a series of Bible study lessons that form a coherent sermon series. Synthesize them into a single comprehensive Master Sermon that feels unified, pastoral, and easy to follow.
+
+LENGTH: 1000–1200 words total across all fields.
 
 SERMON TITLE: {$sermon->title}
 SERMON DESCRIPTION: {$sermon->description}
 
-LESSONS IN THIS SERIES:
+LESSONS (use these as the core teaching movements, in order):
 {$lessonsContext}
 
-Please provide:
-1. An overarching "Detected Theme" (3-5 words) that unifies all these lessons.
-2. A "Spiritual Analysis" (approx. 200-300 words). This should read like a powerful conclusion to the sermon series, summarizing the journey the student has taken through these lessons and offering a final, life-changing takeaway. It should feel like the "alter call" or the moment of realization.
+WRITING RULES (for better listening + learning):
+- Do NOT use obvious outline labels like: Introduction, Main Point, Point 1, Transition, Conclusion.
+- Write as a guided teaching flow with natural phrases.
+- Each movement should naturally include teaching, illustration, and application without labeling them.
 
-Format your response as JSON:
+OUTPUT FORMAT:
+Return valid JSON with exactly this structure:
 {
-  "detected_theme": "The unifying theme",
-  "analysis": "The spiritual analysis text..."
+  "detected_theme": "The unifying theme in 2-4 words",
+  "big_takeaway": "One clear sentence summarizing the sermon's core truth",
+  "movements": [
+    {
+      "focus": "Short phrase describing this movement's focus",
+      "teaching": "3-5 paragraphs synthesizing the lesson: what it teaches, why it matters, with an illustration woven in",
+      "practice": "One concrete action step for this movement"
+    }
+  ],
+  "reflection_questions": ["Question 1?", "Question 2?", "Question 3?"],
+  "prayer": "A closing prayer (6-10 lines)"
 }
+
+IMPORTANT:
+- Create one movement for EACH lesson provided, in the same order.
+- Include smooth bridging ideas within the teaching text between movements.
+- Use plain text with light formatting only (short paragraphs).
 PROMPT;
+        $response = $this->callOpenAI($prompt, 3500);
 
-        $response = $this->callOpenAI($prompt);
-
-        if (isset($response['detected_theme']) && isset($response['analysis'])) {
-            return $response;
-        }
+        // Build backward-compatible analysis from structured fields
+        $analysis = $this->buildAnalysisFromStructured($response);
 
         return [
-            'detected_theme' => $sermon->title,
-            'analysis' => 'Unable to generate analysis at this time.',
+            'detected_theme' => $response['detected_theme'] ?? $sermon->title,
+            'analysis' => $analysis,
+            'big_takeaway' => $response['big_takeaway'] ?? null,
+            'movements' => $response['movements'] ?? null,
+            'reflection_questions' => $response['reflection_questions'] ?? null,
+            'prayer' => $response['prayer'] ?? null,
         ];
     }
 
@@ -274,5 +355,107 @@ PROMPT;
             ->unique()
             ->values()
             ->toArray();
+    }
+
+    /**
+     * Build backward-compatible content string from structured response.
+     */
+    protected function buildContentFromStructured(array $response): string
+    {
+        $parts = [];
+
+        // Big takeaway
+        if (!empty($response['big_takeaway'])) {
+            $parts[] = "**" . $response['big_takeaway'] . "**";
+        }
+
+        // Movements
+        if (!empty($response['movements']) && is_array($response['movements'])) {
+            foreach ($response['movements'] as $i => $movement) {
+                $parts[] = "";
+                if (!empty($movement['focus'])) {
+                    $parts[] = "**" . $movement['focus'] . "**";
+                }
+                if (!empty($movement['teaching'])) {
+                    $parts[] = $movement['teaching'];
+                }
+                if (!empty($movement['practice'])) {
+                    $parts[] = "• " . $movement['practice'];
+                }
+            }
+        }
+
+        // Reflection questions
+        if (!empty($response['reflection_questions']) && is_array($response['reflection_questions'])) {
+            $parts[] = "";
+            $parts[] = "**Reflect on these questions:**";
+            foreach ($response['reflection_questions'] as $q) {
+                $parts[] = "• " . $q;
+            }
+        }
+
+        // Prayer
+        if (!empty($response['prayer'])) {
+            $parts[] = "";
+            $parts[] = "*" . $response['prayer'] . "*";
+        }
+
+        // Fallback to content field if structured fields are empty
+        if (empty($parts) && !empty($response['content'])) {
+            return $response['content'];
+        }
+
+        return implode("\n\n", array_filter($parts));
+    }
+
+    /**
+     * Build backward-compatible analysis string from structured sermon response.
+     */
+    protected function buildAnalysisFromStructured(array $response): string
+    {
+        $parts = [];
+
+        // Big takeaway
+        if (!empty($response['big_takeaway'])) {
+            $parts[] = "**" . $response['big_takeaway'] . "**";
+        }
+
+        // Movements
+        if (!empty($response['movements']) && is_array($response['movements'])) {
+            foreach ($response['movements'] as $movement) {
+                $parts[] = "";
+                if (!empty($movement['focus'])) {
+                    $parts[] = "**" . $movement['focus'] . "**";
+                }
+                if (!empty($movement['teaching'])) {
+                    $parts[] = $movement['teaching'];
+                }
+                if (!empty($movement['practice'])) {
+                    $parts[] = "• " . $movement['practice'];
+                }
+            }
+        }
+
+        // Reflection questions
+        if (!empty($response['reflection_questions']) && is_array($response['reflection_questions'])) {
+            $parts[] = "";
+            $parts[] = "**Reflect on these questions:**";
+            foreach ($response['reflection_questions'] as $q) {
+                $parts[] = "• " . $q;
+            }
+        }
+
+        // Prayer
+        if (!empty($response['prayer'])) {
+            $parts[] = "";
+            $parts[] = "*" . $response['prayer'] . "*";
+        }
+
+        // Fallback to analysis field if structured fields are empty
+        if (empty($parts) && !empty($response['analysis'])) {
+            return $response['analysis'];
+        }
+
+        return implode("\n\n", array_filter($parts));
     }
 }

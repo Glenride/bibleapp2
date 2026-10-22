@@ -28,11 +28,17 @@ const sidebarNavItems: NavItem[] = [
         icon: null,
     },
     {
+        title: 'Subscription',
+        href: '/settings/subscription',
+        icon: null,
+    },
+    {
         title: 'Appearance',
         href: editAppearance(),
         icon: null,
     },
 ];
+
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { urlIsActive } = useActiveUrl();

@@ -14,6 +14,14 @@ export interface Book {
     image: string | null;
 }
 
+export interface BookNav {
+    id: number;
+    name: string;
+    abbreviation: string;
+    position: number;
+    chapters_count: number;
+}
+
 export interface Chapter {
     id: number;
     book_id: number;
@@ -64,12 +72,22 @@ export interface UserInteractions {
     bookmark: Bookmark | null;
 }
 
+export interface LessonMovement {
+    focus: string;
+    teaching: string;
+    practice: string;
+}
+
 export interface Lesson {
     id: number;
     user_id: number;
     sermon_id: number | null;
     title: string;
     content: string;
+    big_takeaway?: string;
+    movements?: LessonMovement[];
+    reflection_questions?: string[];
+    prayer?: string;
     source_verses: number[];
     source_highlights: number[];
     source_favorites: number[];
@@ -88,6 +106,12 @@ export interface Sermon {
     description: string | null;
     share_token: string;
     is_public: boolean;
+    detected_theme: string | null;
+    analysis: string | null;
+    big_takeaway?: string;
+    movements?: LessonMovement[];
+    reflection_questions?: string[];
+    prayer?: string;
     created_at: string;
     updated_at: string;
     lessons?: Lesson[];

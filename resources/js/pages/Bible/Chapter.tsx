@@ -1,9 +1,9 @@
 import BibleLayout from '@/layouts/bible-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Book, Chapter as ChapterType, Verse, UserInteractions } from '@/types/bible';
+import { Book, Chapter as ChapterType, Verse, UserInteractions, BookNav } from '@/types/bible';
 import { SharedData } from '@/types';
 import { useState, useEffect, type ReactNode } from 'react';
-import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare } from 'lucide-react';
+import { Bookmark, Heart, X, Highlighter, Expand, Minimize, MessageSquare, BookOpen, ChevronRight, ChevronDown, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,8 +14,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
     book: Book;
@@ -27,6 +35,8 @@ interface Props {
     prev_link: string | null;
     next_link: string | null;
     userInteractions: UserInteractions;
+    allBooks: BookNav[];
+    bookChapters: { id: number; number: number }[];
 }
 
 interface NoteDialogState {
@@ -75,12 +85,14 @@ function renderVerseText(text: string): ReactNode[] {
     });
 }
 
-export default function Chapter({ book, chapter, verses, version, available_versions, total_chapters, prev_link, next_link, userInteractions }: Props) {
+export default function Chapter({ book, chapter, verses, version, available_versions, total_chapters, prev_link, next_link, userInteractions, allBooks, bookChapters }: Props) {
     const { auth } = usePage<SharedData>().props;
     const [fontSize, setFontSize] = useState(20);
     const [selectedVerseId, setSelectedVerseId] = useState<number | null>(null);
-    
-    // Initialize Zen Mode from localStorage
+    const [navOpen, setNavOpen] = useState(false);
+    const [expandedBook, setExpandedBook] = useState<string | null>(book.abbreviation);
+
+    // Initialize Easy Read mode from localStorage
     const [zenMode, setZenMode] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('bible-zen-mode') === 'true';
@@ -88,11 +100,58 @@ export default function Chapter({ book, chapter, verses, version, available_vers
         return false;
     });
 
-    // Persist Zen Mode changes
+    const [inquiryMode, setInquiryMode] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('bible-inquiry-mode') === 'true';
+        }
+        return false;
+    });
+
+    // Track verse to highlight from URL hash (e.g., #verse-5)
+    const [highlightedVerseNum, setHighlightedVerseNum] = useState<number | null>(() => {
+        if (typeof window !== 'undefined') {
+            const hash = window.location.hash;
+            const match = hash.match(/^#verse-(\d+)$/);
+            return match ? parseInt(match[1], 10) : null;
+        }
+        return null;
+    });
+
+    // Persist Easy Read mode changes
     useEffect(() => {
         localStorage.setItem('bible-zen-mode', String(zenMode));
     }, [zenMode]);
-    
+
+    useEffect(() => {
+        localStorage.setItem('bible-inquiry-mode', String(inquiryMode));
+    }, [inquiryMode]);
+
+    // Scroll to highlighted verse on mount or when hash changes
+    useEffect(() => {
+        if (highlightedVerseNum !== null) {
+            const verseElement = document.getElementById(`verse-${highlightedVerseNum}`);
+            if (verseElement) {
+                // Small delay to ensure DOM is ready
+                setTimeout(() => {
+                    verseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+                // Clear highlight after a few seconds
+                setTimeout(() => {
+                    setHighlightedVerseNum(null);
+                }, 4000);
+            }
+        }
+    }, [highlightedVerseNum]);
+
+    // Close selection when changing chapters
+    useEffect(() => {
+        setSelectedVerseId(null);
+        // Update highlighted verse from new URL hash
+        const hash = window.location.hash;
+        const match = hash.match(/^#verse-(\d+)$/);
+        setHighlightedVerseNum(match ? parseInt(match[1], 10) : null);
+    }, [chapter.id]);
+
     const [noteDialog, setNoteDialog] = useState<NoteDialogState>({
         isOpen: false,
         type: 'highlight',
@@ -100,11 +159,6 @@ export default function Chapter({ book, chapter, verses, version, available_vers
         initialNote: '',
     });
     const [noteContent, setNoteContent] = useState('');
-
-    // Close selection when changing chapters
-    useEffect(() => {
-        setSelectedVerseId(null);
-    }, [chapter.id]);
 
     useEffect(() => {
         if (noteDialog.isOpen) {
@@ -125,8 +179,49 @@ export default function Chapter({ book, chapter, verses, version, available_vers
     const firstVerseClean = stripBraceArtifacts(verses[0]?.text ?? '');
     const metaDescription = `Read ${book.name} chapter ${chapter.number} online free in the ${version.name}. ${firstVerseClean.substring(0, 140)}${firstVerseClean.length > 140 ? '…' : ''}`;
 
+    const scriptPrompts = [
+        {
+            key: 'S',
+            title: 'Set the Scene',
+            prompt: 'Who is speaking, to whom, and what is happening in this passage?',
+        },
+        {
+            key: 'C',
+            title: 'Capture What It Says',
+            prompt: 'What words, actions, commands, or promises are emphasized?',
+        },
+        {
+            key: 'R',
+            title: 'Relate to the Rest of Scripture',
+            prompt: 'Where else does Scripture speak to this same theme?',
+        },
+        {
+            key: 'I',
+            title: 'Interpret the Meaning',
+            prompt: 'What did this mean then, and what does it reveal about God today?',
+        },
+        {
+            key: 'P',
+            title: 'Put It Into Practice',
+            prompt: 'What one action or attitude should change this week?',
+        },
+        {
+            key: 'T',
+            title: 'Talk to God',
+            prompt: 'How will you respond to God in prayer based on this passage?',
+        },
+    ];
+
+    const handleInquiryModeToggle = () => {
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.can_access_premium) return router.visit('/pricing');
+
+        setInquiryMode(!inquiryMode);
+    };
+
     const handleBookmarkClick = () => {
         if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
 
         if (isBookmarked) {
             // Open dialog to edit note or remove
@@ -149,7 +244,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
     const handleSaveNote = () => {
         const { type, id, color } = noteDialog;
-        
+
         let url = '';
         let data: any = { note: noteContent };
 
@@ -182,7 +277,9 @@ export default function Chapter({ book, chapter, verses, version, available_vers
     };
 
     const handleHighlight = (color: string) => {
-        if (!auth.user || !selectedVerseId) return router.visit('/login');
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
+        if (!selectedVerseId) return;
 
         router.post('/bible/highlight', {
             verse_id: selectedVerseId,
@@ -194,7 +291,9 @@ export default function Chapter({ book, chapter, verses, version, available_vers
     };
 
     const handleFavorite = () => {
-        if (!auth.user || !selectedVerseId) return router.visit('/login');
+        if (!auth.user) return router.visit('/login');
+        if (!auth.user.is_subscribed) return router.visit('/pricing');
+        if (!selectedVerseId) return;
 
         router.post('/bible/favorite', {
             verse_id: selectedVerseId,
@@ -213,7 +312,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
         // Prioritize editing Highlight note, then Favorite note.
         // If neither, we'll create a new Favorite with note (or Highlight? Let's go with Favorite as it's cleaner)
         // Actually, let's go with Highlight (yellow) as default "Note" carrier if nothing exists, as it's more "study" like.
-        
+
         if (highlight) {
             setNoteDialog({
                 isOpen: true,
@@ -231,7 +330,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
             });
         } else {
             // Create new Highlight (Yellow) with Note
-             setNoteDialog({
+            setNoteDialog({
                 isOpen: true,
                 type: 'highlight',
                 id: verseId,
@@ -260,7 +359,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                 <meta property="og:description" content={metaDescription} />
                 <meta property="og:type" content="article" />
             </Head>
-            
+
             <div className={cn(
                 "mx-auto py-8 px-4 md:px-8 relative transition-all duration-500 ease-in-out",
                 zenMode ? "max-w-3xl pt-12" : "max-w-4xl"
@@ -270,15 +369,117 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                     "flex flex-col md:flex-row justify-between items-center mb-12 border-b border-border/50 pb-6 transition-opacity duration-300",
                     zenMode && "opacity-20 hover:opacity-100"
                 )}>
-                    <div className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4 md:mb-0">
-                         <Link href="/" className="hover:text-primary/70 font-medium">Books</Link>
-                         <span className="text-muted-foreground">/</span>
-                         <span className="font-bold text-primary">{book.name}</span>
-                    </div>
-                    
+                    <Sheet open={navOpen} onOpenChange={setNavOpen}>
+                        <SheetTrigger asChild>
+                            <button className="flex items-center gap-2 text-sm uppercase tracking-widest mb-4 md:mb-0 hover:text-primary transition-colors group">
+                                <BookOpen className="h-4 w-4 text-primary" />
+                                <span className="font-medium">Books</span>
+                                <span className="text-muted-foreground">/</span>
+                                <span className="font-bold text-primary">{book.name}</span>
+                                <span className="text-muted-foreground">/</span>
+                                <span className="font-medium">Ch. {chapter.number}</span>
+                                <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-[320px] sm:w-[400px] p-0">
+                            <SheetHeader className="p-6 border-b">
+                                <SheetTitle className="text-left font-serif">Scripture Navigation</SheetTitle>
+                            </SheetHeader>
+                            <ScrollArea className="h-[calc(100vh-80px)]">
+                                <div className="p-4">
+                                    {/* Old Testament */}
+                                    <div className="mb-6">
+                                        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-2">Old Testament</h3>
+                                        {allBooks.filter(b => b.position <= 39).map((navBook) => (
+                                            <div key={navBook.id} className="mb-1">
+                                                <button
+                                                    onClick={() => setExpandedBook(expandedBook === navBook.abbreviation ? null : navBook.abbreviation)}
+                                                    className={cn(
+                                                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                                                        navBook.abbreviation === book.abbreviation
+                                                            ? "bg-primary/10 text-primary font-medium"
+                                                            : "hover:bg-muted"
+                                                    )}
+                                                >
+                                                    <span>{navBook.name}</span>
+                                                    <ChevronRight className={cn(
+                                                        "h-4 w-4 transition-transform",
+                                                        expandedBook === navBook.abbreviation && "rotate-90"
+                                                    )} />
+                                                </button>
+                                                {expandedBook === navBook.abbreviation && (
+                                                    <div className="grid grid-cols-6 gap-1 p-2 ml-2 border-l border-border">
+                                                        {Array.from({ length: navBook.chapters_count }, (_, i) => i + 1).map((chNum) => (
+                                                            <Link
+                                                                key={chNum}
+                                                                href={`/bible/${navBook.abbreviation}/${chNum}`}
+                                                                onClick={() => setNavOpen(false)}
+                                                                className={cn(
+                                                                    "w-8 h-8 flex items-center justify-center rounded text-xs font-medium transition-colors",
+                                                                    navBook.abbreviation === book.abbreviation && chNum === chapter.number
+                                                                        ? "bg-primary text-primary-foreground"
+                                                                        : "hover:bg-muted"
+                                                                )}
+                                                            >
+                                                                {chNum}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* New Testament */}
+                                    <div>
+                                        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-2">New Testament</h3>
+                                        {allBooks.filter(b => b.position > 39).map((navBook) => (
+                                            <div key={navBook.id} className="mb-1">
+                                                <button
+                                                    onClick={() => setExpandedBook(expandedBook === navBook.abbreviation ? null : navBook.abbreviation)}
+                                                    className={cn(
+                                                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                                                        navBook.abbreviation === book.abbreviation
+                                                            ? "bg-primary/10 text-primary font-medium"
+                                                            : "hover:bg-muted"
+                                                    )}
+                                                >
+                                                    <span>{navBook.name}</span>
+                                                    <ChevronRight className={cn(
+                                                        "h-4 w-4 transition-transform",
+                                                        expandedBook === navBook.abbreviation && "rotate-90"
+                                                    )} />
+                                                </button>
+                                                {expandedBook === navBook.abbreviation && (
+                                                    <div className="grid grid-cols-6 gap-1 p-2 ml-2 border-l border-border">
+                                                        {Array.from({ length: navBook.chapters_count }, (_, i) => i + 1).map((chNum) => (
+                                                            <Link
+                                                                key={chNum}
+                                                                href={`/bible/${navBook.abbreviation}/${chNum}`}
+                                                                onClick={() => setNavOpen(false)}
+                                                                className={cn(
+                                                                    "w-8 h-8 flex items-center justify-center rounded text-xs font-medium transition-colors",
+                                                                    navBook.abbreviation === book.abbreviation && chNum === chapter.number
+                                                                        ? "bg-primary text-primary-foreground"
+                                                                        : "hover:bg-muted"
+                                                                )}
+                                                            >
+                                                                {chNum}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </ScrollArea>
+                        </SheetContent>
+                    </Sheet>
+
                     <div className="flex items-center gap-4">
-                        <Button 
-                            variant="ghost" 
+                        <Button
+                            variant="ghost"
                             size="icon"
                             onClick={handleBookmarkClick}
                             className={cn("hover:text-primary transition-colors", isBookmarked && "text-primary fill-primary")}
@@ -286,7 +487,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                         >
                             <Bookmark className={cn("h-5 w-5", isBookmarked && "fill-current")} />
                         </Button>
-                        
+
                         <div className="flex items-center gap-2 border-l border-border pl-4">
                             <button onClick={() => setFontSize(Math.max(14, fontSize - 2))} className="text-lg font-serif hover:text-primary w-8 h-8 flex items-center justify-center transition-colors">A-</button>
                             <button onClick={() => setFontSize(Math.min(32, fontSize + 2))} className="text-lg font-serif hover:text-primary w-8 h-8 flex items-center justify-center transition-colors">A+</button>
@@ -297,22 +498,61 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setZenMode(!zenMode)}
-                                title={zenMode ? "Exit Zen Mode" : "Enter Zen Mode"}
+                                title={zenMode ? "Exit Easy Read Mode" : "Enter Easy Read Mode"}
                                 className="hover:text-primary transition-colors"
                             >
                                 {zenMode ? <Minimize className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
                             </Button>
                         </div>
+
+                        <div className="border-l border-border pl-4">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleInquiryModeToggle}
+                                title={inquiryMode ? "Exit S.C.R.I.P.T. Inquiry Mode" : "Enter S.C.R.I.P.T. Inquiry Mode (Premium)"}
+                                className={cn("transition-colors", inquiryMode ? "text-primary" : "hover:text-primary")}
+                            >
+                                <Sparkles className="h-5 w-5" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
+
+                {inquiryMode && (
+                    <section className="mb-10 rounded-2xl border border-primary/20 bg-primary/5 p-5 md:p-6">
+                        <div className="mb-4 flex items-start justify-between gap-4">
+                            <div>
+                                <h2 className="font-serif text-2xl text-foreground">S.C.R.I.P.T. Inquiry Mode</h2>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    A denomination-neutral reading and reflection flow designed for InspireWrite subscribers.
+                                </p>
+                            </div>
+                            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+                                Premium
+                            </span>
+                        </div>
+
+                        <div className="grid gap-3 md:grid-cols-2">
+                            {scriptPrompts.map((step) => (
+                                <article key={step.key} className="rounded-xl border border-border/70 bg-background/80 p-4">
+                                    <h3 className="text-sm font-semibold uppercase tracking-wide text-primary">
+                                        {step.key} — {step.title}
+                                    </h3>
+                                    <p className="mt-2 text-sm text-foreground/80">{step.prompt}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* Chapter Navigation */}
                 <div className={cn(
                     "flex justify-between items-center mb-12 transition-opacity duration-300",
-                     zenMode && "opacity-0 hover:opacity-100"
+                    zenMode && "opacity-0 hover:opacity-100"
                 )}>
                     {prev_link ? (
-                        <Link 
+                        <Link
                             href={prev_link}
                             className="text-xs uppercase tracking-widest hover:text-primary flex items-center gap-2 text-muted-foreground transition-colors"
                         >
@@ -321,14 +561,14 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                     ) : (
                         <div className="w-20"></div>
                     )}
-                    
+
                     <h1 className="font-serif text-5xl md:text-6xl text-center text-foreground/90 font-medium tracking-tight">
                         <span className="text-2xl md:text-3xl block mb-2 text-muted-foreground italic font-normal">Chapter</span>
                         {chapter.number}
                     </h1>
-                    
+
                     {next_link ? (
-                        <Link 
+                        <Link
                             href={next_link}
                             className="text-xs uppercase tracking-widest hover:text-primary flex items-center gap-2 text-muted-foreground transition-colors"
                         >
@@ -342,7 +582,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                 {/* Verses — grouped into readable paragraph blocks */}
                 <div
                     className={cn(
-                        "prose prose-lg dark:prose-invert max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
+                        "prose prose-lg max-w-none font-serif leading-loose text-justify text-foreground/80 selection:bg-primary/20",
                         zenMode && "prose-xl leading-relaxed"
                     )}
                     style={{ fontSize: `${fontSize}px` }}
@@ -357,13 +597,15 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                         const hasNote = highlight?.note || userInteractions.favorites[verse.id]?.note;
 
                         return (
-                            <span 
-                                key={verse.id} 
+                            <span
+                                key={verse.id}
+                                id={`verse-${verse.number}`}
                                 onClick={() => setSelectedVerseId(isSelected ? null : verse.id)}
                                 className={cn(
                                     "relative inline transition-colors duration-200 cursor-pointer select-text decoration-clone p-0.5 rounded box-decoration-clone",
-                                    highlight ? getHighlightColor(highlight.color) : "hover:bg-black/5 dark:hover:bg-white/5",
-                                    isSelected && "bg-black/10 dark:bg-white/10"
+                                    highlight ? getHighlightColor(highlight.color) : "hover:bg-black/5",
+                                    isSelected && "bg-black/10",
+                                    highlightedVerseNum === verse.number && "ring-2 ring-primary ring-offset-2 bg-primary/10 animate-pulse"
                                 )}
                             >
                                 <sup className={cn(
@@ -388,7 +630,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
                                 {/* Floating Toolbar for Selected Verse */}
                                 {isSelected && (
-                                    <div 
+                                    <div
                                         className="absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-3 bg-popover text-popover-foreground shadow-xl border border-border rounded-full p-1.5 flex items-center gap-1 animate-in fade-in slide-in-from-bottom-2 zoom-in-95 duration-200 whitespace-nowrap"
                                         onClick={(e) => e.stopPropagation()}
                                     >
@@ -409,21 +651,21 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                                                 />
                                             ))}
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={handleFavorite}
                                             className={cn("p-2 rounded-full hover:bg-muted transition-colors", isFavorited ? "text-red-500" : "text-muted-foreground")}
                                             title={isFavorited ? "Remove from Favorites" : "Add to Favorites"}
                                         >
                                             <Heart className={cn("h-4 w-4", isFavorited && "fill-current")} />
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => openVerseNoteDialog(verse.id)}
                                             className={cn("p-2 rounded-full hover:bg-muted transition-colors", hasNote ? "text-blue-500" : "text-muted-foreground")}
                                             title="Add/Edit Note"
                                         >
                                             <MessageSquare className={cn("h-4 w-4", hasNote && "fill-current")} />
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => setSelectedVerseId(null)}
                                             className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
                                             title="Close"
@@ -492,26 +734,26 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                         <span className="normal-case tracking-normal">of {total_chapters}</span>
                     </label>
                 </div>
-                
+
                 {/* Bottom Navigation */}
-                 <div className={cn(
-                     "flex justify-between items-center mt-16 pt-12 border-t border-border/50 transition-opacity duration-300",
-                     zenMode && "opacity-20 hover:opacity-100"
-                 )}>
+                <div className={cn(
+                    "flex justify-between items-center mt-16 pt-12 border-t border-border/50 transition-opacity duration-300",
+                    zenMode && "opacity-20 hover:opacity-100"
+                )}>
                     {prev_link ? (
-                        <Link 
+                        <Link
                             href={prev_link}
                             className="group flex flex-col items-start"
                         >
-                             <span className="text-xs uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-primary transition-colors">&larr; Previous</span>
-                             <span className="font-serif text-lg group-hover:text-primary transition-colors">Chapter {chapter.number - 1 > 0 ? chapter.number - 1 : 'Book'}</span>
+                            <span className="text-xs uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-primary transition-colors">&larr; Previous</span>
+                            <span className="font-serif text-lg group-hover:text-primary transition-colors">Chapter {chapter.number - 1 > 0 ? chapter.number - 1 : 'Book'}</span>
                         </Link>
                     ) : (
                         <div></div>
                     )}
-                    
+
                     {next_link ? (
-                        <Link 
+                        <Link
                             href={next_link}
                             className="group flex flex-col items-end"
                         >
@@ -536,13 +778,13 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                             Add a personal note or reflection.
                         </DialogDescription>
                     </DialogHeader>
-                    
+
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                             <Label htmlFor="note">Note</Label>
-                            <Textarea 
-                                id="note" 
-                                value={noteContent} 
+                            <Textarea
+                                id="note"
+                                value={noteContent}
                                 onChange={(e) => setNoteContent(e.target.value)}
                                 placeholder="Enter your thoughts here..."
                                 className="min-h-[120px]"
@@ -552,9 +794,9 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
                     <DialogFooter className="sm:justify-between">
                         {noteDialog.type === 'bookmark' ? (
-                             <Button 
-                                type="button" 
-                                variant="destructive" 
+                            <Button
+                                type="button"
+                                variant="destructive"
                                 onClick={() => {
                                     setNoteDialog({ ...noteDialog, isOpen: false });
                                     router.post('/bible/bookmark', {
@@ -566,7 +808,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
                                 Remove Bookmark
                             </Button>
                         ) : (
-                            <div></div> 
+                            <div></div>
                         )}
                         <div className="flex gap-2">
                             <Button variant="secondary" onClick={() => setNoteDialog({ ...noteDialog, isOpen: false })}>
