@@ -84,7 +84,7 @@ export default function AdminAffiliateShow({ affiliate, stats, referrals, earnin
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
-                            statusForm.patch(route('admin.affiliates.status', affiliate.id));
+                            statusForm.patch(`/admin/affiliates/${affiliate.id}/status`);
                         }}
                         className="flex items-center gap-2"
                     >
@@ -136,7 +136,7 @@ export default function AdminAffiliateShow({ affiliate, stats, referrals, earnin
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();
-                                    payoutForm.post(route('admin.affiliates.payouts.store', affiliate.id), {
+                                    payoutForm.post(`/admin/affiliates/${affiliate.id}/payouts`, {
                                         onSuccess: () => payoutForm.reset(),
                                     });
                                 }}
@@ -206,7 +206,7 @@ export default function AdminAffiliateShow({ affiliate, stats, referrals, earnin
                                 <form
                                     onSubmit={(e) => {
                                         e.preventDefault();
-                                        adjustForm.post(route('admin.affiliates.adjustments.store', affiliate.id), {
+                                        adjustForm.post(`/admin/affiliates/${affiliate.id}/adjustments`, {
                                             onSuccess: () => adjustForm.reset(),
                                         });
                                     }}
@@ -248,7 +248,7 @@ export default function AdminAffiliateShow({ affiliate, stats, referrals, earnin
                                 <form
                                     onSubmit={(e) => {
                                         e.preventDefault();
-                                        detailsForm.patch(route('admin.affiliates.update', affiliate.id));
+                                        detailsForm.patch(`/admin/affiliates/${affiliate.id}`);
                                     }}
                                     className="grid gap-4"
                                 >

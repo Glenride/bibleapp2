@@ -39,7 +39,7 @@ export default function AdminAffiliatesIndex({ affiliates }: { affiliates: Affil
 
     const submitInvite = (e: React.FormEvent) => {
         e.preventDefault();
-        form.post(route('admin.affiliates.invite'), {
+        form.post('/admin/affiliates/invite', {
             onSuccess: () => {
                 form.reset();
                 setShowInvite(false);
@@ -133,7 +133,7 @@ export default function AdminAffiliatesIndex({ affiliates }: { affiliates: Affil
                                             <tr key={a.id} className="border-b last:border-0">
                                                 <td className="py-3 pr-4">
                                                     <Link
-                                                        href={route('admin.affiliates.show', a.id)}
+                                                        href={`/admin/affiliates/${a.id}`}
                                                         className="font-medium hover:text-primary"
                                                     >
                                                         {a.name ?? a.email ?? `#${a.id}`}
