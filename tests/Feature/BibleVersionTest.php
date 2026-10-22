@@ -40,8 +40,8 @@ class BibleVersionTest extends TestCase
                     'chapter_id' => $chapter->id,
                     'number' => 1,
                     'text' => $abbreviation === 'en_kjv'
-                        ? 'In the beginning God created the heaven and the earth.'
-                        : 'At the first God made the heaven and the earth.',
+                        ? ($chapterNumber === 1 ? 'In the beginning God created the heaven and the earth.' : 'Thus the heavens and the earth were finished.')
+                        : ($chapterNumber === 1 ? 'At the first God made the heaven and the earth.' : 'And the heavens and the earth were finished.'),
                 ]);
             }
         }

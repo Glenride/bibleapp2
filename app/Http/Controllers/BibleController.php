@@ -15,31 +15,24 @@ class BibleController extends Controller
     public function index()
     {
         // The book index always shows the default version (KJV).
-        $version = BibleVersion::where(
-            'abbreviation',
-            BibleVersion::VERSION_SLUGS['kjv']
-        )->first();
+        $version = BibleVersion::resolveSlug('kjv') ?? BibleVersion::first();
 
         if (! $version) {
-            return Inertia::render('Welcome', [
-                'oldTestament' => [],
-                'newTestament' => [],
+            return Inertia::render('Bible/Index', [
+                'version' => [
+                    'name' => 'King James Version',
+                    'abbreviation' => 'KJV',
+                    'language' => 'en',
+                ],
+                'books' => [],
             ]);
         }
 
         $books = $version->books()->orderBy('position')->withCount('chapters')->get();
 
-        $oldTestament = $books->filter(function ($book) {
-            return $book->position <= 39;
-        })->values();
-
-        $newTestament = $books->filter(function ($book) {
-            return $book->position >= 40;
-        })->values();
-
-        return Inertia::render('Welcome', [
-            'oldTestament' => $oldTestament,
-            'newTestament' => $newTestament
+        return Inertia::render('Bible/Index', [
+            'version' => $version,
+            'books' => $books,
         ]);
     }
 
@@ -64,13 +57,11 @@ class BibleController extends Controller
     protected function renderChapter(string $versionSlug, string $bookAbbrev, int $chapterNumber)
     {
         $versionSlug = strtolower($versionSlug);
-        $abbreviation = BibleVersion::VERSION_SLUGS[$versionSlug] ?? null;
+        $version = BibleVersion::resolveSlug($versionSlug);
 
-        if (! $abbreviation) {
+        if (! $version) {
             abort(404);
         }
-
-        $version = BibleVersion::where('abbreviation', $abbreviation)->firstOrFail();
 
         $book = $version->books()->where('abbreviation', $bookAbbrev)->firstOrFail();
 

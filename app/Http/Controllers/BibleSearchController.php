@@ -27,7 +27,7 @@ class BibleSearchController extends Controller
 
         if (! $version) {
             $versionSlug = 'kjv';
-            $version = BibleVersion::resolveSlug($versionSlug);
+            $version = BibleVersion::resolveSlug($versionSlug) ?? BibleVersion::first();
         }
 
         $results = [];
@@ -77,52 +77,81 @@ class BibleSearchController extends Controller
 
     protected function searchSqlite(int $versionId, string $query): array
     {
-        $hasIndex = Schema::hasTable('verses_fts') && DB::table('verses_fts')->count() > 0;
+        $hasIndex = false;
+        try {
+            $hasIndex = Schema::hasTable('verses_fts') && DB::table('verses_fts')->count() > 0;
+        } catch (\Throwable) {
+            $hasIndex = false;
+        }
 
         if (! $hasIndex) {
             return $this->searchLike($versionId, $query);
         }
 
-        $rows = DB::table('verses_fts')
-            ->join('verses', 'verses.id', '=', 'verses_fts.verse_id')
-            ->join('chapters', 'chapters.id', '=', 'verses.chapter_id')
-            ->join('books', 'books.id', '=', 'chapters.book_id')
-            ->where('books.bible_version_id', $versionId)
-            ->whereRaw('verses_fts MATCH ?', [$this->fts5Match($query)])
-            ->orderByRaw('bm25(verses_fts)')
-            ->limit(50)
-            ->get([
-                'verses.id',
-                'verses.number as verse_number',
-                'verses.text',
-                'chapters.number as chapter_number',
-                'books.name as book_name',
-                'books.abbreviation as book_abbreviation',
-            ]);
+        try {
+            $rows = DB::table('verses_fts')
+                ->join('verses', 'verses.id', '=', 'verses_fts.verse_id')
+                ->join('chapters', 'chapters.id', '=', 'verses.chapter_id')
+                ->join('books', 'books.id', '=', 'chapters.book_id')
+                ->where('books.bible_version_id', $versionId)
+                ->whereRaw('verses_fts MATCH ?', [$this->fts5Match($query)])
+                ->orderByRaw('bm25(verses_fts)')
+                ->limit(50)
+                ->get([
+                    'verses.id',
+                    'verses.number as verse_number',
+                    'verses.text',
+                    'chapters.number as chapter_number',
+                    'books.name as book_name',
+                    'books.abbreviation as book_abbreviation',
+                ]);
 
-        return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+            if ($rows->isEmpty()) {
+                return $this->searchLike($versionId, $query);
+            }
+
+            return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+        } catch (\Throwable) {
+            return $this->searchLike($versionId, $query);
+        }
     }
 
     protected function searchMysql(int $versionId, string $query): array
     {
-        $rows = $this->baseQuery($versionId)
-            ->whereRaw('MATCH(verses.text) AGAINST(? IN NATURAL LANGUAGE MODE)', [$query])
-            ->orderByRaw('MATCH(verses.text) AGAINST(? IN NATURAL LANGUAGE MODE) DESC', [$query])
-            ->limit(50)
-            ->get();
+        try {
+            $rows = $this->baseQuery($versionId)
+                ->whereRaw('MATCH(verses.text) AGAINST(? IN NATURAL LANGUAGE MODE)', [$query])
+                ->orderByRaw('MATCH(verses.text) AGAINST(? IN NATURAL LANGUAGE MODE) DESC', [$query])
+                ->limit(50)
+                ->get();
 
-        return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+            if ($rows->isEmpty()) {
+                return $this->searchLike($versionId, $query);
+            }
+
+            return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+        } catch (\Throwable) {
+            return $this->searchLike($versionId, $query);
+        }
     }
 
     protected function searchPgsql(int $versionId, string $query): array
     {
-        $rows = $this->baseQuery($versionId)
-            ->whereRaw("to_tsvector('english', verses.text) @@ plainto_tsquery('english', ?)", [$query])
-            ->orderByRaw("ts_rank(to_tsvector('english', verses.text), plainto_tsquery('english', ?)) DESC", [$query])
-            ->limit(50)
-            ->get();
+        try {
+            $rows = $this->baseQuery($versionId)
+                ->whereRaw("to_tsvector('english', verses.text) @@ plainto_tsquery('english', ?)", [$query])
+                ->orderByRaw("ts_rank(to_tsvector('english', verses.text), plainto_tsquery('english', ?)) DESC", [$query])
+                ->limit(50)
+                ->get();
 
-        return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+            if ($rows->isEmpty()) {
+                return $this->searchLike($versionId, $query);
+            }
+
+            return $rows->map(fn ($row) => $this->formatResult($row, $query))->all();
+        } catch (\Throwable) {
+            return $this->searchLike($versionId, $query);
+        }
     }
 
     protected function searchLike(int $versionId, string $query): array
