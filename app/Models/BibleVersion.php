@@ -34,13 +34,16 @@ class BibleVersion extends Model
      */
     public static function resolveSlug(?string $slug): ?self
     {
-        $abbreviation = self::VERSION_SLUGS[strtolower((string) $slug)] ?? null;
+        $normalizedSlug = strtolower((string) $slug);
+        $abbreviation = self::VERSION_SLUGS[$normalizedSlug] ?? null;
 
         if (! $abbreviation) {
             return null;
         }
 
-        return static::where('abbreviation', $abbreviation)->first();
+        return static::where('abbreviation', $abbreviation)->first()
+            ?? static::where('abbreviation', strtoupper($normalizedSlug))->first()
+            ?? static::where('abbreviation', $normalizedSlug)->first();
     }
 
     /**
@@ -51,13 +54,14 @@ class BibleVersion extends Model
      */
     public static function availableForSwitcher(): array
     {
-        $imported = static::whereIn('abbreviation', array_values(self::VERSION_SLUGS))
-            ->get()
-            ->keyBy('abbreviation');
+        $imported = static::all();
 
         $list = [];
         foreach (self::VERSION_SLUGS as $slug => $abbreviation) {
-            $row = $imported->get($abbreviation);
+            $row = $imported->first(function ($v) use ($slug, $abbreviation) {
+                return in_array($v->abbreviation, [$abbreviation, strtoupper($slug), $slug], true);
+            });
+
             if ($row) {
                 $list[] = [
                     'slug' => $slug,
