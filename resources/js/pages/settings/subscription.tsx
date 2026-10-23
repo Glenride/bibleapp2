@@ -101,9 +101,9 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                                 </ul>
                                             </div>
                                             <Button asChild>
-                                                <Link href="/checkout/price_1SqIgMLenlwJrzcOoUWAw2qf">
+                                                <a href="/checkout/study">
                                                     Subscribe
-                                                </Link>
+                                                </a>
                                             </Button>
                                         </div>
                                     </div>
@@ -134,9 +134,9 @@ export default function Subscription({ currentPlan = 'none', subscriptionEndsAt 
                                             </ul>
                                         </div>
                                         <Button asChild className="bg-primary">
-                                            <Link href="/checkout/price_1SqIgxLenlwJrzcOw7OEiD4n">
+                                            <a href="/checkout/pro">
                                                 {currentPlan === 'basic' ? 'Upgrade' : 'Subscribe'}
-                                            </Link>
+                                            </a>
                                         </Button>
                                     </div>
                                 </div>

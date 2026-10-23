@@ -44,7 +44,7 @@ export default function Pricing() {
                                 <li className="flex items-center gap-2"><Check className="size-4 text-green-500 shrink-0" /> Up to 2 lessons with the Assistant / month</li>
                             </ul>
                         </div>
-                        <a href="/checkout/price_1SqIgMLenlwJrzcOoUWAw2qf" className="w-full block text-center py-2.5 px-4 border border-primary text-primary hover:bg-primary/10 font-semibold rounded-md transition-colors">
+                        <a href="/checkout/study" className="w-full block text-center py-2.5 px-4 border border-primary text-primary hover:bg-primary/10 font-semibold rounded-md transition-colors">
                             Get Started
                         </a>
                     </div>
@@ -65,7 +65,7 @@ export default function Pricing() {
                                 <li className="flex items-center gap-2"><Check className="size-4 text-primary shrink-0" /> Up to 5 sermons with the Assistant / month</li>
                             </ul>
                         </div>
-                        <a href="/checkout/price_1SqIgxLenlwJrzcOw7OEiD4n" className="w-full block text-center py-2.5 px-4 bg-primary text-primary-foreground hover:opacity-90 font-semibold rounded-md transition-opacity shadow-sm">
+                        <a href="/checkout/pro" className="w-full block text-center py-2.5 px-4 bg-primary text-primary-foreground hover:opacity-90 font-semibold rounded-md transition-opacity shadow-sm">
                             Subscribe Now
                         </a>
                     </div>

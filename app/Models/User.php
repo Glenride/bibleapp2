@@ -116,12 +116,28 @@ class User extends Authenticatable
             return 'trial';
         }
 
-        if ($subscription->hasPrice(self::PRO_PLAN_PRICE_ID)) {
-            return 'pro';
+        $proPrices = array_filter([
+            self::PRO_PLAN_PRICE_ID,
+            config('services.stripe.plans.pro'),
+            env('STRIPE_PRICE_TIER27'),
+        ]);
+
+        foreach ($proPrices as $price) {
+            if ($subscription->hasPrice($price)) {
+                return 'pro';
+            }
         }
 
-        if ($subscription->hasPrice(self::BASIC_PLAN_PRICE_ID)) {
-            return 'basic';
+        $studyPrices = array_filter([
+            self::BASIC_PLAN_PRICE_ID,
+            config('services.stripe.plans.study'),
+            env('STRIPE_PRICE_TIER7'),
+        ]);
+
+        foreach ($studyPrices as $price) {
+            if ($subscription->hasPrice($price)) {
+                return 'basic';
+            }
         }
 
         return 'none';

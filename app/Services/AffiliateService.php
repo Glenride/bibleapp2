@@ -113,11 +113,13 @@ class AffiliateService
     public function recordSubscriptionCommission(
         Affiliate $affiliate,
         int $amountCents,
-        string $description = ''
+        string $description = '',
+        ?int $referralId = null
     ): AffiliateEarning {
         $commission = (int) round($amountCents * $affiliate->effectiveCommissionRate());
 
         return $affiliate->earnings()->create([
+            'affiliate_referral_id' => $referralId,
             'amount_cents' => $commission,
             'currency' => 'usd',
             'kind' => AffiliateEarning::KIND_SUBSCRIPTION,

@@ -30,5 +30,11 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Auth\Events\Registered::class,
             \App\Listeners\AttributeAffiliateSignup::class
         );
+
+        // Record affiliate commission when a subscription payment succeeds via Stripe webhook
+        \Illuminate\Support\Facades\Event::listen(
+            \Laravel\Cashier\Events\WebhookReceived::class,
+            \App\Listeners\RecordAffiliateSubscriptionCommission::class
+        );
     }
 }
