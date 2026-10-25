@@ -75,7 +75,7 @@ function renderVerseText(text: string): ReactNode[] {
             return isNote ? (
                 <span
                     key={i}
-                    className="inline-block align-super text-[0.68em] font-sans font-semibold text-yellow-600/90 dark:text-yellow-400/90 cursor-help px-0.5 select-none hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors"
+                    className="inline-block align-super text-[0.68em] font-sans font-semibold text-yellow-600/90 cursor-help px-0.5 select-none hover:text-yellow-700 transition-colors"
                     title={`Translator note: ${inner}`}
                     role="note"
                     aria-label={`Translator note: ${inner}`}
@@ -372,10 +372,10 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
     const getHighlightColor = (color: string) => {
         switch (color) {
-            case 'yellow': return 'bg-yellow-200/50 dark:bg-yellow-400/25';
-            case 'green': return 'bg-green-200/50 dark:bg-green-400/25';
-            case 'blue': return 'bg-blue-200/50 dark:bg-blue-400/25';
-            case 'pink': return 'bg-pink-200/50 dark:bg-pink-400/25';
+            case 'yellow': return 'bg-yellow-200/50';
+            case 'green': return 'bg-green-200/50';
+            case 'blue': return 'bg-blue-200/50';
+            case 'pink': return 'bg-pink-200/50';
             default: return '';
         }
     };
@@ -392,7 +392,7 @@ export default function Chapter({ book, chapter, verses, version, available_vers
 
             {/* Sticky mini-header on scroll */}
             {showStickyHeader && (
-                <div className="fixed top-0 left-0 right-0 z-40 bg-[#F5F2EA]/95 dark:bg-[#1a1a1a]/95 backdrop-blur border-b border-border/40 py-2.5 px-6 flex items-center justify-between shadow-sm animate-in fade-in duration-200">
+                <div className="fixed top-0 left-0 right-0 z-40 bg-[#F5F2EA]/95 backdrop-blur border-b border-black/10 py-2.5 px-6 flex items-center justify-between shadow-sm animate-in fade-in duration-200">
                     <div className="flex items-center gap-3">
                         <span className="font-serif font-semibold text-sm tracking-wide">
                             {book.name} {chapter.number}

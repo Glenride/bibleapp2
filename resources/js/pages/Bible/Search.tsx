@@ -31,7 +31,7 @@ function highlightSnippet(snippet: string, query: string) {
 
     return snippet.split(pattern).map((part, i) =>
         lowerTokens.has(part.toLowerCase()) ? (
-            <mark key={i} className="bg-yellow-200 dark:bg-yellow-500/30 text-inherit rounded px-1 py-0.5 font-medium">
+            <mark key={i} className="bg-yellow-200 text-inherit rounded px-1 py-0.5 font-medium">
                 {part}
             </mark>
         ) : (

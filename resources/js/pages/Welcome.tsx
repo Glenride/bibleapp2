@@ -38,7 +38,7 @@ export default function Welcome({ oldTestament = [], newTestament = [] }: { oldT
     ];
 
     return (
-        <div className="min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <div className="force-light min-h-screen bg-[#F5F2EA] text-[#1a1a1a]" style={{ fontFamily: 'Inter, sans-serif' }}>
             <FlashToaster />
             <Head title="InspireWrite by Glenride - S.C.R.I.P.T. Bible Reading & Spiritual Journaling">
                 <meta name="description" content="InspireWrite by Glenride helps believers read Scripture with the denomination-neutral S.C.R.I.P.T. method, journal reflections, and build lessons and sermons with the Assistant." />

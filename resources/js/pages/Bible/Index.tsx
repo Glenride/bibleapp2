@@ -42,7 +42,7 @@ export default function Index({ version, books }: Props) {
             </section>
 
             {/* Books Grid */}
-            <section className="py-16 px-4 md:px-12 bg-white/50 dark:bg-card/40">
+            <section className="py-16 px-4 md:px-12 bg-white/50">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-16 text-center">
                         <h3 className="font-serif text-3xl italic mb-2">The Old Testament</h3>
@@ -56,7 +56,7 @@ export default function Index({ version, books }: Props) {
                                 href={`/bible/${book.abbreviation}`}
                                 className="group flex flex-col items-center p-4 bg-card shadow-sm hover:shadow-md transition-all border border-transparent hover:border-primary/10"
                             >
-                                <div className="w-full aspect-[2/3] bg-[#F5F2EA] dark:bg-[#2b231a] mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-[#EAE5D5] dark:group-hover:bg-[#372b1e] transition-colors">
+                                <div className="w-full aspect-[2/3] bg-[#F5F2EA] mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-[#EAE5D5] transition-colors">
                                     {book.image ? (
                                         <img 
                                             src={book.image} 
@@ -93,7 +93,7 @@ export default function Index({ version, books }: Props) {
                                 href={`/bible/${book.abbreviation}`}
                                 className="group flex flex-col items-center p-4 bg-card shadow-sm hover:shadow-md transition-all border border-transparent hover:border-primary/10"
                             >
-                                <div className="w-full aspect-[2/3] bg-[#F5F2EA] dark:bg-[#2b231a] mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-[#EAE5D5] dark:group-hover:bg-[#372b1e] transition-colors">
+                                <div className="w-full aspect-[2/3] bg-[#F5F2EA] mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-[#EAE5D5] transition-colors">
                                     {book.image ? (
                                         <img 
                                             src={book.image} 
@@ -121,7 +121,7 @@ export default function Index({ version, books }: Props) {
             </section>
             
             {/* Newsletter Section */}
-            <section className="py-20 px-4 md:px-12 bg-[#FBF9F4] dark:bg-card">
+            <section className="py-20 px-4 md:px-12 bg-[#FBF9F4]">
                  <div className="max-w-4xl mx-auto text-center">
                     <h3 className="font-serif text-3xl md:text-4xl mb-4">Subscribe to our Daily Verse</h3>
                     <p className="text-muted-foreground mb-8 max-w-md mx-auto">
@@ -131,7 +131,7 @@ export default function Index({ version, books }: Props) {
                         <input 
                             type="email" 
                             placeholder="Your email address" 
-                            className="flex-1 bg-white dark:bg-background border border-border px-4 py-3 focus:outline-none focus:border-primary"
+                            className="flex-1 bg-white border border-border px-4 py-3 focus:outline-none focus:border-primary"
                         />
                         <button className="bg-primary text-primary-foreground px-8 py-3 text-sm font-bold uppercase tracking-widest hover:opacity-90">
                             Subscribe

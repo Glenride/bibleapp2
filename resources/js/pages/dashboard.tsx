@@ -84,18 +84,28 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
 
     const getHighlightColor = (color: string) => {
         switch (color) {
-            case 'yellow': return 'bg-yellow-200 text-yellow-900 border-yellow-300';
-            case 'green': return 'bg-green-200 text-green-900 border-green-300';
-            case 'blue': return 'bg-blue-200 text-blue-900 border-blue-300';
-            case 'pink': return 'bg-pink-200 text-pink-900 border-pink-300';
-            default: return 'bg-gray-200 text-gray-900';
+            case 'yellow': return 'bg-yellow-200/70 text-yellow-950 dark:bg-yellow-950/60 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-800';
+            case 'green': return 'bg-green-200/70 text-green-950 dark:bg-green-950/60 dark:text-green-200 border border-green-300 dark:border-green-800';
+            case 'blue': return 'bg-blue-200/70 text-blue-950 dark:bg-blue-950/60 dark:text-blue-200 border border-blue-300 dark:border-blue-800';
+            case 'pink': return 'bg-pink-200/70 text-pink-950 dark:bg-pink-950/60 dark:text-pink-200 border border-pink-300 dark:border-pink-800';
+            default: return 'bg-muted text-foreground border border-border';
+        }
+    };
+
+    const getHighlightBadge = (color: string) => {
+        switch (color) {
+            case 'yellow': return 'bg-yellow-400';
+            case 'green': return 'bg-green-500';
+            case 'blue': return 'bg-blue-400';
+            case 'pink': return 'bg-pink-400';
+            default: return 'bg-gray-400';
         }
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="My Studio" />
-            <div className="flex h-full flex-1 flex-col gap-8 overflow-x-auto p-6 md:p-10 bg-[#F5F2EA]/30">
+            <div className="flex h-full flex-1 flex-col gap-8 overflow-x-auto p-6 md:p-10 bg-background text-foreground">
 
                 {/* Welcome Section */}
                 <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] text-white p-10 rounded-none shadow-xl">
@@ -198,17 +208,17 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
 
                 {/* Stats Overview */}
                 <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-white border border-gray-100 p-6 text-center hover:shadow-lg transition-shadow">
-                        <div className="text-4xl font-bold text-yellow-500 mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{bookmarks.length}</div>
-                        <div className="text-xs uppercase tracking-widest text-gray-500">Bookmarks</div>
+                    <div className="bg-card border border-border p-6 text-center hover:shadow-lg transition-shadow rounded-lg">
+                        <div className="text-4xl font-bold text-primary mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{bookmarks.length}</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Bookmarks</div>
                     </div>
-                    <div className="bg-white border border-gray-100 p-6 text-center hover:shadow-lg transition-shadow">
-                        <div className="text-4xl font-bold text-yellow-500 mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{favorites.length}</div>
-                        <div className="text-xs uppercase tracking-widest text-gray-500">Favorites</div>
+                    <div className="bg-card border border-border p-6 text-center hover:shadow-lg transition-shadow rounded-lg">
+                        <div className="text-4xl font-bold text-primary mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{favorites.length}</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Favorites</div>
                     </div>
-                    <div className="bg-white border border-gray-100 p-6 text-center hover:shadow-lg transition-shadow">
-                        <div className="text-4xl font-bold text-yellow-500 mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{highlights.length}</div>
-                        <div className="text-xs uppercase tracking-widest text-gray-500">Highlights</div>
+                    <div className="bg-card border border-border p-6 text-center hover:shadow-lg transition-shadow rounded-lg">
+                        <div className="text-4xl font-bold text-primary mb-1" style={{ fontFamily: 'DM Serif Display, serif' }}>{highlights.length}</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Highlights</div>
                     </div>
                 </div>
 
@@ -257,35 +267,35 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     {/* Bookmarks Column */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-[#1a1a1a] text-white">
+                            <div className="p-2 bg-primary text-primary-foreground rounded">
                                 <BookmarkIcon size={18} />
                             </div>
-                            <h3 className="text-sm font-bold uppercase tracking-widest">Bookmarks</h3>
-                            <div className="h-px bg-black/10 flex-1" />
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">Bookmarks</h3>
+                            <div className="h-px bg-border flex-1" />
                         </div>
 
                         <div className="flex flex-col gap-3">
                             {bookmarks.length > 0 ? (
                                 bookmarks.map((bookmark) => (
-                                    <div key={bookmark.id} className="flex flex-col bg-white border border-gray-100 overflow-hidden group hover:shadow-lg hover:border-yellow-500/30 transition-all">
+                                    <div key={bookmark.id} className="flex flex-col bg-card border border-border rounded-lg overflow-hidden group hover:shadow-lg hover:border-primary/40 transition-all">
                                         <Link
                                             href={`/bible/${bookmark.book.abbreviation}/${bookmark.chapter.number}`}
                                             className="p-5 block"
                                         >
                                             <div className="flex justify-between items-start mb-2">
-                                                <span className="font-bold text-sm uppercase tracking-wider group-hover:text-yellow-600 transition-colors">
+                                                <span className="font-bold text-sm uppercase tracking-wider text-foreground group-hover:text-primary transition-colors">
                                                     {bookmark.book.name} {bookmark.chapter.number}
                                                 </span>
-                                                <span className="text-xs text-gray-400">{formatDate(bookmark.created_at)}</span>
+                                                <span className="text-xs text-muted-foreground">{formatDate(bookmark.created_at)}</span>
                                             </div>
-                                            <p className="text-sm text-gray-600 truncate italic" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                                            <p className="text-sm text-muted-foreground truncate italic" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                                 {bookmark.verse ? `Verse ${bookmark.verse.number}: ${bookmark.verse.text}` : 'Chapter Bookmark'}
                                             </p>
                                         </Link>
                                         {bookmark.note && (
                                             <div className="px-5 pb-5 pt-0">
-                                                <div className="bg-[#F5F2EA] p-4 text-sm italic text-gray-700 flex gap-2 border-l-2 border-yellow-500">
-                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-gray-400 shrink-0" />
+                                                <div className="bg-muted/60 p-4 text-sm italic text-foreground flex gap-2 border-l-2 border-primary rounded-r">
+                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
                                                     <span>{bookmark.note}</span>
                                                 </div>
                                             </div>
@@ -293,10 +303,10 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
-                                    <BookmarkIcon className="h-6 w-6 text-gray-400" />
-                                    <p className="text-gray-600">Save chapters you want to return to.</p>
-                                    <Link href="/bible/gn/1" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                <div className="p-8 text-center border-2 border-dashed border-border rounded-lg text-muted-foreground text-sm flex flex-col items-center gap-3">
+                                    <BookmarkIcon className="h-6 w-6 text-muted-foreground" />
+                                    <p className="text-muted-foreground">Save chapters you want to return to.</p>
+                                    <Link href="/bible/gn/1" className="text-xs uppercase tracking-wider font-semibold text-primary hover:opacity-80">
                                         Start Reading Genesis 1 &rarr;
                                     </Link>
                                 </div>
@@ -307,35 +317,35 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     {/* Favorites Column */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-yellow-500 text-[#1a1a1a]">
+                            <div className="p-2 bg-primary text-primary-foreground rounded">
                                 <Heart size={18} />
                             </div>
-                            <h3 className="text-sm font-bold uppercase tracking-widest">Favorites</h3>
-                            <div className="h-px bg-black/10 flex-1" />
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">Favorites</h3>
+                            <div className="h-px bg-border flex-1" />
                         </div>
 
                         <div className="flex flex-col gap-3">
                             {favorites.length > 0 ? (
                                 favorites.map((favorite) => (
-                                    <div key={favorite.id} className="flex flex-col bg-white border border-gray-100 overflow-hidden group hover:shadow-lg hover:border-yellow-500/30 transition-all">
+                                    <div key={favorite.id} className="flex flex-col bg-card border border-border rounded-lg overflow-hidden group hover:shadow-lg hover:border-primary/40 transition-all">
                                         <Link
                                             href={`/bible/${favorite.verse.chapter.book.abbreviation}/${favorite.verse.chapter.number}`}
                                             className="p-5 block"
                                         >
                                             <div className="flex justify-between items-start mb-2">
-                                                <span className="font-bold text-sm uppercase tracking-wider group-hover:text-yellow-600 transition-colors">
+                                                <span className="font-bold text-sm uppercase tracking-wider text-foreground group-hover:text-primary transition-colors">
                                                     {favorite.verse.chapter.book.name} {favorite.verse.chapter.number}:{favorite.verse.number}
                                                 </span>
-                                                <span className="text-xs text-gray-400">{formatDate(favorite.created_at)}</span>
+                                                <span className="text-xs text-muted-foreground">{formatDate(favorite.created_at)}</span>
                                             </div>
-                                            <p className="text-sm text-gray-600 line-clamp-3 italic" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                                            <p className="text-sm text-muted-foreground line-clamp-3 italic" style={{ fontFamily: 'DM Serif Display, serif' }}>
                                                 "{favorite.verse.text}"
                                             </p>
                                         </Link>
                                         {favorite.note && (
                                             <div className="px-5 pb-5 pt-0">
-                                                <div className="bg-[#F5F2EA] p-4 text-sm italic text-gray-700 flex gap-2 border-l-2 border-yellow-500">
-                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-gray-400 shrink-0" />
+                                                <div className="bg-muted/60 p-4 text-sm italic text-foreground flex gap-2 border-l-2 border-primary rounded-r">
+                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
                                                     <span>{favorite.note}</span>
                                                 </div>
                                             </div>
@@ -343,10 +353,10 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
-                                    <Heart className="h-6 w-6 text-gray-400" />
-                                    <p className="text-gray-600">Save verses that speak to your heart.</p>
-                                    <Link href="/bible/jn/1" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                <div className="p-8 text-center border-2 border-dashed border-border rounded-lg text-muted-foreground text-sm flex flex-col items-center gap-3">
+                                    <Heart className="h-6 w-6 text-muted-foreground" />
+                                    <p className="text-muted-foreground">Save verses that speak to your heart.</p>
+                                    <Link href="/bible/jn/1" className="text-xs uppercase tracking-wider font-semibold text-primary hover:opacity-80">
                                         Explore John 1 &rarr;
                                     </Link>
                                 </div>
@@ -357,38 +367,38 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                     {/* Highlights Column */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-yellow-500 text-[#1a1a1a]">
+                            <div className="p-2 bg-primary text-primary-foreground rounded">
                                 <Highlighter size={18} />
                             </div>
-                            <h3 className="text-sm font-bold uppercase tracking-widest">Highlights</h3>
-                            <div className="h-px bg-black/10 flex-1" />
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">Highlights</h3>
+                            <div className="h-px bg-border flex-1" />
                         </div>
 
                         <div className="flex flex-col gap-3">
                             {highlights.length > 0 ? (
                                 highlights.map((highlight) => (
-                                    <div key={highlight.id} className="flex flex-col bg-white border border-gray-100 overflow-hidden group hover:shadow-lg hover:border-yellow-500/30 transition-all">
+                                    <div key={highlight.id} className="flex flex-col bg-card border border-border rounded-lg overflow-hidden group hover:shadow-lg hover:border-primary/40 transition-all">
                                         <Link
                                             href={`/bible/${highlight.verse.chapter.book.abbreviation}/${highlight.verse.chapter.number}`}
                                             className="p-5 block"
                                         >
                                             <div className="flex justify-between items-start mb-2">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={cn("w-3 h-3 rounded-full", getHighlightColor(highlight.color).split(' ')[0])}></span>
-                                                    <span className="font-bold text-sm uppercase tracking-wider group-hover:text-yellow-600 transition-colors">
+                                                    <span className={cn("w-3 h-3 rounded-full shrink-0", getHighlightBadge(highlight.color))}></span>
+                                                    <span className="font-bold text-sm uppercase tracking-wider text-foreground group-hover:text-primary transition-colors">
                                                         {highlight.verse.chapter.book.name} {highlight.verse.chapter.number}:{highlight.verse.number}
                                                     </span>
                                                 </div>
-                                                <span className="text-xs text-gray-400">{formatDate(highlight.created_at)}</span>
+                                                <span className="text-xs text-muted-foreground">{formatDate(highlight.created_at)}</span>
                                             </div>
-                                            <p className={cn("text-sm line-clamp-3 p-2", getHighlightColor(highlight.color))} style={{ fontFamily: 'DM Serif Display, serif' }}>
+                                            <p className={cn("text-sm line-clamp-3 p-2.5 rounded", getHighlightColor(highlight.color))} style={{ fontFamily: 'DM Serif Display, serif' }}>
                                                 {highlight.verse.text}
                                             </p>
                                         </Link>
                                         {highlight.note && (
                                             <div className="px-5 pb-5 pt-0">
-                                                <div className="bg-[#F5F2EA] p-4 text-sm italic text-gray-700 flex gap-2 border-l-2 border-yellow-500">
-                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-gray-400 shrink-0" />
+                                                <div className="bg-muted/60 p-4 text-sm italic text-foreground flex gap-2 border-l-2 border-primary rounded-r">
+                                                    <MessageSquare className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
                                                     <span>{highlight.note}</span>
                                                 </div>
                                             </div>
@@ -396,10 +406,10 @@ export default function Dashboard({ bookmarks, favorites, highlights }: Dashboar
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-sm flex flex-col items-center gap-3">
-                                    <Highlighter className="h-6 w-6 text-gray-400" />
-                                    <p className="text-gray-600">Click any verse while reading to highlight it.</p>
-                                    <Link href="/bible/ps/23" className="text-xs uppercase tracking-wider font-semibold text-yellow-600 hover:text-yellow-700">
+                                <div className="p-8 text-center border-2 border-dashed border-border rounded-lg text-muted-foreground text-sm flex flex-col items-center gap-3">
+                                    <Highlighter className="h-6 w-6 text-muted-foreground" />
+                                    <p className="text-muted-foreground">Click any verse while reading to highlight it.</p>
+                                    <Link href="/bible/ps/23" className="text-xs uppercase tracking-wider font-semibold text-primary hover:opacity-80">
                                         Read Psalm 23 &rarr;
                                     </Link>
                                 </div>

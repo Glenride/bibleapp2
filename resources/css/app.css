@@ -5,7 +5,7 @@
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *):not(:is(.force-light, .force-light *)));
 
 /* Keep native form controls (especially password inputs) in sync with the
    active theme. Without an explicit color-scheme, the browser can render dark
